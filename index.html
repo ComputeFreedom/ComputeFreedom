@@ -4,6 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <title>Compute Freedom — If you don't run it, you cannot control it.</title>
   <meta name="description" content="Two obligations. One architecture. Local AI access for the citizen; binding international treaty for the frontier. Compute sovereignty is not a technical preference — it is a precondition for accountability.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,6 +24,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
+      color-scheme: dark;
       --bg:           #161412;
       --bg-card:      #1d1a17;
       --sand:         #C8B898;
@@ -30,8 +33,11 @@
       --sand-dim:     #8A8070;
       --stahl:        #8899AA;
       --terra:        #D07038;
+      --terra-soft:   rgba(208, 112, 56, 0.18);
       --gold:         #B89040;
-      --teal:         #5D8C86;
+      --teal:         #4F9A91;
+      --teal-strong:  #5DB1A6;
+      --teal-soft:    rgba(79, 154, 145, 0.16);
       --proton:       #6D4AFF;
     }
 
@@ -104,7 +110,7 @@
     .logo-pd .pd-d {
       font-family: 'Palatino', 'Palatino Linotype', 'URW Palladio L', 'P052', 'Book Antiqua', 'Cormorant Garamond', serif;
       font-size: 16px;
-      color: #5D8C86;
+      color: #4F9A91;
       line-height: 1;
       display: block;
       margin: 0;
@@ -116,11 +122,18 @@
 
     .logo-name {
       font-family: 'DM Serif Display', serif;
-      font-size: 13px;
-      line-height: 1.22;
+      font-size: 14px;
+      line-height: 1.05;
       color: #C8B898;
       padding-left: 8px;
       letter-spacing: 0.005em;
+      white-space: nowrap;
+    }
+    @media (max-width: 420px) {
+      .logo-name { font-size: 12px; }
+    }
+    @media (max-width: 360px) {
+      .logo-name { font-size: 11px; }
     }
 
     nav {
@@ -180,11 +193,24 @@
 
     .section-label {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.14em;
+      font-size: 11.5px;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: #5D8C86;
-      margin-bottom: 40px;
+      color: #5DB1A6;
+      margin-bottom: 36px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .section-label::after {
+      content: '';
+      height: 1px;
+      flex: 1;
+      background: linear-gradient(
+        to right,
+        rgba(93,177,166,0.42),
+        rgba(93,177,166,0)
+      );
     }
 
     /* ─── CTA BANNER ──────────────────────────────────────── */
@@ -261,7 +287,7 @@
       font-family: 'Palatino', 'Palatino Linotype', 'URW Palladio L', 'P052', 'Book Antiqua', 'Cormorant Garamond', serif;
       font-size: clamp(76px, 13vw, 116px);
       line-height: 1;
-      color: #5D8C86;
+      color: #4F9A91;
       display: block;
       margin: 0;
       padding: 0;
@@ -327,64 +353,125 @@
     .hero-line { display: block; }
     .hero-line-bottom { margin-top: -0.08em; }
     .hero-title .c-p,
-    .hero-title .c-d { color: #5D8C86; }
+    .hero-title .c-d { color: #4F9A91; }
 
-    .hero-mark-tagline {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-weight: 400;
-      font-size: clamp(15px, 1.9vw, 19px);
-      line-height: 1.45;
-      color: #D07038;
-      margin-top: 14px;
-      letter-spacing: 0.005em;
-      text-wrap: balance;
-    }
-
-    /* Hero tagline below the composition: the new manifesto-line */
+    /* Hero tagline below the composition */
     .hero-tagline {
       font-family: 'DM Serif Display', serif;
       font-size: clamp(28px, 4.6vw, 42px);
       line-height: 1.1;
-      color: #D8CDB4;
-      margin-bottom: 16px;
+      color: #C8B898;
+      margin-bottom: 14px;
       letter-spacing: -0.005em;
       text-wrap: balance;
     }
 
-    /* Big declaration line — orange semibold serif, full punch */
+    /* AGIplus subtitle line — sits directly under wordmark, tight spacing */
+    .hero-tagline-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(15px, 2vw, 19px);
+      line-height: 1.4;
+      color: #B8AC96;
+      margin: 12px 0 0 0;
+      letter-spacing: 0.005em;
+      text-wrap: balance;
+    }
+
+    /* AGIplus token: split — AGI in teal (threshold), plus in orange (red line) */
+    .agiplus {
+      white-space: nowrap;
+      font-weight: 600;
+      font-style: normal;
+      letter-spacing: 0.01em;
+    }
+    .agi-core {
+      color: #5DB1A6;
+    }
+    .agi-plus {
+      color: #D07038;
+    }
+
+    /* Inline highlights */
+    .hl-orange {
+      color: #D07038;
+      font-weight: 600;
+    }
+    .hl-teal {
+      color: #4F9A91;
+      font-weight: 500;
+    }
+    .hl-teal-bold {
+      color: #4F9A91;
+      font-weight: 600;
+    }
+
+    .will-word {
+      color: #D07038;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* Big declaration line — now sand-body with selective orange highlights */
     .declaration-line {
       font-family: 'Cormorant Garamond', serif;
-      font-weight: 600;
-      font-size: clamp(26px, 4.4vw, 38px);
-      line-height: 1.22;
-      color: #D07038;
+      font-weight: 500;
+      font-size: clamp(24px, 4vw, 34px);
+      line-height: 1.25;
+      color: #C8B898;
       letter-spacing: 0.005em;
       text-wrap: balance;
       margin: 0 0 36px 0;
     }
 
-    /* Mobile: stack hero-mark over wordmark */
+    /* Mobile: keep hero composition horizontal, just shrink everything */
     @media (max-width: 560px) {
       .hero-composition {
-        flex-direction: column;
-        gap: 24px;
-        align-items: flex-start;
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+      }
+      .hero-glyph {
+        padding-right: 8px;
       }
       .hero-glyph .hg-p,
       .hero-glyph .hg-d {
-        font-size: 84px;
+        font-size: clamp(58px, 17vw, 78px);
       }
-      .hero-icons a { width: 26px; height: 26px; }
-      .hero-icons svg { width: 13px; height: 13px; }
+      .hero-divider {
+        margin: 0 6px;
+      }
+      .hero-icons {
+        gap: 6px;
+      }
+      .hero-icons a {
+        width: 24px;
+        height: 24px;
+      }
+      .hero-icons svg {
+        width: 12px;
+        height: 12px;
+      }
+      .hero-title {
+        font-size: clamp(38px, 12vw, 58px);
+        line-height: 0.86;
+      }
     }
 
     .hero-domains {
       font-family: 'IBM Plex Mono', monospace;
       font-size: 11px;
       letter-spacing: 0.08em;
-      color: #5D8C86;
+      color: #4F9A91;
       margin-bottom: 36px;
+    }
+    .hero-domains a,
+    .hero-domains a:link,
+    .hero-domains a:visited {
+      color: #4F9A91;
+      text-decoration: none;
     }
     .hero-domains span { margin: 0 8px; opacity: 0.35; }
 
@@ -398,40 +485,6 @@
       margin-bottom: 44px;
       text-wrap: balance;
     }
-
-    /* ─── PULL BOX (featured quote) ──────────────────────── */
-
-    .pull-box {
-      background: #1d1a17;
-      border-left: 2px solid #5D8C86;
-      border-radius: 0 6px 6px 0;
-      padding: 24px 28px 24px 32px;
-      margin-bottom: 48px;
-      position: relative;
-      overflow: hidden;
-    }
-    .pull-box::before {
-      content: '\201C';
-      font-family: 'DM Serif Display', serif;
-      font-size: 140px;
-      line-height: 1;
-      color: rgba(93,140,134,0.10);
-      position: absolute;
-      top: -18px;
-      left: 14px;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .pull-box p {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-size: 19px;
-      line-height: 1.55;
-      color: #D8CDB4;
-      position: relative;
-      z-index: 1;
-    }
-    .pull-box p + p { margin-top: 14px; }
 
     /* ─── BODY TEXT ───────────────────────────────────────── */
 
@@ -450,20 +503,19 @@
       color: #D8CDB4;
     }
 
-    /* English manifesto/closer lines — terra orange, semibold italic, no quote marks */
+    /* Manifest/closer lines — sand-light gravitas, semibold italic, breathing top-rule */
     .manifesto-line {
       font-family: 'Cormorant Garamond', serif;
       font-style: italic;
       font-weight: 600;
-      font-size: 22px;
-      line-height: 1.5;
-      color: #D07038;
-      margin-top: 44px;
-      margin-bottom: 0;
-      padding-top: 32px;
-      border-top: 1px solid rgba(200,184,152,0.14);
-      letter-spacing: 0.005em;
+      font-size: clamp(28px, 5vw, 36px);
+      line-height: 1.18;
+      color: #D8CDB4;
+      margin: 20px 0 0;
+      padding-top: 16px;
+      border-top: 1px solid rgba(200,184,152,0.12);
       text-wrap: balance;
+      -webkit-font-smoothing: antialiased;
     }
 
     /* Orange inline accents for AGI plus / ASI */
@@ -508,7 +560,16 @@
     .headline-card .hc-date {
       font-family: 'IBM Plex Mono', monospace;
       font-size: 10px;
-      color: #5D8C86;
+      color: #4F9A91;
+    }
+
+    .gallery-note {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10.5px;
+      color: #6E6458;
+      margin: 14px 0 28px;
+      letter-spacing: 0.04em;
+      line-height: 1.5;
     }
 
     /* ─── ARGUMENT ────────────────────────────────────────── */
@@ -567,38 +628,63 @@
 
     /* ─── ORIGIN ──────────────────────────────────────────── */
 
-    .origin-epigraph {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-size: 22px;
-      line-height: 1.45;
-      color: #D8CDB4;
-      border-left: 2px solid rgba(93,140,134,0.4);
-      padding: 8px 0 8px 22px;
-      margin-bottom: 48px;
-      position: relative;
+    /* Origin subhead — section title style */
+    .origin-subhead {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(28px, 4vw, 38px);
+      line-height: 1.15;
+      color: #C8B898;
+      margin-bottom: 36px;
+      letter-spacing: -0.005em;
+    }
+
+    /* Origin pull-line: standalone italic line, sand-light */
+    .origin-pull {
+      font-family: 'Cormorant Garamond', serif !important;
+      font-style: italic !important;
+      font-weight: 500 !important;
+      font-size: clamp(22px, 3vw, 26px) !important;
+      line-height: 1.35 !important;
+      color: #D8CDB4 !important;
+      margin: 28px 0 28px 0 !important;
       text-wrap: balance;
     }
-    .origin-epigraph::before {
-      content: '\201C';
-      font-family: 'DM Serif Display', serif;
-      font-style: normal;
-      font-size: 100px;
-      line-height: 1;
-      color: rgba(93,140,134,0.12);
-      position: absolute;
-      top: -14px;
-      left: 10px;
-      pointer-events: none;
+
+    /* Origin mic-drop: standalone teal-bold with separator above */
+    .origin-micdrop {
+      font-family: 'DM Serif Display', serif !important;
+      font-weight: 400 !important;
+      font-size: clamp(22px, 3.2vw, 28px) !important;
+      line-height: 1.3 !important;
+      color: #4F9A91 !important;
+      margin-top: 48px !important;
+      margin-bottom: 0 !important;
+      padding-top: 28px;
+      border-top: 1px solid rgba(79,154,145,0.22);
+      letter-spacing: 0.005em;
+      text-wrap: balance;
+      -webkit-font-smoothing: antialiased;
     }
-    .origin-epigraph cite {
-      display: block;
-      font-style: normal;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.1em;
-      color: #5D8C86;
-      margin-top: 12px;
+
+    /* Origin founder line: smaller, neutral biographical attribution */
+    .origin-founder {
+      font-family: 'IBM Plex Sans', sans-serif !important;
+      font-size: 13.5px !important;
+      line-height: 1.7 !important;
+      color: #8A8070 !important;
+      margin: 36px 0 0 0 !important;
+      padding-top: 24px;
+      border-top: 1px solid rgba(200,184,152,0.08);
+    }
+    .origin-founder strong {
+      color: #C8B898;
+      font-weight: 500;
+    }
+    .origin-founder em {
+      font-style: italic;
+      color: #B8AC96;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: inherit;
     }
 
     .origin-body p {
@@ -614,51 +700,6 @@
       color: #D8CDB4;
     }
     .origin-body strong { color: #D8CDB4; font-weight: 500; }
-
-    /* Footnote markers */
-    sup.fn {
-      font-size: 10px;
-      line-height: 0;
-      position: relative;
-      top: -0.5em;
-      margin-left: 1px;
-    }
-    sup.fn a {
-      color: #B89040;
-      text-decoration: none;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 10px;
-      padding: 0 1px;
-      border-bottom: 1px solid rgba(184,144,64,0.3);
-      transition: color 0.15s, border-color 0.15s;
-    }
-    sup.fn a:hover { color: #D4A850; border-color: rgba(212,168,80,0.5); }
-
-    /* Footnote block */
-    .fn-block {
-      margin-top: 56px;
-      padding-top: 32px;
-      border-top: 1px solid rgba(200,184,152,0.1);
-    }
-    .fn-block-label {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 9.5px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: #5D8C86;
-      margin-bottom: 20px;
-    }
-    .fn-item {
-      display: grid;
-      grid-template-columns: 18px 1fr;
-      gap: 10px;
-      margin-bottom: 14px;
-      align-items: baseline;
-    }
-    .fn-num { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #B89040; padding-top: 2px; }
-    .fn-text { font-size: 12.5px; line-height: 1.65; color: #8A8070; }
-    .fn-text em { font-family: 'Cormorant Garamond', serif; font-style: italic; color: #A09080; }
-    .fn-text a { color: #8A8070; text-decoration: underline; text-underline-offset: 2px; }
 
     /* ─── CONTACT ─────────────────────────────────────────── */
 
@@ -719,7 +760,7 @@
       right: 10px;
       top: 50%;
       transform: translateY(-50%);
-      color: #5D8C86;
+      color: #4F9A91;
       font-size: 11px;
       pointer-events: none;
     }
@@ -735,7 +776,7 @@
       margin-top: 4px;
     }
     .privacy-note { font-size: 12px; color: #5a5248; line-height: 1.5; }
-    .privacy-note a { color: #5D8C86; text-decoration: none; }
+    .privacy-note a { color: #4F9A91; text-decoration: none; }
 
     .btn-send {
       font-family: 'IBM Plex Mono', monospace;
@@ -765,7 +806,7 @@
       font-size: 9.5px;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: #5D8C86;
+      color: #4F9A91;
       margin-bottom: 22px;
     }
     .social-links {
@@ -829,7 +870,7 @@
       font-family: 'IBM Plex Mono', monospace;
       font-size: 10px;
       letter-spacing: 0.06em;
-      color: #5D8C86;
+      color: #4F9A91;
       text-decoration: none;
       opacity: 0.7;
       transition: opacity 0.2s;
@@ -863,7 +904,7 @@
       <span class="pd-p">p</span>
       <span class="pd-d">d</span>
     </div>
-    <span class="logo-name">Compute<br>Freedom</span>
+    <span class="logo-name">ComputeFreedom</span>
   </a>
   <nav>
     <a href="#principle" class="active">Principle</a>
@@ -886,8 +927,6 @@
       Contact
     </a>
   </div>
-
-  <div class="section-label">The Principle</div>
 
   <div class="hero-composition">
     <div class="hero-mark">
@@ -916,9 +955,13 @@
         <span class="hero-line hero-line-top">Com<span class="c-p">p</span>ute</span>
         <span class="hero-line hero-line-bottom">Free<span class="c-d">d</span>om</span>
       </h1>
-      <div class="hero-mark-tagline">From local compute sovereignty to binding global AI treaty law.</div>
+      <p class="hero-tagline-sub">
+        At <span class="agiplus"><span class="agi-core">AGI</span><span class="agi-plus">plus</span></span>, self-regulation ends — treaty law begins.
+      </p>
     </div>
   </div>
+
+  <div class="section-label">The Principle</div>
 
   <p class="hero-tagline">
     The Right to Run. The Duty to Restrain.
@@ -929,7 +972,7 @@
   </p>
 
   <p class="declaration-line">
-    Two legal obligations — a lower boundary, and an upper one.
+    <span class="hl-orange">Two legal obligations</span> — a <strong>lower</strong> boundary, and an <strong>upper</strong> one.
   </p>
 
   <div class="body-text">
@@ -937,7 +980,7 @@
       Once AI crosses a defined capability threshold, developers should be legally required to offer a version runnable on personal hardware — without cloud dependency, without ongoing access fees, without surveillance. We call this the <strong>Threshold Obligation</strong>. It secures the right of the citizen to a machine that answers to them.
     </p>
     <p>
-      Once frontier development crosses into <strong>AGI, AGI <span class="accent-plus">plus</span>, and <span class="accent-asi">ASI</span></strong>, no single corporation and no single state holds the democratic mandate to proceed alone. Decisions of consequence to the species require legitimation by the species — encoded in a binding international treaty, with verifiable compute and energy limits, IAEA-grade inspections, and pause mechanisms anchored in law. We call this the <strong>Treaty Obligation</strong>.
+      Once frontier development crosses into <strong><span class="agi-core">AGI</span>, <span class="agiplus"><span class="agi-core">AGI</span><span class="agi-plus">plus</span></span>, and <span class="accent-asi">ASI</span></strong>, no single corporation and no single state holds the democratic mandate to proceed alone. Decisions of consequence to the species require legitimation by the species — encoded in a binding international treaty, with verifiable compute and energy limits, IAEA-grade inspections, and pause mechanisms anchored in law. We call this the <strong>Treaty Obligation</strong>.
     </p>
     <p>
       <em>Two thresholds. One architecture.</em> AI is too consequential to remain in the hands of a small number of unaccountable actors — neither at the point of access, nor at the point of risk.
@@ -965,10 +1008,10 @@
 <h3 class="arg-subhead">The Threshold Obligation</h3>
 
 <p>
-  The standard response to concerns about AI concentration is: <em>"but the models are open source."</em> This answer mistakes visibility for access, and access for sovereignty.
+  The standard response to concerns about AI concentration is a language of openness: papers, benchmarks, model cards, APIs, and occasional weight releases. But this answer mistakes visibility for access, and access for sovereignty.
 </p>
 <p>
-  When a model's weights are released under a permissive license but can only be run meaningfully on infrastructure costing hundreds of thousands of dollars, the openness is formal, not functional. Researchers can read the code. They cannot run it. Citizens can, in theory, audit it. In practice, they cannot. The source is open. The capability is not.
+  Even where model weights are released, the most capable systems remain practically dependent on infrastructure costing hundreds of thousands or millions of dollars. Researchers may inspect parts of the stack. Citizens may, in theory, audit it. But they cannot run frontier capability independently. The appearance of openness remains; the substance of control does not.
 </p>
 <p>
   Compute Freedom proposes a concrete mechanism: once an AI system crosses a defined capability threshold, its developer should be legally required to offer a compressed, locally-runnable version — on consumer hardware, offline-capable, without mandatory cloud authentication.
@@ -1009,7 +1052,7 @@
   The lower threshold protects the citizen. The upper threshold protects the species — and we have been quiet about it for too long.
 </p>
 <p>
-  As frontier systems advance toward general human-level capability and beyond — <strong>AGI, AGI <span class="accent-plus">plus</span>, and <span class="accent-asi">ASI</span></strong> — their development becomes a matter of consequence beyond any single state or any single corporation. The current trajectory has neither democratic mandate nor binding treaty. Stargate, Colossus, the multi-hundred-billion-dollar build-outs of OpenAI, Google, and xAI — all dependent on the de facto NVIDIA monopoly on frontier training silicon — proceed at competitive tempo, accountable to shareholders, not to citizens.
+  As frontier systems advance toward general human-level capability and beyond — <strong><span class="agi-core">AGI</span>, <span class="agiplus"><span class="agi-core">AGI</span><span class="agi-plus">plus</span></span>, and <span class="accent-asi">ASI</span></strong> — their development becomes a matter of consequence beyond any single state or any single corporation. The current trajectory has neither democratic mandate nor binding treaty. Stargate, Colossus, the multi-hundred-billion-dollar build-outs of OpenAI, Google, and xAI — all dependent on the de facto NVIDIA monopoly on frontier training silicon — proceed at competitive tempo, accountable to shareholders, not to citizens.
 </p>
 <p>
   The physical signature of this race is no longer subtle. When an AI company announces it requires not the electrical capacity of Silicon Valley but <em>ten new nuclear reactors</em>, the appropriate response of any constitutional state is not admiration. It is the question: <strong>by whose authority?</strong> That this question has not been asked — has barely been articulated — is the deepest failure of contemporary political thought.
@@ -1021,36 +1064,43 @@
   <div class="threshold-box">
     <div class="tb-label">The Failure of Self-Regulation</div>
     <p>
-      Anthropic publicly refuses to allow its model Claude to be used for autonomous weapons or mass surveillance. The U.S. Department of Defense has responded by designating the company a "supply chain risk" — a measure that threatens its commercial existence. OpenAI and xAI have signed contracts without such restrictions. <strong>Without treaty law, voluntary safety commitments are eventually surrendered under pressure. It is a question of time, of pressure, and of competition — not of intention.</strong>
+      Anthropic refused to remove safeguards preventing Claude from being used for autonomous weapon targeting or mass domestic surveillance. The Pentagon responded by designating the company a <em>supply-chain risk</em>. OpenAI, Google, and xAI have moved into classified defense deployments under less restrictive arrangements. <strong>Without treaty law, voluntary safety commitments become bargaining chips under pressure.</strong>
     </p>
   </div>
 
   <div class="headline-gallery">
     <div class="headline-card">
-      <div class="hc-source">Reuters · Defense</div>
-      <div class="hc-title">Pentagon designates Anthropic "supply chain risk" over weapons-use restrictions</div>
+      <div class="hc-source">Public Record · Reuters</div>
+      <div class="hc-title">Pentagon designates Anthropic "supply-chain risk" over weapons-use safeguards</div>
       <div class="hc-date">February 2026</div>
     </div>
     <div class="headline-card">
-      <div class="hc-source">Bloomberg · Tech</div>
-      <div class="hc-title">OpenAI and xAI sign all-uses defense contracts as compute race accelerates</div>
+      <div class="hc-source">Public Record · Bloomberg</div>
+      <div class="hc-title">OpenAI and xAI sign expansive defense deployments as compute race accelerates</div>
       <div class="hc-date">January 2026</div>
     </div>
     <div class="headline-card">
-      <div class="hc-source">Financial Times · Energy</div>
-      <div class="hc-title">Frontier AI build-out triggers nuclear reactor commitments at unprecedented scale</div>
+      <div class="hc-source">Public Record · Financial Times</div>
+      <div class="hc-title">Frontier AI build-out triggers nuclear-reactor commitments at unprecedented scale</div>
       <div class="hc-date">2025–2026</div>
     </div>
     <div class="headline-card">
-      <div class="hc-source">Center for AI Safety · 2023</div>
+      <div class="hc-source">Public Statement · Center for AI Safety</div>
       <div class="hc-title">Hinton, Bengio, Altman, Hassabis: AI risk on par with pandemics and nuclear war</div>
       <div class="hc-date">May 2023</div>
     </div>
   </div>
+  <p class="gallery-note">Paraphrased summaries of public reporting. See linked sources via the contact channel for citations.</p>
 
   <div class="body-text">
     <p>
-      We have built such treaties before. The Non-Proliferation Treaty. The IAEA. The Biological Weapons Convention. The Montreal Protocol. None were utopian when proposed; all of them function today — imperfect, monitored, real. The technologies they govern are no more transformative, no more dual-use, no more globally consequential than frontier AI. <em>The institutional infrastructure exists. Only the will is missing.</em>
+      We have built such treaties before. <span class="hl-teal">The Non-Proliferation Treaty.</span> <span class="hl-teal">The IAEA.</span> <span class="hl-teal">The Biological Weapons Convention.</span> <span class="hl-teal">The Montreal Protocol.</span> None were utopian when proposed; all function today — imperfect, monitored, real. The technologies they govern are no more transformative, no more dual-use, no more globally consequential than frontier AI. The institutional infrastructure exists. Only the <span class="will-word">will</span> is missing.
+    </p>
+    <p>
+      The case is not ours alone. The 2023 Center for AI Safety statement — placing AI risk on the same axis as pandemics and nuclear war — was signed by <span class="hl-teal">Geoffrey Hinton</span>, <span class="hl-teal">Yoshua Bengio</span>, <span class="hl-teal">Sam Altman</span>, and <span class="hl-teal">Demis Hassabis</span>. The signatories include the very executives currently building the frontier. Their warning is not an outside critique. <span class="hl-orange">It is a confession</span> — one that has produced no binding constraint on their own behavior, because none has been demanded of them.
+    </p>
+    <p>
+      The pricing model is changing under everyone's feet. Flat subscriptions are giving way to metered inference: <span class="hl-orange">€20 becomes €200, €2,000, or simply unavailable at your tier.</span> If access to intelligence becomes a metered utility, understanding becomes a function of budget. The thresholds will be crossed — in months, not decades. <strong>Whoever does not act now will have no leverage later.</strong>
     </p>
     <p>What the Treaty Obligation demands:</p>
   </div>
@@ -1064,14 +1114,8 @@
   </ul>
 
   <div class="body-text">
-    <p>
-      The case is not ours alone. The 2023 Center for AI Safety statement — placing AI risk on the same axis as pandemics and nuclear war — was signed by Geoffrey Hinton, Yoshua Bengio, Sam Altman, and Demis Hassabis. The signatories include the very executives currently building the frontier. <strong>Their warning is not an outside critique. It is a confession.</strong> A confession that has produced no binding constraint on their own behavior, because none has been demanded of them.
-    </p>
-    <p>
-      Prices will rise. Clusters will grow. The thresholds will be crossed — in months, not in decades. <strong>Whoever does not act now will have no leverage later.</strong>
-    </p>
     <p class="manifesto-line">
-      The citizen below. The species above.<br>The unaccountable actor: neither here nor there.
+      The citizen below. The species above.<br>The corporation answers to neither.
     </p>
   </div>
 </section>
@@ -1079,60 +1123,47 @@
 <section id="origin" class="section">
   <div class="section-label">Who &amp; Why</div>
 
-  <blockquote class="origin-epigraph">
-    The sequence data is open.<br>The understanding is not.
-    <cite>— On the monopoly of genomics</cite>
-  </blockquote>
+  <h2 class="origin-subhead">Why I built Compute Freedom</h2>
 
   <div class="origin-body">
     <p>
-      <strong>Compute Freedom is implemented by Michael S.D. Kormann</strong> — a scientist whose work on modified mRNA was pivotal for the delivery of genetic information into living cells without triggering immune rejection,<sup class="fn"><a href="#fn-1" id="fnref-1">1</a></sup> a biochemical principle that would later become central to the mRNA vaccines developed during the COVID-19 pandemic. The original context was basic translational science applied to rare pediatric lung diseases, including cystic fibrosis.<sup class="fn"><a href="#fn-2" id="fnref-2">2</a></sup>
+      I am not building Compute Freedom as a personal platform. I am building it because I have seen this pattern before.
     </p>
-    <p>
-      What that work made visible was a structural pattern: the raw data — genetic sequences, molecular structures, published findings — was largely accessible. What was not accessible was the <em>capacity to understand it at scale</em>: to model protein folding across populations, to simulate therapeutic effects, to run the inference that turned sequence data into clinical knowledge. That capacity concentrated, quietly, in institutions with the infrastructure to process it.
-    </p>
-    <p>
-      <em>The sequence data was open. The understanding was not.</em>
-    </p>
-    <p>
-      Today, the same architecture is reproducing itself in artificial intelligence. Model weights are sometimes released. Papers are published. But inference at the frontier — the ability to actually <em>run</em> the most capable systems — remains tethered to centralized cloud infrastructure controlled by a small number of corporations globally. This is not openness. It is openness as theater.
-    </p>
-    <p>
-      The transition from genomics to AI governance is, in this light, not a pivot. It is the same problem encountered at a different scale.<sup class="fn"><a href="#fn-3" id="fnref-3">3</a></sup> Whoever controls the infrastructure through which foundational knowledge is generated and applied controls the knowledge itself — and, through that, the trajectory of medicine, education, law, and science.
-    </p>
-    <p>
-      <strong>Compute Freedom</strong> is structured as a policy initiative, not a technology project. Its goal is to establish both the Threshold Obligation and the Treaty Obligation as matters of law — minimum conditions of structural compute sovereignty that no commercial model, and no voluntary corporate framework, can substitute for.
-    </p>
-  </div>
 
-  <div class="fn-block">
-    <div class="fn-block-label">References</div>
-    <div class="fn-item" id="fn-1">
-      <span class="fn-num">1</span>
-      <span class="fn-text">
-        Kormann MSD et al. <em>Expression of therapeutic proteins after delivery of chemically modified mRNA in mice.</em> Nature Biotechnology 29: 154–157 (2011). Paper of the Year; cited in the Wikipedia article on nucleoside-modified mRNA. <a href="#fnref-1">↩</a>
-      </span>
-    </div>
-    <div class="fn-item" id="fn-2">
-      <span class="fn-num">2</span>
-      <span class="fn-text">
-        Selected related works: Mays LE, Kormann MSD et al. <em>Modified mRNA as an alternative to plasmid DNA.</em> Journal of Clinical Investigation (2013); Mahiny AJ, Kormann MSD et al. <em>In vivo genome editing using nuclease-encoding mRNA corrects SP-B deficiency.</em> Nature Biotechnology (2015); Haque N, … Kormann MSD et al. <em>mRNA-based treatment for cystic fibrosis.</em> Scientific Reports (2018). <a href="#fnref-2">↩</a>
-      </span>
-    </div>
-    <div class="fn-item" id="fn-3">
-      <span class="fn-num">3</span>
-      <span class="fn-text">
-        Scientific publications are listed as footnotes rather than credentials: the argument stands or falls on its own merits, not on the authority of the person making it. <a href="#fnref-3">↩</a>
-      </span>
-    </div>
+```
+<p>
+  In science, information can be public while understanding remains concentrated. Data may be shared. Papers may be accessible. Methods may be described. But the real power lies in the infrastructure that turns information into knowledge.
+</p>
+
+<p class="origin-pull">
+  The data was open. The understanding was not.
+</p>
+
+<p>
+  Artificial intelligence is now reproducing that same structure at civilizational scale. The language of openness remains, but the substance of control is moving into <span class="hl-orange">centralized compute, centralized inference, and centralized permission.</span>
+</p>
+
+<p>
+  Compute Freedom exists to challenge that arrangement. It argues that control over foundational intelligence must not remain the privilege of a few firms, or the <em>accidental by-product</em> of their business models.
+</p>
+
+<p class="origin-founder">
+  Compute Freedom was initiated by <strong>Michael S. D. Kormann</strong>, a translational scientist and Professor of Translational Genomics and Gene Therapy in Pediatrics, with a PhD in Biology, a former European Research Council Starting Grant, publications in journals including Nature Biotechnology and the Journal of Clinical Investigation, and international recognition including the Maurizio Vignola Award.
+</p>
+
+<p class="origin-micdrop">
+  If intelligence becomes infrastructure, its governance cannot remain private.
+</p>
+```
+
   </div>
 </section>
 
 <section id="contact" class="section">
-  <div class="section-label">Reach Out</div>
+  <div class="section-label">Take a Position</div>
 
   <p class="contact-intro">
-    <strong>AI governance is not a spectator sport.</strong> It requires open, sustained conversation — between researchers, policymakers, engineers, and citizens. If you want to reach out about the initiative, a collaboration, or simply to push back — you can do so without concern. The contact form routes directly to an encrypted Proton inbox. No trackers. No intermediaries.
+    <strong>AI governance is not a spectator sport.</strong> Compute Freedom is the argument in canonical form. Discuss it publicly, challenge it, share it, improve it — on LinkedIn, X, Bluesky, Mastodon, or wherever policy conversations actually happen. Use the form below for collaborations, interviews, policy work, research input, or serious objections that should not be lost in a comment thread.
   </p>
 
   <form class="contact-form" action="https://formspree.io/f/xeepeyrb" method="POST">
@@ -1198,8 +1229,9 @@
 
 <div class="form-submit-row">
   <p class="privacy-note">
-    Routes directly to an encrypted Proton inbox.<br>
-    No trackers. No intermediaries.
+    Routes to a Proton inbox via Formspree.<br>
+    Privacy-respecting analytics: aggregate page views only.<br>
+    No cookies. No personal profiling. No advertising trackers.
   </p>
   <button type="submit" class="btn-send">Send →</button>
 </div>
