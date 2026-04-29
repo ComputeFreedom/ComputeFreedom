@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compute Freedom — If you don't run it, you cannot control it.</title>
+  <meta name="description" content="Two obligations. One architecture. Local AI access for the citizen; binding international treaty for the frontier. Compute sovereignty is not a technical preference — it is a precondition for accountability.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* v26 — refinements after review:
+       [v26] Logo + hero spacing tightened
+       [v26] Quote styling and vertical rhythm unified
+       [v26] Section divider reworked: strongest in the middle, fading at the ends
+       [v26] Structure clarified: Position → Obligation
+       [v26] Social links flattened onto site background
+    */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #161412;
+      --bg-card:      #1d1a17;
+      --sand:         #C8B898;
+      --sand-light:   #D8CDB4;
+      --sand-body:    #B8AC96;
+      --sand-dim:     #8A8070;
+      --stahl:        #8899AA;
+      --terra:        #D07038;
+      --gold:         #B89040;
+      --teal:         #5D8C86;
+      --proton:       #6D4AFF;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: #161412 !important;
+      background-color: #161412 !important;
+      min-height: 100%;
+    }
+
+    body {
+      background: #161412 !important;
+      background-color: #161412 !important;
+      min-height: 100vh;
+      color: #B8AC96;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── HEADER ─────────────────────────────────────────── */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      /* Fabi: backdrop-filter fallback for Firefox/older Safari */
+      background: rgba(22, 20, 18, 0.97);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(200,184,152,0.08);
+      padding: 0 28px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      line-height: 1;
+      flex-shrink: 0;
+      gap: 0;
+    }
+
+    .logo-pd {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: auto;
+      padding-right: 8px;
+      position: relative;
+      transform: translateY(-1px);
+    }
+    .logo-pd::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: rgba(93,140,134,0.28);
+    }
+    .logo-pd .pd-p,
+    .logo-pd .pd-d {
+      font-family: 'Palatino', 'Palatino Linotype', 'URW Palladio L', 'P052', 'Book Antiqua', 'Cormorant Garamond', serif;
+      font-size: 16px;
+      color: #5D8C86;
+      line-height: 1;
+      display: block;
+      margin: 0;
+      padding: 0;
+    }
+    .logo-pd .pd-d {
+      margin-top: -5px;
+    }
+
+    .logo-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 13px;
+      line-height: 1.22;
+      color: #C8B898;
+      padding-left: 8px;
+      letter-spacing: 0.005em;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      flex-wrap: nowrap;
+    }
+    nav a {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: #8A8070;
+      text-decoration: none;
+      padding: 5px 10px;
+      border-radius: 20px;
+      border: 1px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+    nav a:hover { color: #C8B898; }
+    nav a.active {
+      color: #C8B898;
+      border-color: rgba(200,184,152,0.28);
+    }
+
+    /* ─── LAYOUT ──────────────────────────────────────────── */
+
+    .section {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 88px 28px;
+    }
+
+    /* Section divider: soft sand gradient, fading at both ends */
+    .section + .section {
+      position: relative;
+    }
+    .section + .section::before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 15%;
+      right: 15%;
+      height: 1px;
+      background: linear-gradient(
+        to right,
+        rgba(200,184,152,0) 0%,
+        rgba(200,184,152,0.18) 30%,
+        rgba(200,184,152,0.32) 50%,
+        rgba(200,184,152,0.18) 70%,
+        rgba(200,184,152,0) 100%
+      );
+    }
+
+    .section-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #5D8C86;
+      margin-bottom: 40px;
+    }
+
+    /* ─── CTA BANNER ──────────────────────────────────────── */
+
+    .cta-banner {
+      background: #1d1a17;
+      border: 1px solid rgba(200,184,152,0.1);
+      border-radius: 6px;
+      padding: 12px 18px;
+      margin-bottom: 56px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .cta-banner p {
+      font-size: 13px;
+      color: #B8AC96;
+      flex: 1;
+      min-width: 140px;
+      line-height: 1.5;
+    }
+    .cta-banner p strong { color: #C8B898; font-weight: 500; }
+
+    .btn-contact {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10.5px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #ffffff;
+      background: rgba(109,74,255,0.15);
+      border: 1px solid rgba(109,74,255,0.45);
+      padding: 7px 14px;
+      border-radius: 4px;
+      text-decoration: none;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: background 0.2s, border-color 0.2s;
+      cursor: pointer;
+    }
+    .btn-contact:hover {
+      background: rgba(109,74,255,0.25);
+      border-color: rgba(109,74,255,0.65);
+    }
+    .proton-icon { width: 13px; height: 13px; flex-shrink: 0; }
+
+    /* ─── HERO ────────────────────────────────────────────── */
+
+    /* New composition: pd-glyph + divider + vertical icon stack | wordmark + mark-tagline */
+    .hero-composition {
+      display: flex;
+      align-items: flex-start;
+      gap: 22px;
+      margin-bottom: 36px;
+    }
+
+    .hero-mark {
+      display: flex;
+      align-items: stretch;
+      flex-shrink: 0;
+    }
+    .hero-glyph {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding-right: 14px;
+      line-height: 1;
+    }
+    .hero-glyph .hg-p,
+    .hero-glyph .hg-d {
+      font-family: 'Palatino', 'Palatino Linotype', 'URW Palladio L', 'P052', 'Book Antiqua', 'Cormorant Garamond', serif;
+      font-size: clamp(76px, 13vw, 116px);
+      line-height: 1;
+      color: #5D8C86;
+      display: block;
+      margin: 0;
+      padding: 0;
+    }
+    .hero-glyph .hg-d {
+      margin-top: -0.30em;
+    }
+    .hero-divider {
+      width: 1px;
+      background: linear-gradient(
+        to bottom,
+        rgba(200,184,152,0) 0%,
+        rgba(200,184,152,0.32) 14%,
+        rgba(200,184,152,0.32) 86%,
+        rgba(200,184,152,0) 100%
+      );
+      margin: 0 14px;
+      flex-shrink: 0;
+    }
+    .hero-icons {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+    }
+    .hero-icons a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: #D07038;
+      border-radius: 5px;
+      transition: opacity 0.2s, transform 0.2s;
+      opacity: 0.92;
+    }
+    .hero-icons a:hover {
+      opacity: 1;
+      transform: translateY(-1px);
+    }
+    .hero-icons svg {
+      width: 14px;
+      height: 14px;
+      fill: #ffffff;
+    }
+
+    .hero-wordmark-block {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex: 1;
+      min-width: 0;
+    }
+    .hero-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(46px, 9.5vw, 78px);
+      line-height: 0.85;
+      color: #C8B898;
+      letter-spacing: -0.01em;
+      text-rendering: optimizeLegibility;
+      margin: 0;
+    }
+    .hero-line { display: block; }
+    .hero-line-bottom { margin-top: -0.08em; }
+    .hero-title .c-p,
+    .hero-title .c-d { color: #5D8C86; }
+
+    .hero-mark-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(15px, 1.9vw, 19px);
+      line-height: 1.45;
+      color: #D07038;
+      margin-top: 14px;
+      letter-spacing: 0.005em;
+      text-wrap: balance;
+    }
+
+    /* Hero tagline below the composition: the new manifesto-line */
+    .hero-tagline {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(28px, 4.6vw, 42px);
+      line-height: 1.1;
+      color: #D8CDB4;
+      margin-bottom: 16px;
+      letter-spacing: -0.005em;
+      text-wrap: balance;
+    }
+
+    /* Big declaration line — orange semibold serif, full punch */
+    .declaration-line {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: clamp(26px, 4.4vw, 38px);
+      line-height: 1.22;
+      color: #D07038;
+      letter-spacing: 0.005em;
+      text-wrap: balance;
+      margin: 0 0 36px 0;
+    }
+
+    /* Mobile: stack hero-mark over wordmark */
+    @media (max-width: 560px) {
+      .hero-composition {
+        flex-direction: column;
+        gap: 24px;
+        align-items: flex-start;
+      }
+      .hero-glyph .hg-p,
+      .hero-glyph .hg-d {
+        font-size: 84px;
+      }
+      .hero-icons a { width: 26px; height: 26px; }
+      .hero-icons svg { width: 13px; height: 13px; }
+    }
+
+    .hero-domains {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: #5D8C86;
+      margin-bottom: 36px;
+    }
+    .hero-domains span { margin: 0 8px; opacity: 0.35; }
+
+    /* Plain italic intro — NOT a quote, no decorative marks */
+    .hero-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 21px;
+      line-height: 1.5;
+      color: #D8CDB4;
+      margin-bottom: 44px;
+      text-wrap: balance;
+    }
+
+    /* ─── PULL BOX (featured quote) ──────────────────────── */
+
+    .pull-box {
+      background: #1d1a17;
+      border-left: 2px solid #5D8C86;
+      border-radius: 0 6px 6px 0;
+      padding: 24px 28px 24px 32px;
+      margin-bottom: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .pull-box::before {
+      content: '\201C';
+      font-family: 'DM Serif Display', serif;
+      font-size: 140px;
+      line-height: 1;
+      color: rgba(93,140,134,0.10);
+      position: absolute;
+      top: -18px;
+      left: 14px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .pull-box p {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 19px;
+      line-height: 1.55;
+      color: #D8CDB4;
+      position: relative;
+      z-index: 1;
+    }
+    .pull-box p + p { margin-top: 14px; }
+
+    /* ─── BODY TEXT ───────────────────────────────────────── */
+
+    .body-text p {
+      font-size: 15.5px;
+      line-height: 1.82;
+      color: #B8AC96;
+      margin-bottom: 22px;
+    }
+    .body-text p:last-child { margin-bottom: 0; }
+    .body-text strong { color: #D8CDB4; font-weight: 500; }
+    .body-text em {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 17px;
+      color: #D8CDB4;
+    }
+
+    /* English manifesto/closer lines — terra orange, semibold italic, no quote marks */
+    .manifesto-line {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 600;
+      font-size: 22px;
+      line-height: 1.5;
+      color: #D07038;
+      margin-top: 44px;
+      margin-bottom: 0;
+      padding-top: 32px;
+      border-top: 1px solid rgba(200,184,152,0.14);
+      letter-spacing: 0.005em;
+      text-wrap: balance;
+    }
+
+    /* Orange inline accents for AGI plus / ASI */
+    .accent-plus,
+    .accent-asi {
+      color: #D07038;
+      font-weight: 500;
+    }
+
+    /* ─── HEADLINE GALLERY (faux-newspaper style, no real masthead sampling) ── */
+    .headline-gallery {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 36px 0;
+    }
+    @media (max-width: 560px) {
+      .headline-gallery { grid-template-columns: 1fr; }
+    }
+    .headline-card {
+      background: #1d1a17;
+      border: 1px solid rgba(200,184,152,0.1);
+      border-left: 2px solid #D07038;
+      border-radius: 0 4px 4px 0;
+      padding: 16px 18px;
+    }
+    .headline-card .hc-source {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #8A8070;
+      margin-bottom: 8px;
+    }
+    .headline-card .hc-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 16px;
+      line-height: 1.25;
+      color: #D8CDB4;
+      margin-bottom: 6px;
+    }
+    .headline-card .hc-date {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: #5D8C86;
+    }
+
+    /* ─── ARGUMENT ────────────────────────────────────────── */
+
+    .arg-heading {
+      font-family: 'DM Serif Display', serif;
+      font-size: 26px;
+      color: #C8B898;
+      margin-bottom: 28px;
+      line-height: 1.2;
+    }
+    .arg-subhead {
+      font-family: 'DM Serif Display', serif;
+      font-size: 19px;
+      color: #D8CDB4;
+      margin: 40px 0 16px;
+      line-height: 1.3;
+    }
+
+    .threshold-box {
+      background: #1d1a17;
+      border: 1px solid rgba(200,184,152,0.1);
+      border-radius: 8px;
+      padding: 28px 32px;
+      margin: 36px 0;
+    }
+    .threshold-box .tb-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #B89040;
+      margin-bottom: 12px;
+    }
+    .threshold-box p { font-size: 15px; color: #B8AC96; line-height: 1.75; }
+    .threshold-box strong { color: #D8CDB4; font-weight: 500; }
+
+    .point-list { list-style: none; margin: 24px 0 32px; }
+    .point-list li {
+      font-size: 15px;
+      color: #B8AC96;
+      padding: 10px 0 10px 22px;
+      border-bottom: 1px solid rgba(200,184,152,0.07);
+      position: relative;
+      line-height: 1.65;
+    }
+    .point-list li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: #D07038;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .point-list li:first-child { border-top: 1px solid rgba(200,184,152,0.07); }
+
+    /* ─── ORIGIN ──────────────────────────────────────────── */
+
+    .origin-epigraph {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 22px;
+      line-height: 1.45;
+      color: #D8CDB4;
+      border-left: 2px solid rgba(93,140,134,0.4);
+      padding: 8px 0 8px 22px;
+      margin-bottom: 48px;
+      position: relative;
+      text-wrap: balance;
+    }
+    .origin-epigraph::before {
+      content: '\201C';
+      font-family: 'DM Serif Display', serif;
+      font-style: normal;
+      font-size: 100px;
+      line-height: 1;
+      color: rgba(93,140,134,0.12);
+      position: absolute;
+      top: -14px;
+      left: 10px;
+      pointer-events: none;
+    }
+    .origin-epigraph cite {
+      display: block;
+      font-style: normal;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: #5D8C86;
+      margin-top: 12px;
+    }
+
+    .origin-body p {
+      font-size: 15.5px;
+      line-height: 1.82;
+      color: #B8AC96;
+      margin-bottom: 24px;
+    }
+    .origin-body p em {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 17px;
+      color: #D8CDB4;
+    }
+    .origin-body strong { color: #D8CDB4; font-weight: 500; }
+
+    /* Footnote markers */
+    sup.fn {
+      font-size: 10px;
+      line-height: 0;
+      position: relative;
+      top: -0.5em;
+      margin-left: 1px;
+    }
+    sup.fn a {
+      color: #B89040;
+      text-decoration: none;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      padding: 0 1px;
+      border-bottom: 1px solid rgba(184,144,64,0.3);
+      transition: color 0.15s, border-color 0.15s;
+    }
+    sup.fn a:hover { color: #D4A850; border-color: rgba(212,168,80,0.5); }
+
+    /* Footnote block */
+    .fn-block {
+      margin-top: 56px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(200,184,152,0.1);
+    }
+    .fn-block-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9.5px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #5D8C86;
+      margin-bottom: 20px;
+    }
+    .fn-item {
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+      align-items: baseline;
+    }
+    .fn-num { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #B89040; padding-top: 2px; }
+    .fn-text { font-size: 12.5px; line-height: 1.65; color: #8A8070; }
+    .fn-text em { font-family: 'Cormorant Garamond', serif; font-style: italic; color: #A09080; }
+    .fn-text a { color: #8A8070; text-decoration: underline; text-underline-offset: 2px; }
+
+    /* ─── CONTACT ─────────────────────────────────────────── */
+
+    .contact-intro {
+      font-size: 15.5px;
+      line-height: 1.8;
+      color: #B8AC96;
+      margin-bottom: 36px;
+    }
+    .contact-intro strong { color: #D8CDB4; font-weight: 500; }
+
+    .contact-form { display: flex; flex-direction: column; gap: 16px; }
+
+    .form-row   { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+    /* Fabi: proper mobile collapse for form rows */
+    @media (max-width: 520px) {
+      .form-row,
+      .form-row-3 { grid-template-columns: 1fr; }
+    }
+
+    .form-field { display: flex; flex-direction: column; gap: 6px; }
+    .form-field label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #6E8090;
+    }
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      background: #1d1a17;
+      border: 1px solid rgba(200,184,152,0.12);
+      border-radius: 4px;
+      padding: 10px 13px;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 14px;
+      color: #C8B898;
+      outline: none;
+      transition: border-color 0.2s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .form-field input::placeholder,
+    .form-field textarea::placeholder { color: #4a4540; }
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus { border-color: rgba(93,140,134,0.45); }
+
+    .select-wrap { position: relative; }
+    .select-wrap select { width: 100%; padding-right: 30px; cursor: pointer; }
+    .select-wrap select option { background: #1d1a17; color: #C8B898; }
+    .select-wrap::after {
+      content: '▾';
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #5D8C86;
+      font-size: 11px;
+      pointer-events: none;
+    }
+
+    .form-field textarea { min-height: 120px; resize: vertical; }
+
+    .form-submit-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 4px;
+    }
+    .privacy-note { font-size: 12px; color: #5a5248; line-height: 1.5; }
+    .privacy-note a { color: #5D8C86; text-decoration: none; }
+
+    .btn-send {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #161412;
+      background: #B89040;
+      border: none;
+      padding: 11px 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .btn-send:hover { background: #C8A050; }
+
+    /* ─── SOCIAL LINKS ────────────────────────────────────── */
+
+    .social-section {
+      margin-top: 56px;
+      padding-top: 40px;
+      border-top: 1px solid rgba(200,184,152,0.08);
+    }
+    .social-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9.5px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #5D8C86;
+      margin-bottom: 22px;
+    }
+    .social-links {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      column-gap: 18px;
+      row-gap: 12px;
+    }
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      text-decoration: none;
+      padding: 0;
+      border: none;
+      background: transparent;
+      transition: opacity 0.2s, transform 0.2s;
+      opacity: 0.82;
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+    .social-link:hover {
+      opacity: 1;
+      transform: translateY(-1px);
+    }
+    .social-link svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .social-link span {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .sl-linkedin svg { fill: #0A66C2; }
+    .sl-linkedin span { color: #0A66C2; }
+    .sl-x svg { fill: #E7E9EA; }
+    .sl-x span { color: #E7E9EA; }
+    .sl-bluesky svg { fill: #0085FF; }
+    .sl-bluesky span { color: #0085FF; }
+    .sl-mastodon svg { fill: #6364FF; }
+    .sl-mastodon span { color: #6364FF; }
+
+    /* ─── FOOTER ──────────────────────────────────────────── */
+
+    footer {
+      border-top: 1px solid rgba(200,184,152,0.07);
+      padding: 28px;
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-text { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.08em; color: #4a4540; }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      color: #5D8C86;
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .footer-links a:hover { opacity: 1; }
+
+    /* ─── RESPONSIVE ──────────────────────────────────────── */
+
+    /* Fabi: mobile nav — reduce padding so all 4 links fit on narrow screens */
+    @media (max-width: 480px) {
+      nav a { padding: 4px 6px; font-size: 9px; letter-spacing: 0.06em; }
+      header { padding: 0 16px; }
+      .section { padding: 56px 20px; }
+    }
+    @media (max-width: 360px) {
+      nav a { display: none; }
+      nav a.active { display: block; } /* Fabi: on very small screens, show only active */
+    }
+
+    @media (min-width: 768px) {
+      .social-links { flex-wrap: nowrap; }
+    }
+  </style>
+
+</head>
+<body>
+
+<header>
+  <a href="#position" class="logo-wrap" aria-label="Compute Freedom">
+    <div class="logo-pd">
+      <span class="pd-p">p</span>
+      <span class="pd-d">d</span>
+    </div>
+    <span class="logo-name">Compute<br>Freedom</span>
+  </a>
+  <nav>
+    <a href="#principle" class="active">Principle</a>
+    <a href="#mechanism">Mechanism</a>
+    <a href="#origin">Origin</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<section id="principle" class="section">
+  <div class="cta-banner">
+    <p><strong>Get involved:</strong> Read. Share. Reach out via the contact form.</p>
+    <a href="#contact" class="btn-contact">
+      <svg class="proton-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 1L2 3.5V8C2 11.3 4.6 14.4 8 15C11.4 14.4 14 11.3 14 8V3.5L8 1Z" fill="#6D4AFF" opacity="0.3"/>
+        <path d="M8 1L2 3.5V8C2 11.3 4.6 14.4 8 15C11.4 14.4 14 11.3 14 8V3.5L8 1Z" stroke="#6D4AFF" stroke-width="1.2" stroke-linejoin="round"/>
+        <path d="M5.5 7.5H10.5M6.5 5H9.5C10.05 5 10.5 5.45 10.5 6V7.5H5.5V6C5.5 5.45 5.95 5 6.5 5Z" stroke="#ffffff" stroke-width="1" stroke-linecap="round"/>
+        <path d="M5.5 7.5V11H10.5V7.5" stroke="#ffffff" stroke-width="1" stroke-linecap="round"/>
+      </svg>
+      Contact
+    </a>
+  </div>
+
+  <div class="section-label">The Principle</div>
+
+  <div class="hero-composition">
+    <div class="hero-mark">
+      <div class="hero-glyph">
+        <span class="hg-p">p</span>
+        <span class="hg-d">d</span>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-icons">
+        <a href="https://x.com/msdkormann" target="_blank" rel="noopener" aria-label="X">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a href="https://linkedin.com/in/msdkormann" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </a>
+        <a href="https://bsky.app/profile/computefreedom.org" target="_blank" rel="noopener" aria-label="Bluesky">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 10.8C10.8 8.4 7.2 3.6 4.2 2.4 1.8 1.2 0 2.4 0 5.4c0 .6.3 4.8.6 5.4.9 3 3.6 3.6 6.3 3.6-.3 0-2.7.3-2.7 2.1 0 2.4 4.2 5.1 7.8 5.1s7.8-2.7 7.8-5.1c0-1.8-2.4-2.1-2.7-2.1 2.7 0 5.4-.6 6.3-3.6.3-.6.6-4.8.6-5.4 0-3-1.8-4.2-4.2-3C18.8 3.6 13.2 8.4 12 10.8z"/></svg>
+        </a>
+        <a href="https://mastodon.social/@computefreedom" target="_blank" rel="noopener" aria-label="Mastodon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C17.51.242 15.792 0 11.813 0h-.03c-3.98 0-4.835.242-5.288.309C3.882.692 1.496 2.518.917 5.127.64 6.412.61 7.837.661 9.143c.074 1.874.088 3.745.26 5.611.118 1.24.325 2.47.62 3.68.55 2.237 2.777 4.098 4.96 4.857 2.336.792 4.849.923 7.256.38.265-.061.527-.132.786-.213.585-.184 1.27-.39 1.774-.753a.057.057 0 0 0 .023-.043v-1.809a.052.052 0 0 0-.02-.041.053.053 0 0 0-.046-.01 20.282 20.282 0 0 1-4.709.545c-2.73 0-3.463-1.284-3.674-1.818a5.593 5.593 0 0 1-.319-1.433.053.053 0 0 1 .066-.054c1.517.363 3.072.546 4.632.546.376 0 .75 0 1.125-.01 1.57-.044 3.224-.124 4.768-.422.038-.008.077-.015.11-.024 2.435-.464 4.753-1.92 4.989-5.604.008-.145.03-1.52.03-1.67.002-.512.167-3.63-.024-5.545zm-3.748 9.195h-2.561V8.29c0-1.309-.55-1.976-1.67-1.976-1.23 0-1.846.79-1.846 2.35v3.403h-2.546V8.664c0-1.56-.617-2.35-1.848-2.35-1.112 0-1.668.668-1.67 1.977v6.218H4.822V8.102c0-1.31.337-2.35 1.011-3.12.696-.77 1.608-1.164 2.74-1.164 1.311 0 2.302.5 2.962 1.498l.638 1.06.638-1.06c.66-.999 1.65-1.498 2.96-1.498 1.13 0 2.043.395 2.74 1.164.675.77 1.012 1.81 1.012 3.12z"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="hero-wordmark-block">
+      <h1 class="hero-title">
+        <span class="hero-line hero-line-top">Com<span class="c-p">p</span>ute</span>
+        <span class="hero-line hero-line-bottom">Free<span class="c-d">d</span>om</span>
+      </h1>
+      <div class="hero-mark-tagline">From local compute sovereignty to binding global AI treaty law.</div>
+    </div>
+  </div>
+
+  <p class="hero-tagline">
+    The Right to Run. The Duty to Restrain.
+  </p>
+
+  <p class="hero-domains">
+    computefreedom.com<span>·</span>computefreedom.org
+  </p>
+
+  <p class="declaration-line">
+    Two legal obligations — a lower boundary, and an upper one.
+  </p>
+
+  <div class="body-text">
+    <p>
+      Once AI crosses a defined capability threshold, developers should be legally required to offer a version runnable on personal hardware — without cloud dependency, without ongoing access fees, without surveillance. We call this the <strong>Threshold Obligation</strong>. It secures the right of the citizen to a machine that answers to them.
+    </p>
+    <p>
+      Once frontier development crosses into <strong>AGI, AGI <span class="accent-plus">plus</span>, and <span class="accent-asi">ASI</span></strong>, no single corporation and no single state holds the democratic mandate to proceed alone. Decisions of consequence to the species require legitimation by the species — encoded in a binding international treaty, with verifiable compute and energy limits, IAEA-grade inspections, and pause mechanisms anchored in law. We call this the <strong>Treaty Obligation</strong>.
+    </p>
+    <p>
+      <em>Two thresholds. One architecture.</em> AI is too consequential to remain in the hands of a small number of unaccountable actors — neither at the point of access, nor at the point of risk.
+    </p>
+    <p>
+      Open source is not the same as compute sovereignty. Releasing model weights that only function at scale on hyperscaler infrastructure is a formal gesture, not a functional one. The code may be visible; the capability remains inaccessible. Whoever controls the inference infrastructure controls the knowledge — and if that knowledge becomes foundational to medicine, education, law, and governance, concentrating it in three to five private corporations is not a market outcome we should accept by default.
+    </p>
+    <p class="manifesto-line">
+      History does not repeat itself. It scales.
+    </p>
+  </div>
+</section>
+
+<section id="mechanism" class="section">
+  <div class="section-label">The Mechanism</div>
+
+  <h2 class="arg-heading">Two obligations. One architecture.</h2>
+
+  <div class="body-text">
+    <p>
+      The Threshold Obligation secures the lower boundary: the right of the citizen to a machine they actually control. The Treaty Obligation secures the upper one: the right of the species to a voice in decisions taken in its name. Each obligation, alone, is symbolic. <em>Together, they are an architecture.</em>
+    </p>
+
+```
+<h3 class="arg-subhead">The Threshold Obligation</h3>
+
+<p>
+  The standard response to concerns about AI concentration is: <em>"but the models are open source."</em> This answer mistakes visibility for access, and access for sovereignty.
+</p>
+<p>
+  When a model's weights are released under a permissive license but can only be run meaningfully on infrastructure costing hundreds of thousands of dollars, the openness is formal, not functional. Researchers can read the code. They cannot run it. Citizens can, in theory, audit it. In practice, they cannot. The source is open. The capability is not.
+</p>
+<p>
+  Compute Freedom proposes a concrete mechanism: once an AI system crosses a defined capability threshold, its developer should be legally required to offer a compressed, locally-runnable version — on consumer hardware, offline-capable, without mandatory cloud authentication.
+</p>
+
+<div class="threshold-box">
+  <div class="tb-label">The Threshold — Intentionally Undefined</div>
+  <p>
+    The precise capability threshold is left open here by design. Defining it is a technical and political question that belongs in public deliberation — with input from engineers, ethicists, policymakers, and affected communities. <strong>The obligation is the principle. The threshold is the negotiation.</strong> We invite that negotiation to begin.
+  </p>
+</div>
+
+<p>What we already know:</p>
+```
+
+  </div>
+
+  <ul class="point-list">
+    <li>Frontier models can today be compressed to run on consumer hardware with modest capability loss — the technical barrier is not fundamental.</li>
+    <li>The economic incentive to prevent local deployment is structural: cloud inference is the revenue model.</li>
+    <li>No legal framework currently compels disclosure of whether compression is feasible.</li>
+    <li>The public has no mechanism to verify industry claims about what is and is not possible.</li>
+    <li>Whoever controls inference controls access to the most capable AI — and by extension, to the competitive advantage it confers in medicine, law, science, and finance.</li>
+  </ul>
+
+  <div class="body-text">
+    <p>
+      The pharmaceutical parallel is instructive. Drug developers are required to disclose formulations, submit to regulatory review, and — after a period — open compounds to generics. We accept that the public has a legitimate interest in not having life-critical knowledge permanently locked inside private infrastructure. AI is becoming life-critical knowledge. The argument is the same.
+    </p>
+    <p>
+      This is not an argument against commercial AI development. It is an argument for a structural floor beneath it: a minimum condition of compute sovereignty that preserves the possibility of independent verification, academic research, and democratic accountability.
+    </p>
+
+```
+<h3 class="arg-subhead">The Treaty Obligation</h3>
+
+<p>
+  The lower threshold protects the citizen. The upper threshold protects the species — and we have been quiet about it for too long.
+</p>
+<p>
+  As frontier systems advance toward general human-level capability and beyond — <strong>AGI, AGI <span class="accent-plus">plus</span>, and <span class="accent-asi">ASI</span></strong> — their development becomes a matter of consequence beyond any single state or any single corporation. The current trajectory has neither democratic mandate nor binding treaty. Stargate, Colossus, the multi-hundred-billion-dollar build-outs of OpenAI, Google, and xAI — all dependent on the de facto NVIDIA monopoly on frontier training silicon — proceed at competitive tempo, accountable to shareholders, not to citizens.
+</p>
+<p>
+  The physical signature of this race is no longer subtle. When an AI company announces it requires not the electrical capacity of Silicon Valley but <em>ten new nuclear reactors</em>, the appropriate response of any constitutional state is not admiration. It is the question: <strong>by whose authority?</strong> That this question has not been asked — has barely been articulated — is the deepest failure of contemporary political thought.
+</p>
+```
+
+  </div>
+
+  <div class="threshold-box">
+    <div class="tb-label">The Failure of Self-Regulation</div>
+    <p>
+      Anthropic publicly refuses to allow its model Claude to be used for autonomous weapons or mass surveillance. The U.S. Department of Defense has responded by designating the company a "supply chain risk" — a measure that threatens its commercial existence. OpenAI and xAI have signed contracts without such restrictions. <strong>Without treaty law, voluntary safety commitments are eventually surrendered under pressure. It is a question of time, of pressure, and of competition — not of intention.</strong>
+    </p>
+  </div>
+
+  <div class="headline-gallery">
+    <div class="headline-card">
+      <div class="hc-source">Reuters · Defense</div>
+      <div class="hc-title">Pentagon designates Anthropic "supply chain risk" over weapons-use restrictions</div>
+      <div class="hc-date">February 2026</div>
+    </div>
+    <div class="headline-card">
+      <div class="hc-source">Bloomberg · Tech</div>
+      <div class="hc-title">OpenAI and xAI sign all-uses defense contracts as compute race accelerates</div>
+      <div class="hc-date">January 2026</div>
+    </div>
+    <div class="headline-card">
+      <div class="hc-source">Financial Times · Energy</div>
+      <div class="hc-title">Frontier AI build-out triggers nuclear reactor commitments at unprecedented scale</div>
+      <div class="hc-date">2025–2026</div>
+    </div>
+    <div class="headline-card">
+      <div class="hc-source">Center for AI Safety · 2023</div>
+      <div class="hc-title">Hinton, Bengio, Altman, Hassabis: AI risk on par with pandemics and nuclear war</div>
+      <div class="hc-date">May 2023</div>
+    </div>
+  </div>
+
+  <div class="body-text">
+    <p>
+      We have built such treaties before. The Non-Proliferation Treaty. The IAEA. The Biological Weapons Convention. The Montreal Protocol. None were utopian when proposed; all of them function today — imperfect, monitored, real. The technologies they govern are no more transformative, no more dual-use, no more globally consequential than frontier AI. <em>The institutional infrastructure exists. Only the will is missing.</em>
+    </p>
+    <p>What the Treaty Obligation demands:</p>
+  </div>
+
+  <ul class="point-list">
+    <li>A binding international agreement defining the capability and infrastructural thresholds beyond which AI development requires multilateral authorization.</li>
+    <li>Verifiable compute and energy limits at the frontier, monitored under an inspection regime equivalent in seriousness to the IAEA.</li>
+    <li>Pause mechanisms anchored in treaty law, not corporate self-restraint, triggered by demonstrated capability or demonstrated risk.</li>
+    <li>The inclusion of every frontier-capable state, explicitly including China, whose stated willingness to engage in international AI safety dialogue has been more substantive than the Western reflex acknowledges.</li>
+    <li>Public, citizen-accessible reporting on frontier development, breaking the opacity of corporate self-assessment that currently passes for governance.</li>
+  </ul>
+
+  <div class="body-text">
+    <p>
+      The case is not ours alone. The 2023 Center for AI Safety statement — placing AI risk on the same axis as pandemics and nuclear war — was signed by Geoffrey Hinton, Yoshua Bengio, Sam Altman, and Demis Hassabis. The signatories include the very executives currently building the frontier. <strong>Their warning is not an outside critique. It is a confession.</strong> A confession that has produced no binding constraint on their own behavior, because none has been demanded of them.
+    </p>
+    <p>
+      Prices will rise. Clusters will grow. The thresholds will be crossed — in months, not in decades. <strong>Whoever does not act now will have no leverage later.</strong>
+    </p>
+    <p class="manifesto-line">
+      The citizen below. The species above.<br>The unaccountable actor: neither here nor there.
+    </p>
+  </div>
+</section>
+
+<section id="origin" class="section">
+  <div class="section-label">Who &amp; Why</div>
+
+  <blockquote class="origin-epigraph">
+    The sequence data is open.<br>The understanding is not.
+    <cite>— On the monopoly of genomics</cite>
+  </blockquote>
+
+  <div class="origin-body">
+    <p>
+      <strong>Compute Freedom is implemented by Michael S.D. Kormann</strong> — a scientist whose work on modified mRNA was pivotal for the delivery of genetic information into living cells without triggering immune rejection,<sup class="fn"><a href="#fn-1" id="fnref-1">1</a></sup> a biochemical principle that would later become central to the mRNA vaccines developed during the COVID-19 pandemic. The original context was basic translational science applied to rare pediatric lung diseases, including cystic fibrosis.<sup class="fn"><a href="#fn-2" id="fnref-2">2</a></sup>
+    </p>
+    <p>
+      What that work made visible was a structural pattern: the raw data — genetic sequences, molecular structures, published findings — was largely accessible. What was not accessible was the <em>capacity to understand it at scale</em>: to model protein folding across populations, to simulate therapeutic effects, to run the inference that turned sequence data into clinical knowledge. That capacity concentrated, quietly, in institutions with the infrastructure to process it.
+    </p>
+    <p>
+      <em>The sequence data was open. The understanding was not.</em>
+    </p>
+    <p>
+      Today, the same architecture is reproducing itself in artificial intelligence. Model weights are sometimes released. Papers are published. But inference at the frontier — the ability to actually <em>run</em> the most capable systems — remains tethered to centralized cloud infrastructure controlled by a small number of corporations globally. This is not openness. It is openness as theater.
+    </p>
+    <p>
+      The transition from genomics to AI governance is, in this light, not a pivot. It is the same problem encountered at a different scale.<sup class="fn"><a href="#fn-3" id="fnref-3">3</a></sup> Whoever controls the infrastructure through which foundational knowledge is generated and applied controls the knowledge itself — and, through that, the trajectory of medicine, education, law, and science.
+    </p>
+    <p>
+      <strong>Compute Freedom</strong> is structured as a policy initiative, not a technology project. Its goal is to establish both the Threshold Obligation and the Treaty Obligation as matters of law — minimum conditions of structural compute sovereignty that no commercial model, and no voluntary corporate framework, can substitute for.
+    </p>
+  </div>
+
+  <div class="fn-block">
+    <div class="fn-block-label">References</div>
+    <div class="fn-item" id="fn-1">
+      <span class="fn-num">1</span>
+      <span class="fn-text">
+        Kormann MSD et al. <em>Expression of therapeutic proteins after delivery of chemically modified mRNA in mice.</em> Nature Biotechnology 29: 154–157 (2011). Paper of the Year; cited in the Wikipedia article on nucleoside-modified mRNA. <a href="#fnref-1">↩</a>
+      </span>
+    </div>
+    <div class="fn-item" id="fn-2">
+      <span class="fn-num">2</span>
+      <span class="fn-text">
+        Selected related works: Mays LE, Kormann MSD et al. <em>Modified mRNA as an alternative to plasmid DNA.</em> Journal of Clinical Investigation (2013); Mahiny AJ, Kormann MSD et al. <em>In vivo genome editing using nuclease-encoding mRNA corrects SP-B deficiency.</em> Nature Biotechnology (2015); Haque N, … Kormann MSD et al. <em>mRNA-based treatment for cystic fibrosis.</em> Scientific Reports (2018). <a href="#fnref-2">↩</a>
+      </span>
+    </div>
+    <div class="fn-item" id="fn-3">
+      <span class="fn-num">3</span>
+      <span class="fn-text">
+        Scientific publications are listed as footnotes rather than credentials: the argument stands or falls on its own merits, not on the authority of the person making it. <a href="#fnref-3">↩</a>
+      </span>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="section">
+  <div class="section-label">Reach Out</div>
+
+  <p class="contact-intro">
+    <strong>AI governance is not a spectator sport.</strong> It requires open, sustained conversation — between researchers, policymakers, engineers, and citizens. If you want to reach out about the initiative, a collaboration, or simply to push back — you can do so without concern. The contact form routes directly to an encrypted Proton inbox. No trackers. No intermediaries.
+  </p>
+
+  <form class="contact-form" action="https://formspree.io/f/xeepeyrb" method="POST">
+    <div class="form-row-3">
+      <div class="form-field">
+        <label for="salutation">Salutation</label>
+        <div class="select-wrap">
+          <select id="salutation" name="salutation">
+            <option value="" disabled selected>—</option>
+            <option>Mr.</option>
+            <option>Mrs.</option>
+            <option>Ms.</option>
+            <option>Mx.</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="title">Title</label>
+        <div class="select-wrap">
+          <select id="title" name="title">
+            <option value="" selected>—</option>
+            <option>Dr.</option>
+            <option>Prof.</option>
+            <option>Prof. Dr.</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" placeholder="Your name" autocomplete="name">
+      </div>
+    </div>
+
+```
+<div class="form-row">
+  <div class="form-field">
+    <label for="email">Email</label>
+    <input type="email" id="email" name="_replyto" placeholder="your@email.com" autocomplete="email">
+  </div>
+  <div class="form-field">
+    <label for="role">Background</label>
+    <div class="select-wrap">
+      <select id="role" name="role">
+        <option value="" disabled selected>— Select —</option>
+        <option>Researcher / Academic</option>
+        <option>Policymaker / Regulator</option>
+        <option>Engineer / Developer</option>
+        <option>Journalist / Writer</option>
+        <option>Civil Society / Activist</option>
+        <option>Industry / Business</option>
+        <option>Student</option>
+        <option>Interested Citizen</option>
+        <option>Other</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="form-field">
+  <label for="message">Message</label>
+  <textarea id="message" name="message" placeholder="Your message…"></textarea>
+</div>
+
+<div class="form-submit-row">
+  <p class="privacy-note">
+    Routes directly to an encrypted Proton inbox.<br>
+    No trackers. No intermediaries.
+  </p>
+  <button type="submit" class="btn-send">Send →</button>
+</div>
+```
+
+  </form>
+
+  <div class="social-section">
+    <div class="social-label">Follow the conversation</div>
+    <div class="social-links">
+      <a href="https://linkedin.com/in/msdkormann" target="_blank" rel="noopener" class="social-link sl-linkedin">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+        </svg>
+        <span>LinkedIn</span>
+      </a>
+
+```
+  <a href="https://x.com/msdkormann" target="_blank" rel="noopener" class="social-link sl-x" aria-label="X">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+    </svg>
+  </a>
+
+  <a href="https://bsky.app/profile/computefreedom.org" target="_blank" rel="noopener" class="social-link sl-bluesky">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 10.8C10.8 8.4 7.2 3.6 4.2 2.4 1.8 1.2 0 2.4 0 5.4c0 .6.3 4.8.6 5.4.9 3 3.6 3.6 6.3 3.6-.3 0-2.7.3-2.7 2.1 0 2.4 4.2 5.1 7.8 5.1s7.8-2.7 7.8-5.1c0-1.8-2.4-2.1-2.7-2.1 2.7 0 5.4-.6 6.3-3.6.3-.6.6-4.8.6-5.4 0-3-1.8-4.2-4.2-3C18.8 3.6 13.2 8.4 12 10.8z"/>
+    </svg>
+    <span>Bluesky</span>
+  </a>
+
+  <a href="https://mastodon.social/@computefreedom" target="_blank" rel="noopener" class="social-link sl-mastodon">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C17.51.242 15.792 0 11.813 0h-.03c-3.98 0-4.835.242-5.288.309C3.882.692 1.496 2.518.917 5.127.64 6.412.61 7.837.661 9.143c.074 1.874.088 3.745.26 5.611.118 1.24.325 2.47.62 3.68.55 2.237 2.777 4.098 4.96 4.857 2.336.792 4.849.923 7.256.38.265-.061.527-.132.786-.213.585-.184 1.27-.39 1.774-.753a.057.057 0 0 0 .023-.043v-1.809a.052.052 0 0 0-.02-.041.053.053 0 0 0-.046-.01 20.282 20.282 0 0 1-4.709.545c-2.73 0-3.463-1.284-3.674-1.818a5.593 5.593 0 0 1-.319-1.433.053.053 0 0 1 .066-.054c1.517.363 3.072.546 4.632.546.376 0 .75 0 1.125-.01 1.57-.044 3.224-.124 4.768-.422.038-.008.077-.015.11-.024 2.435-.464 4.753-1.92 4.989-5.604.008-.145.03-1.52.03-1.67.002-.512.167-3.63-.024-5.545zm-3.748 9.195h-2.561V8.29c0-1.309-.55-1.976-1.67-1.976-1.23 0-1.846.79-1.846 2.35v3.403h-2.546V8.664c0-1.56-.617-2.35-1.848-2.35-1.112 0-1.668.668-1.67 1.977v6.218H4.822V8.102c0-1.31.337-2.35 1.011-3.12.696-.77 1.608-1.164 2.74-1.164 1.311 0 2.302.5 2.962 1.498l.638 1.06.638-1.06c.66-.999 1.65-1.498 2.96-1.498 1.13 0 2.043.395 2.74 1.164.675.77 1.012 1.81 1.012 3.12z"/>
+    </svg>
+    <span>Mastodon</span>
+  </a>
+</div>
+```
+
+  </div>
+</section>
+
+<footer>
+  <span class="footer-text">© Michael S.D. Kormann · Compute Freedom · #ComputeFreedom</span>
+  <div class="footer-links">
+    <a href="https://computefreedom.com">computefreedom.com</a>
+    <a href="https://computefreedom.org">computefreedom.org</a>
+  </div>
+</footer>
+
+<script>
+  // Fabi: scroll-spy with IntersectionObserver + fallback for older browsers
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a');
+
+  function setActive(id) {
+    navLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+    });
+  }
+
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) setActive(entry.target.id);
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    sections.forEach(s => io.observe(s));
+  } else {
+    // Fabi: fallback — listen to scroll, find section closest to top
+    window.addEventListener('scroll', () => {
+      let current = sections[0].id;
+      sections.forEach(s => {
+        if (s.getBoundingClientRect().top < window.innerHeight * 0.45) {
+          current = s.id;
+        }
+      });
+      setActive(current);
+    }, { passive: true });
+  }
+
+  // AJAX form submit (works over HTTP/HTTPS; Fabi's note: not reliable as local file://)
+  const form = document.querySelector('.contact-form');
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector('.btn-send');
+      btn.textContent = 'Sending…';
+      btn.disabled = true;
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        });
+        if (res.ok) {
+          btn.textContent = 'Sent ✓';
+          form.reset();
+        } else {
+          btn.textContent = 'Try again →';
+          btn.disabled = false;
+        }
+      } catch {
+        btn.textContent = 'Try again →';
+        btn.disabled = false;
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
