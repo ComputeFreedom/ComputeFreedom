@@ -13,7 +13,17 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
-    /* v33 — logo overhaul + quote specificity fix:
+    /* v33.1 — logo Strategy B + quote tuning:
+       [v33.1] Logo strategy reversed: rotate "d" to make visual "p" (was: rotate "p" to make "d")
+               — the d-glyph has the slanted ascender Michael wants; rotated, it becomes
+               a slanted "descender" for the visual p. Plus: real d has no descender, so
+               no Knäuel/overlap from the upper p-glyph spilling into the d's bowl region.
+       [v33.1] margin-top reduced: -6px → -5px (header), -0.32em → -0.30em (hero)
+               — math: real-d's ascender-top (y=0.08em) just below rotated-d's bowl-bottom
+               (y=0.70em in own box) gives ≈ -0.30em offset
+       [v33.1] Manifesto-line size lightly reduced: clamp(34, 5.8vw, 42) → clamp(30, 5.2vw, 38)
+
+       v33 — logo overhaul + quote specificity fix:
        [v33] Logo font: pd glyphs switched from Palatino → DM Serif Display
              (matches wordmark; resolves the two-fonts mismatch)
        [v33] Rotation trick: "d" is now a 180°-rotated "p" — guarantees identical letterform
@@ -141,10 +151,12 @@
       margin: 0;
       padding: 0;
     }
+    .logo-pd .pd-p {
+      transform: rotate(180deg); /* v33.1: rotated d becomes visual p (Strategy B per design vision) */
+    }
     .logo-pd .pd-d {
-      margin-top: -6px;
-      margin-left: -1px;
-      transform: rotate(180deg); /* v33: rotated p becomes visual d — same letterform, mirrored */
+      margin-top: -5px;  /* v33.1: -6 → -5 — d ascender meets rotated-d bowl-bottom; no Knäuel */
+      margin-left: -1px; /* Variant E horizontal offset */
     }
 
     .logo-name {
@@ -334,10 +346,12 @@
       margin: 0;
       padding: 0;
     }
+    .hero-glyph .hg-p {
+      transform: rotate(180deg); /* v33.1: rotated d becomes visual p (Strategy B) */
+    }
     .hero-glyph .hg-d {
-      margin-top: -0.32em;
-      margin-left: -0.067em;
-      transform: rotate(180deg); /* v33: rotated p becomes visual d */
+      margin-top: -0.30em;     /* v33.1: -0.32 → -0.30 — clean separation, no Knäuel */
+      margin-left: -0.067em;   /* Variant E horizontal offset */
     }
     .hero-divider {
       width: 1px;
@@ -552,7 +566,7 @@
       font-family: 'Cormorant Garamond', serif;
       font-style: italic;
       font-weight: 600;
-      font-size: clamp(34px, 5.8vw, 42px) !important; /* v33: !important — was overridden by .body-text p */
+      font-size: clamp(30px, 5.2vw, 38px) !important; /* v33.1: lightly reduced from clamp(34, 5.8vw, 42) — was a touch too big */
       line-height: 1.18 !important;                   /* v33: !important */
       color: #D8CDB4 !important;                       /* v33: !important */
       margin: 20px 0 0;
@@ -954,11 +968,11 @@
 <header>
   <a href="#position" class="logo-wrap" aria-label="Compute Freedom">
     <div class="logo-pd" aria-hidden="true">
-      <span class="pd-p">p</span>
-      <span class="pd-d">p</span>
+      <span class="pd-p">d</span>
+      <span class="pd-d">d</span>
     </div>
     <span class="logo-name">ComputeFreedom</span>
-    <span class="version-tag" aria-hidden="true">v33</span>
+    <span class="version-tag" aria-hidden="true">v33.1</span>
   </a>
   <nav>
     <a href="#principle" class="active">Principle</a>
@@ -985,8 +999,8 @@
   <div class="hero-composition">
     <div class="hero-mark">
       <div class="hero-glyph" aria-hidden="true">
-        <span class="hg-p">p</span>
-        <span class="hg-d">p</span>
+        <span class="hg-p">d</span>
+        <span class="hg-d">d</span>
       </div>
       <div class="hero-divider"></div>
       <div class="hero-icons">
