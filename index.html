@@ -13,7 +13,16 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
-    /* v32.3 — logo Variant E precision pass:
+    /* v33 — logo overhaul + quote specificity fix:
+       [v33] Logo font: pd glyphs switched from Palatino → DM Serif Display
+             (matches wordmark; resolves the two-fonts mismatch)
+       [v33] Rotation trick: "d" is now a 180°-rotated "p" — guarantees identical letterform
+       [v33] Header version tag added next to logo for instant deploy verification
+       [v33] .manifesto-line: !important on font-size/line-height/color
+             (was being overridden by .body-text p — specificity 0,1,1 vs 0,1,0)
+       [v33] .origin-pull: reverted to v32 size clamp(22, 3vw, 26) — was overshooting
+
+       v32.3 — logo Variant E precision pass:
        [v32.3] .logo-pd: pd font-size 16→18px, .pd-d margin-top -5→-6, margin-left -1px (Variant E offset)
        [v32.3] .hero-glyph: .hg-d margin-top -0.30em→-0.32em, margin-left -0.067em (Variant E offset)
        (Quote-size specificity fix is queued for v33 — see v32.2 notes; .body-text p overrides .manifesto-line)
@@ -124,7 +133,7 @@
     }
     .logo-pd .pd-p,
     .logo-pd .pd-d {
-      font-family: 'Palatino', 'Palatino Linotype', 'URW Palladio L', 'P052', 'Book Antiqua', 'Cormorant Garamond', serif;
+      font-family: 'DM Serif Display', serif; /* v33: was Palatino stack — now matches wordmark */
       font-size: 18px; /* v32.3: 16 → 18 — pd was nearly invisible on iPad/desktop */
       color: #4F9A91;
       line-height: 1;
@@ -133,8 +142,9 @@
       padding: 0;
     }
     .logo-pd .pd-d {
-      margin-top: -6px;  /* v32.3: -5 → -6 (closer to -0.32em at 18px font, matches Variant E) */
-      margin-left: -1px; /* v32.3: NEW — Variant E horizontal offset (~ -0.067em scaled to 18px) */
+      margin-top: -6px;
+      margin-left: -1px;
+      transform: rotate(180deg); /* v33: rotated p becomes visual d — same letterform, mirrored */
     }
 
     .logo-name {
@@ -151,6 +161,21 @@
     }
     @media (max-width: 360px) {
       .logo-name { font-size: 11px; }
+    }
+
+    /* v33: small build-version indicator next to wordmark — for live deploy verification */
+    .version-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.05em;
+      color: #5a5248;
+      margin-left: 8px;
+      align-self: flex-end;
+      padding-bottom: 3px;
+      user-select: none;
+    }
+    @media (max-width: 420px) {
+      .version-tag { display: none; }
     }
 
     nav {
@@ -301,7 +326,7 @@
     }
     .hero-glyph .hg-p,
     .hero-glyph .hg-d {
-      font-family: 'Palatino', 'Palatino Linotype', 'URW Palladio L', 'P052', 'Book Antiqua', 'Cormorant Garamond', serif;
+      font-family: 'DM Serif Display', serif; /* v33: was Palatino stack — now matches wordmark */
       font-size: clamp(76px, 13vw, 116px);
       line-height: 1;
       color: #4F9A91;
@@ -310,8 +335,9 @@
       padding: 0;
     }
     .hero-glyph .hg-d {
-      margin-top: -0.32em;   /* v32.3: -0.30em → -0.32em — d ascender at p baseline (Variant E) */
-      margin-left: -0.067em; /* v32.3: NEW — Variant E horizontal offset (-28/420) */
+      margin-top: -0.32em;
+      margin-left: -0.067em;
+      transform: rotate(180deg); /* v33: rotated p becomes visual d */
     }
     .hero-divider {
       width: 1px;
@@ -526,9 +552,9 @@
       font-family: 'Cormorant Garamond', serif;
       font-style: italic;
       font-weight: 600;
-      font-size: clamp(34px, 5.8vw, 42px); /* v32.2: bumped from clamp(30, 5.4vw, 38) — still felt small in v32.1 */
-      line-height: 1.18;
-      color: #D8CDB4;
+      font-size: clamp(34px, 5.8vw, 42px) !important; /* v33: !important — was overridden by .body-text p */
+      line-height: 1.18 !important;                   /* v33: !important */
+      color: #D8CDB4 !important;                       /* v33: !important */
       margin: 20px 0 0;
       padding-top: 16px;
       border-top: 1px solid rgba(200,184,152,0.12);
@@ -670,7 +696,7 @@
       font-family: 'Cormorant Garamond', serif !important;
       font-style: italic !important;
       font-weight: 500 !important;
-      font-size: clamp(26px, 3.5vw, 30px) !important; /* v32.2: bumped from clamp(24, 3.3vw, 28) */
+      font-size: clamp(22px, 3vw, 26px) !important; /* v33: reverted to v32 original — v32.2 bump was overshooting */
       line-height: 1.35 !important;
       color: #D8CDB4 !important;
       margin: 28px 0 28px 0 !important;
@@ -927,11 +953,12 @@
 
 <header>
   <a href="#position" class="logo-wrap" aria-label="Compute Freedom">
-    <div class="logo-pd">
+    <div class="logo-pd" aria-hidden="true">
       <span class="pd-p">p</span>
-      <span class="pd-d">d</span>
+      <span class="pd-d">p</span>
     </div>
     <span class="logo-name">ComputeFreedom</span>
+    <span class="version-tag" aria-hidden="true">v33</span>
   </a>
   <nav>
     <a href="#principle" class="active">Principle</a>
@@ -957,9 +984,9 @@
 
   <div class="hero-composition">
     <div class="hero-mark">
-      <div class="hero-glyph">
+      <div class="hero-glyph" aria-hidden="true">
         <span class="hg-p">p</span>
-        <span class="hg-d">d</span>
+        <span class="hg-d">p</span>
       </div>
       <div class="hero-divider"></div>
       <div class="hero-icons">
