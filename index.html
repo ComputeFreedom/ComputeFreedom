@@ -11,7 +11,7 @@
   <link id="favicon" rel="icon" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -81,11 +81,17 @@
     .brand { display: flex; align-items: center; gap: 15px; flex-shrink: 0; }
     .brand img { height: 38px; width: auto; display: block; }
     .wordmark {
-      font-family: 'IBM Plex Sans', sans-serif; font-weight: 600; font-size: 16px;
-      letter-spacing: 0.11em; text-transform: uppercase; color: var(--ink); white-space: nowrap;
+      font-family: 'Newsreader', 'DM Serif Display', serif; font-weight: 500; font-size: 21px;
+      letter-spacing: 0.015em; color: var(--ink); white-space: nowrap;
     }
-    .wordmark b { color: var(--burnt); font-weight: 600; }
-    .wordmark i { color: var(--lightblue); font-style: normal; }
+    .wordmark b {
+      color: var(--burnt); font-weight: 500;
+      text-shadow: 0 0 10px rgba(221, 119, 64, 0.9), 0 0 24px rgba(221, 119, 64, 0.5);
+    }
+    .wordmark i {
+      color: var(--lightblue); font-style: normal;
+      text-shadow: 0 0 10px rgba(168, 188, 199, 0.9), 0 0 24px rgba(168, 188, 199, 0.5);
+    }
 
     .nav-links { display: flex; align-items: center; gap: 30px; }
     .nav-links a {
@@ -122,7 +128,7 @@
 
     /* ─────────────── HERO ─────────────── */
     .hero { position: relative; padding: clamp(22px, 3.5vw, 46px) 0 clamp(26px, 4vw, 52px); }
-    .hero .wrap { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+    .hero .wrap { display: grid; grid-template-columns: 1.18fr 0.82fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
     .hero-copy { display: grid; gap: 26px; }
 
     .eyebrow {
@@ -133,8 +139,8 @@
 
     .hero h1 {
       font-family: 'DM Serif Display', serif; font-weight: 400;
-      font-size: clamp(2.6rem, 6vw, 5rem); line-height: 0.99; letter-spacing: -0.015em;
-      color: #97ACB9; text-wrap: balance;
+      font-size: clamp(2.4rem, 3.9vw, 3.7rem); line-height: 1.04; letter-spacing: -0.015em;
+      color: #97ACB9;
     }
     .hero h1 .run { color: #E5803F; font-style: italic; }
     .hero h1 .restrain { color: var(--blue-bright); font-style: italic; }
@@ -165,9 +171,9 @@
     .hero-domains .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--burnt); }
 
     /* hologram */
-    .holo-stage { position: relative; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+    .holo-stage { position: relative; display: flex; flex-direction: column; align-items: center; gap: 18px; margin-left: auto; }
     .holo-wrap { position: relative; line-height: 0; }
-    #holo { width: min(78vw, 440px); height: auto; display: block; filter: drop-shadow(0 18px 50px rgba(0,0,0,0.5)); }
+    #holo { width: min(66vw, 380px); height: auto; display: block; filter: drop-shadow(0 18px 50px rgba(0,0,0,0.5)); }
     .holo-wrap::after {
       content: ""; position: absolute; inset: 0; pointer-events: none;
       background: repeating-linear-gradient(0deg, rgba(8,17,26,0) 0 2px, rgba(8,17,26,0.16) 2px 3px);
@@ -362,6 +368,15 @@
       margin-top: 28px; padding-top: 28px; border-top: 1px solid var(--hairline); text-align: center; text-wrap: balance;
     }
 
+    /* ─────────── OPENING · straight into the hologram ─────────── */
+    /* html.seq = first visit this session. Elements appear via .on / .in. */
+    .brand svg { height: 38px; width: auto; display: block; overflow: visible; }
+
+    html.seq header, html.seq .ticker, html.seq .holo-meta {
+      opacity: 0; transition: opacity 0.7s var(--ease);
+    }
+    html.seq header.on, html.seq .ticker.on, html.seq .holo-meta.on { opacity: 1; }
+
     /* ─────────────── REVEAL ─────────────── */
     .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
     .reveal.in { opacity: 1; transform: none; }
@@ -370,12 +385,13 @@
       .ticker .track { animation: none; }
       .live-dot { animation: none; }
       html { scroll-behavior: auto; }
+      #intro { display: none; }
     }
 
     /* ─────────────── RESPONSIVE ─────────────── */
     @media (max-width: 920px) {
       .hero .wrap { grid-template-columns: 1fr; }
-      .holo-stage { order: -1; }
+      .holo-stage { order: -1; margin: 0 auto; }
       #holo { width: min(62vw, 320px); }
     }
     @media (max-width: 860px) {
@@ -392,9 +408,18 @@
     @media (max-width: 520px) {
       body { font-size: 16px; }
       .wrap { padding: 0 20px; }
-      .wordmark { font-size: 14px; letter-spacing: 0.1em; }
+      .wordmark { font-size: 17px; letter-spacing: 0.01em; }
     }
   </style>
+  <script>
+    // Runs before first paint: arm the opening sequence only on the first
+    // visit of this browser session, and never for reduced-motion users.
+    try {
+      if (!sessionStorage.getItem('cfIntroSeen') && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('seq');
+      }
+    } catch (e) {}
+  </script>
 </head>
 <body>
 
@@ -402,13 +427,30 @@
   <header>
     <div class="wrap nav">
       <a class="brand" href="#top" aria-label="Compute Freedom home">
-        <img id="navLogo" alt="Compute Freedom p|d mark" />
+        <!-- p|d mark, inline so the opening sequence can build it part by part (strong bar for small size) -->
+        <svg id="navMark" viewBox="-159.0 -1596.5 2357.0 2126.5" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Compute Freedom p|d mark">
+          <g class="gP">
+            <path d="M912.0 -505.0C912.0 -227.7 714.1 -3.0 470.0 -3.0C225.9 -3.0 28.0 -227.7 28.0 -505.0C28.0 -782.3 225.9 -1007.0 470.0 -1007.0C714.1 -1007.0 912.0 -782.3 912.0 -505.0Z M746.0 -505.0C746.0 -273.0 614.8 -85.0 453.0 -85.0C291.2 -85.0 160.0 -273.0 160.0 -505.0C160.0 -737.0 291.2 -925.0 453.0 -925.0C614.8 -925.0 746.0 -737.0 746.0 -505.0Z" fill="#B85025" fill-rule="evenodd"/>
+            <path d="M0.0 -1000.0L160.0 -1000.0L160.0 440.0L0.0 440.0Z" fill="#B85025"/>
+            <path d="M0.0 357.0C0.0 405.1 -63.0 431.7 -63.0 440.0L0.0 440.0Z M160.0 357.0C160.0 405.1 223.0 431.7 223.0 440.0L160.0 440.0Z" fill="#B85025"/>
+            <path d="M160.0 -1000.0L-69.0 -1000.0L-69.0 -963.0C0.0 -963.0 0.0 -963.0 0.0 -896.0Z" fill="#B85025"/>
+          </g>
+          <g class="gD">
+            <path d="M1127.0 -495.0C1127.0 -772.3 1324.9 -997.0 1569.0 -997.0C1813.1 -997.0 2011.0 -772.3 2011.0 -495.0C2011.0 -217.7 1813.1 7.0 1569.0 7.0C1324.9 7.0 1127.0 -217.7 1127.0 -495.0Z M1293.0 -495.0C1293.0 -727.0 1424.2 -915.0 1586.0 -915.0C1747.8 -915.0 1879.0 -727.0 1879.0 -495.0C1879.0 -263.0 1747.8 -75.0 1586.0 -75.0C1424.2 -75.0 1293.0 -263.0 1293.0 -495.0Z" fill="#A8BCC7" fill-rule="evenodd"/>
+            <path d="M1879.0 -1453.5L2039.0 -1453.5L2039.0 0.0L1879.0 0.0Z" fill="#A8BCC7"/>
+            <path d="M1879.0 -1453.5L2039.0 -1506.5L2039.0 -1453.5Z" fill="#A8BCC7"/>
+            <path d="M2039.0 -1453.5L1848.0 -1453.5L1848.0 -1416.5C1879.0 -1416.5 1879.0 -1416.5 1879.0 -1349.5Z" fill="#A8BCC7"/>
+            <path d="M1879.0 0.0L2108.0 0.0L2108.0 -37.0C2039.0 -37.0 2039.0 -37.0 2039.0 -104.0Z" fill="#A8BCC7"/>
+          </g>
+          <g class="gBar"><rect x="974.0" y="-1370.0" width="91.0" height="1634.0" fill="#A8BCC7"/></g>
+        </svg>
         <span class="wordmark">Com<b>p</b>ute&nbsp;Free<i>d</i>om</span>
       </a>
       <nav class="nav-links" id="navLinks" aria-label="Primary">
         <a href="#principle">Principle</a>
         <a href="#mechanism">Mechanism</a>
         <a href="#origin">Origin</a>
+        <a href="#forum" id="navForum" hidden>Forum</a>
         <a href="#contact" class="nav-cta">Get involved</a>
       </nav>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
@@ -420,15 +462,17 @@
   <!-- ░░ TICKER ░░ -->
   <div class="ticker" aria-hidden="true">
     <div class="track">
-      <span class="brk"><b>● LIVE · JUNE 2026</b> &nbsp; Anthropic&apos;s Mythos 5 and OpenAI&apos;s GPT-5.6 locked to ~100 approved US institutions. <em>Everyone else is shut out.</em></span>
-      <span><b>AGI+</b> — self-regulation ends, treaty law begins.</span>
+      <span class="brk"><b>● LIVE · GENEVA, 6–7 JULY</b> &nbsp; The UN&apos;s Global Dialogue on AI Governance convenes its first session. <em>Every state at one table.</em></span>
+      <span><b>EO, 2 June:</b> Washington takes 30 days of early access. <em>The public keeps waiting.</em></span>
       <span>The right to run. <em>The duty to restrain.</em></span>
-      <span>Two thresholds. <b>One architecture.</b></span>
+      <span>Open weights hold the gap to the frontier at months. <b>The right to run, exercised.</b></span>
+      <span><b>AGI+</b> — self-regulation ends, treaty law begins.</span>
       <span>If you don&apos;t run it, <em>you cannot control it.</em></span>
-      <span class="brk"><b>● LIVE · JUNE 2026</b> &nbsp; Anthropic&apos;s Mythos 5 and OpenAI&apos;s GPT-5.6 locked to ~100 approved US institutions. <em>Everyone else is shut out.</em></span>
-      <span><b>AGI+</b> — self-regulation ends, treaty law begins.</span>
+      <span class="brk"><b>● LIVE · GENEVA, 6–7 JULY</b> &nbsp; The UN&apos;s Global Dialogue on AI Governance convenes its first session. <em>Every state at one table.</em></span>
+      <span><b>EO, 2 June:</b> Washington takes 30 days of early access. <em>The public keeps waiting.</em></span>
       <span>The right to run. <em>The duty to restrain.</em></span>
-      <span>Two thresholds. <b>One architecture.</b></span>
+      <span>Open weights hold the gap to the frontier at months. <b>The right to run, exercised.</b></span>
+      <span><b>AGI+</b> — self-regulation ends, treaty law begins.</span>
       <span>If you don&apos;t run it, <em>you cannot control it.</em></span>
     </div>
   </div>
@@ -438,7 +482,7 @@
   <section class="hero">
     <div class="wrap">
       <div class="hero-copy">
-        <span class="eyebrow reveal">Compute Sovereignty · v34.1 · June 2026</span>
+        <span class="eyebrow reveal">Compute Sovereignty · v35.0 · July 2026</span>
         <h1 class="reveal">The Right to <span class="run">Run.</span><br/>The Duty to <span class="restrain">Restrain.</span></h1>
         <p class="hero-lede reveal">
           Two legal obligations: a <b>lower</b> boundary, and an <b>upper</b> one.
@@ -466,12 +510,12 @@
   <section class="dispatch" id="dispatch" aria-label="Urgent dispatch">
     <div class="wrap">
       <div class="dispatch-card reveal">
-        <span class="dispatch-label"><span class="live-dot"></span>Dispatch · 27 June 2026</span>
-        <h2 class="dispatch-head">The newest frontier models just disappeared behind a government gate.</h2>
-        <p class="dispatch-body">Within days, the two highest-rated AI labs in the United States both placed their latest systems behind approved-access lists. Anthropic&apos;s <b>Mythos 5</b>, after a two-week export-control shutdown, was released to roughly <b>100 selected US institutions</b>, many of them Fortune 500 members in its &ldquo;Project Glasswing.&rdquo; Its sibling <b>Fable 5</b> stays withheld. OpenAI launched <b>GPT-5.6</b> (Sol, Terra, Luna) and limited it to a small group of government-approved partners at the White House&apos;s request.</p>
-        <p class="dispatch-body">The public now sits below the line, without access to the newest models of either leading US lab, inside the United States and beyond. Even OpenAI warned that this kind of government-gated access should not become the default.</p>
-        <p class="dispatch-kicker">This is the lower boundary failing in real time. The most capable intelligence has become a permission, granted to a few and withheld from the rest. This is exactly why Compute Freedom exists, and why the right to run cannot wait for permission.</p>
-        <p class="dispatch-src">Reported by CNBC, Semafor, TechCrunch, and CNN, June 2026.</p>
+        <span class="dispatch-label"><span class="live-dot"></span>Dispatch · 1 July 2026</span>
+        <h2 class="dispatch-head">In 5 days, the species gets its table in Geneva.</h2>
+        <p class="dispatch-body">On 6 and 7 July, the United Nations convenes the first session of its <b>Global Dialogue on AI Governance</b> in Geneva. Born out of the 2024 Global Digital Compact, it is the first standing forum where every member state, with an independent scientific panel reporting in, addresses one question: <b>who authorizes the frontier?</b></p>
+        <p class="dispatch-body">Washington answered early. A June executive order grants the US government <b>30 days of access to covered frontier models</b> before the public sees them, under a framework the order itself calls voluntary. Early access for the state, gated access for everyone else: June&apos;s pattern, now in writing. And below the gate, the open-weight wave keeps building. GLM-5.2 ships under MIT license, MiniMax M3 and NVIDIA&apos;s Nemotron 3 follow, and the distance to the frontier holds at 3 to 6 months. <b>The right to run is being exercised, permission or none.</b></p>
+        <p class="dispatch-kicker">A treaty needs a table before it needs a text. Geneva sets the table. Whether the species gets a voice there, or only a seat, is the question Compute Freedom exists to ask.</p>
+        <p class="dispatch-src">White House executive order, 2 June 2026 · UN Global Dialogue on AI Governance, Geneva · Public reporting, June 2026.</p>
       </div>
     </div>
   </section>
@@ -543,6 +587,8 @@
       <p class="body reveal">Anthropic refused to remove safeguards preventing Claude from being used for autonomous weapon targeting or mass domestic surveillance. The Pentagon responded by designating the company a <span class="term-burnt">supply-chain risk</span>. OpenAI, Google, and xAI have moved into classified defense deployments under less restrictive arrangements. Without treaty law, voluntary safety commitments become bargaining chips under pressure.</p>
 
       <div class="records">
+        <div class="record reveal"><span class="src">Public Record · United Nations</span><span class="claim">First session of the UN Global Dialogue on AI Governance convenes in Geneva.</span><span class="when">6–7 July 2026</span></div>
+        <div class="record reveal"><span class="src">Public Record · White House</span><span class="claim">Executive order gives the US government 30-day early access to covered frontier models before release.</span><span class="when">2 June 2026</span></div>
         <div class="record reveal"><span class="src">Public Record</span><span class="claim">Pentagon designates Anthropic a &ldquo;supply-chain risk&rdquo; over weapons-use safeguards.</span><span class="when">March 2026</span></div>
         <div class="record reveal"><span class="src">Public Record</span><span class="claim">OpenAI and xAI sign expansive defense deployments as the compute race accelerates.</span><span class="when">February 2026</span></div>
         <div class="record reveal"><span class="src">Public Record</span><span class="claim">Frontier AI build-out triggers commitments to multiple new nuclear reactors.</span><span class="when">2025–2026</span></div>
@@ -614,10 +660,10 @@
         <div class="contact-aside reveal">
           <p class="pull blue" style="margin-top:0">Read. Share. <em>Reach out.</em></p>
           <div class="socials">
-            <a href="https://linkedin.com/in/msdkormann">LinkedIn <span class="handle">/in/msdkormann</span></a>
-            <a href="https://x.com/msdkormann">X <span class="handle">@msdkormann</span></a>
-            <a href="https://bsky.app/profile/computefreedom.org">Bluesky <span class="handle">@computefreedom.org</span></a>
-            <a href="https://mastodon.social/@computefreedom">Mastodon <span class="handle">@computefreedom</span></a>
+            <a href="https://www.linkedin.com/in/prof-dr-rer-nat-michael-kormann-46251084/" target="_blank" rel="noopener">LinkedIn <span class="handle">Michael Kormann</span></a>
+            <a href="https://x.com/michael_kormann" target="_blank" rel="noopener">X <span class="handle">@michael_kormann</span></a>
+            <a href="https://bsky.app/profile/mkormann.bsky.social" target="_blank" rel="noopener">Bluesky <span class="handle">@mkormann.bsky.social</span></a>
+            <a href="https://mastodon.social/@the_sad_professor" target="_blank" rel="me noopener">Mastodon <span class="handle">@the_sad_professor</span></a>
           </div>
         </div>
 
@@ -677,6 +723,24 @@
       </div>
     </div>
   </section>
+
+  <!-- ░░ FORUM (giscus — appears once configured, see script constants below) ░░ -->
+  <section class="band" id="forum" hidden>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="sec-num">05 — The Forum</span>
+        <h2>The argument is open. Take it apart.</h2>
+        <p class="kicker">Serious objections make the argument better. Post them here, in the open, where they can be read, answered, and kept.</p>
+      </div>
+      <div class="forum-actions reveal">
+        <a class="btn btn-ghost" id="forumFullLink" href="#" target="_blank" rel="noopener">Open the full forum on GitHub →</a>
+      </div>
+      <div class="forum-shell reveal">
+        <div id="giscusMount"></div>
+        <p class="forum-note">Commenting runs on GitHub Discussions via giscus. A free GitHub account is required to post; reading is open to everyone. No trackers beyond GitHub itself.</p>
+      </div>
+    </div>
+  </section>
   </main>
 
   <!-- ░░ FOOTER ░░ -->
@@ -692,7 +756,7 @@
         </div>
       </div>
       <p class="foot-tag">If you don&apos;t run it, you cannot control it.</p>
-      <p class="foot-meta" style="text-align:center;margin-top:18px">© Michael S. D. Kormann · Compute Freedom · #ComputeFreedom</p>
+      <p class="foot-meta" style="text-align:center;margin-top:18px">© MMXXVI · Michael S. D. Kormann · All rights reserved · #ComputeFreedom</p>
     </div>
   </footer>
 
@@ -701,10 +765,9 @@
     var MASTER_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="-159.0 -1596.5 2357.0 2126.5" width="600" height="541"><path d="M912.0 -505.0C912.0 -227.7 714.1 -3.0 470.0 -3.0C225.9 -3.0 28.0 -227.7 28.0 -505.0C28.0 -782.3 225.9 -1007.0 470.0 -1007.0C714.1 -1007.0 912.0 -782.3 912.0 -505.0Z M746.0 -505.0C746.0 -273.0 614.8 -85.0 453.0 -85.0C291.2 -85.0 160.0 -273.0 160.0 -505.0C160.0 -737.0 291.2 -925.0 453.0 -925.0C614.8 -925.0 746.0 -737.0 746.0 -505.0Z" fill="#B85025" fill-rule="evenodd"/><path d="M0.0 -1000.0L160.0 -1000.0L160.0 440.0L0.0 440.0Z" fill="#B85025"/><path d="M0.0 357.0C0.0 405.1 -63.0 431.7 -63.0 440.0L0.0 440.0Z M160.0 357.0C160.0 405.1 223.0 431.7 223.0 440.0L160.0 440.0Z" fill="#B85025"/><path d="M160.0 -1000.0L-69.0 -1000.0L-69.0 -963.0C0.0 -963.0 0.0 -963.0 0.0 -896.0Z" fill="#B85025"/><path d="M1127.0 -495.0C1127.0 -772.3 1324.9 -997.0 1569.0 -997.0C1813.1 -997.0 2011.0 -772.3 2011.0 -495.0C2011.0 -217.7 1813.1 7.0 1569.0 7.0C1324.9 7.0 1127.0 -217.7 1127.0 -495.0Z M1293.0 -495.0C1293.0 -727.0 1424.2 -915.0 1586.0 -915.0C1747.8 -915.0 1879.0 -727.0 1879.0 -495.0C1879.0 -263.0 1747.8 -75.0 1586.0 -75.0C1424.2 -75.0 1293.0 -263.0 1293.0 -495.0Z" fill="#A8BCC7" fill-rule="evenodd"/><path d="M1879.0 -1453.5L2039.0 -1453.5L2039.0 0.0L1879.0 0.0Z" fill="#A8BCC7"/><path d="M1879.0 -1453.5L2039.0 -1506.5L2039.0 -1453.5Z" fill="#A8BCC7"/><path d="M2039.0 -1453.5L1848.0 -1453.5L1848.0 -1416.5C1879.0 -1416.5 1879.0 -1416.5 1879.0 -1349.5Z" fill="#A8BCC7"/><path d="M1879.0 0.0L2108.0 0.0L2108.0 -37.0C2039.0 -37.0 2039.0 -37.0 2039.0 -104.0Z" fill="#A8BCC7"/><rect x="1006.5" y="-1370.0" width="26.0" height="1634.0" fill="#A8BCC7"/></svg>';
     var dataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(MASTER_SVG);
 
-    // Strong-bar variant survives at small sizes (nav, footer, favicon)
+    // Strong-bar variant survives at small sizes (footer, favicon; nav mark is inline SVG)
     var STRONG_SVG = MASTER_SVG.replace('x="1006.5" y="-1370.0" width="26.0"', 'x="974.0" y="-1370.0" width="91.0"');
     var strongUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(STRONG_SVG);
-    document.getElementById('navLogo').src = strongUrl;
     document.getElementById('footLogo').src = strongUrl;
     document.getElementById('favicon').href = strongUrl;
 
@@ -724,28 +787,54 @@
       });
     })();
 
-    // ── Scroll reveal ──
-    (function () {
-      var els = document.querySelectorAll('.reveal');
-      if (!('IntersectionObserver' in window)) {
-        els.forEach(function (el) { el.classList.add('in'); });
-        return;
-      }
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-        });
-      }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
-      els.forEach(function (el) { io.observe(el); });
+    // ── Scroll reveal (start is deferred while the opening sequence runs) ──
+    window.__cfStartReveal = (function () {
+      var started = false;
+      return function () {
+        if (started) return;
+        started = true;
+        var els = document.querySelectorAll('.reveal');
+        if (!('IntersectionObserver' in window)) {
+          els.forEach(function (el) { el.classList.add('in'); });
+          return;
+        }
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+        els.forEach(function (el) { io.observe(el); });
+      };
     })();
 
-    // ── Living pixel-art hologram of the p|d mark ──
+    // ── Living pixel hologram of the p|d mark · with Störungsfilter ──
+    // The mark never stands safely. The Störungsfilter: stacked false-color
+    // copies (RGB split), staccato over-/under-exposure, displacements of
+    // 50–80% of the mark's width and height. Spark-over. tzzzz — tZTZZZZ.
+    //   window.__cfStartHolo()        → mark stands at once (repeat visits)
+    //   window.__cfStartHolo('ramp')  → mark forms through the filter,
+    //                                   starting at ~30% speed, accelerating
     (function () {
       var rng = function (seed) { var s = seed >>> 0; return function () { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; };
       var holo = document.getElementById('holo'), hx = holo.getContext('2d');
       var HW = holo.width, HH = holo.height;
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       var cells = [];
+      var mode = 'idle';                 // idle → ramp → stand
+      var phaseStart = null;
+      var RAMP = 2.7;                    // seconds: filter accelerates 30% → 100%
+      var pose = { until: -1, ops: [] };
+      var burst = { until: 0, next: 0 };
+      var glitter = 0;                   // scroll-fed sparkle boost, decays
+
+      window.__cfStartHolo = function (how) {
+        if (mode !== 'idle') return;
+        mode = (how === 'ramp' || how === 'glitch') ? 'ramp' : 'stand';
+      };
+      window.addEventListener('scroll', function () { glitter = 1; }, { passive: true });
+
+      var FALSE_COLS = ['#FF0033', '#00FFE0', '#39FF14', '#FFFFFF', '#2A64FF'];
+
       var img = new Image();
       img.onload = function () {
         var oc = document.createElement('canvas'); oc.width = HW; oc.height = HH;
@@ -753,26 +842,27 @@
         var ASPECT = 2357 / 2126.5, mh = 512, mw = mh * ASPECT, mx = (HW - mw) / 2, my = (HH - mh) / 2;
         o.drawImage(img, mx, my, mw, mh);
         var d = o.getImageData(0, 0, HW, HH).data;
-        var CELL = 8, rand = rng(531);
+        var CELL = 6, rand = rng(531);
         for (var y = 0; y < HH; y += CELL) {
           for (var x = 0; x < HW; x += CELL) {
-            var idx = ((y + 4) * HW + (x + 4)) * 4, a = d[idx + 3];
+            var idx = ((y + 3) * HW + (x + 3)) * 4, a = d[idx + 3];
             if (a > 110) {
               cells.push({
                 x: x + (rand() - 0.5) * 1.4, y: y + (rand() - 0.5) * 1.4,
                 col: 'rgb(' + d[idx] + ',' + d[idx + 1] + ',' + d[idx + 2] + ')',
                 base: 0.5 + rand() * 0.45, ph: rand() * Math.PI * 2, spd: 0.5 + rand() * 1.2,
-                spark: rand() < 0.16, sz: CELL - 2
+                spark: rand() < 0.16, sz: CELL - 1.5
               });
             }
           }
         }
-        if (reduce) drawCells(0, true); else requestAnimationFrame(loop);
+        if (reduce) { drawMark(0, 1, 0, 0, null, true); return; }
+        requestAnimationFrame(loop);
       };
       img.src = dataUrl;
 
-      function drawCells(tt, flat) {
-        hx.clearRect(0, 0, HW, HH);
+      function drawMark(tt, alphaMul, dx, dy, colOverride, flat) {
+        var boost = glitter;
         for (var i = 0; i < cells.length; i++) {
           var c = cells[i], a = c.base, sz = c.sz;
           if (!flat) {
@@ -782,18 +872,88 @@
             sz = c.sz + dz * 0.4;
             if (c.spark) {
               var pop = Math.max(0, tw);
-              a = Math.min(1, a + pop * 0.5);
-              sz += pop * 1.0;
+              a = Math.min(1, a + pop * (0.5 + boost * 0.45));
+              sz += pop * (1.0 + boost * 1.2);
             }
           }
+          a *= alphaMul;
           hx.globalAlpha = a < 0 ? 0 : (a > 1 ? 1 : a);
-          hx.fillStyle = c.col;
-          hx.fillRect(c.x, c.y, sz, sz);
-          hx.shadowBlur = 0;
+          hx.fillStyle = colOverride || c.col;
+          hx.fillRect(c.x + dx, c.y + dy, sz, sz);
         }
         hx.globalAlpha = 1;
       }
-      function loop(t) { drawCells(t / 1000, false); requestAnimationFrame(loop); }
+
+      // One disturbance pose. g = intensity (0…1). Returns draw ops.
+      function makePose(g) {
+        var ops = [];
+        var roll = Math.random();
+        if (roll < 0.18 * g) return ops;                    // dropout: underexposure
+        if (roll < 0.5 * g) {                               // spark-over: displaced false-color stack
+          var n = 1 + ((Math.random() * 2) | 0);
+          for (var k = 0; k < n; k++) {
+            var dx = (Math.random() < 0.5 ? -1 : 1) * (0.5 + Math.random() * 0.3) * HW;
+            var dy = (Math.random() < 0.5 ? -1 : 1) * (0.5 + Math.random() * 0.3) * HH;
+            if (Math.random() < 0.5) dy = (Math.random() - 0.5) * 0.25 * HH;
+            ops.push({ a: 0.9, dx: dx, dy: dy, col: FALSE_COLS[(Math.random() * FALSE_COLS.length) | 0] });
+          }
+          if (Math.random() < 0.45) ops.push({ a: 1.6, dx: 0, dy: 0, col: '#FFFFFF' });
+          return ops;
+        }
+        var off = (3 + Math.random() * 10) * (0.4 + g);     // RGB-stacked, in place
+        ops.push({ a: 0.12 + 0.3 * g, dx: off, dy: 0, col: '#FF0033' });
+        ops.push({ a: 0.12 + 0.3 * g, dx: -off, dy: 0, col: '#00FFE0' });
+        ops.push({ a: 1 - 0.3 * g, dx: 0, dy: 0, col: null });
+        return ops;
+      }
+      function drawOps(tt, ops) {
+        for (var i = 0; i < ops.length; i++) {
+          drawMark(tt, ops[i].a, ops[i].dx, ops[i].dy, ops[i].col);
+        }
+      }
+
+      function loop(t) {
+        var tt = t / 1000;
+        glitter *= 0.94;
+        if (glitter < 0.01) glitter = 0;
+        hx.clearRect(0, 0, HW, HH);
+
+        if (mode === 'ramp') {
+          if (phaseStart === null) phaseStart = tt;
+          var pr = (tt - phaseStart) / RAMP;
+          if (pr >= 1) {
+            mode = 'stand';
+            burst.next = tt + 1.5 + Math.random() * 2.5;
+          } else {
+            // pose hold shrinks: ~160 ms (30% speed) → ~30 ms (full speed)
+            if (tt >= pose.until) {
+              pose.ops = makePose(1 - 0.45 * pr);
+              pose.until = tt + (0.16 - 0.13 * pr);
+            }
+            drawOps(tt, pose.ops);
+          }
+        }
+        if (mode === 'stand') {
+          if (burst.next === 0) burst.next = tt + 2 + Math.random() * 4;
+          if (tt >= burst.next) {
+            burst.until = tt + 0.08 + Math.random() * 0.3;
+            burst.next = tt + 3 + Math.random() * 6;
+          }
+          if (tt < burst.until) {
+            drawOps(tt, makePose(1));                       // tzzzz — tZTZZZZ
+          } else {
+            var flick = 0.93 + Math.random() * 0.07;        // nervous, never at rest
+            if (Math.random() < 0.03) flick *= 0.55;        // single-frame stutter
+            if (Math.random() < 0.02) {                     // micro RGB fringe
+              var o2 = 2 + Math.random() * 5;
+              drawMark(tt, 0.16, o2, 0, '#FF0033');
+              drawMark(tt, 0.16, -o2, 0, '#00FFE0');
+            }
+            drawMark(tt, flick, 0, 0, null);
+          }
+        }
+        requestAnimationFrame(loop);
+      }
     })();
 
     // ── Async Formspree submit (Proton inbox) ──
@@ -825,6 +985,102 @@
           btn.disabled = false; btn.textContent = 'Send →';
         }
       });
+    })();
+
+    // ── OPENING · straight into the hologram ──
+    // No prelude. The p|d hologram forms through the Störungsfilter, starting
+    // at ~30% speed and accelerating to full — while the page appears around
+    // it: title bar first, then the text, element by element. By the time the
+    // page stands, the filter runs at full speed and never fully rests.
+    // Armed once per session via the html.seq class (set in <head>).
+    (function () {
+      var root = document.documentElement;
+
+      if (!root.classList.contains('seq')) {
+        window.__cfStartHolo && window.__cfStartHolo();
+        window.__cfStartReveal();
+        return;
+      }
+
+      var timers = [], done = false;
+      function at(ms, fn) { timers.push(setTimeout(fn, ms)); }
+      function inEl(sel, instant) {
+        document.querySelectorAll(sel).forEach(function (el) {
+          if (instant) el.style.transition = 'none';
+          el.classList.add('in');
+          el.classList.add('on');
+        });
+      }
+
+      at(150, function () {                                   // a: the hologram, immediately
+        inEl('.holo-stage', true);
+        window.__cfStartHolo && window.__cfStartHolo('ramp');
+      });
+      at(450,  function () { inEl('header'); });              // b: title bar first…
+      at(850,  function () { inEl('.ticker'); });
+      at(1150, function () { inEl('.hero .eyebrow'); });      // …then the text
+      at(1400, function () { inEl('.hero h1'); });
+      at(1700, function () { inEl('.hero-lede'); });
+      at(1950, function () { inEl('.hero-actions'); });
+      at(2200, function () { inEl('.hero-domains'); });
+      at(2450, function () { inEl('.holo-meta'); });
+      at(2800, finish);
+
+      function finish() {
+        if (done) return;
+        done = true;
+        timers.forEach(clearTimeout);
+        inEl('header'); inEl('.ticker'); inEl('.holo-meta');
+        inEl('.hero .eyebrow'); inEl('.hero h1'); inEl('.holo-stage', true);
+        inEl('.hero-lede'); inEl('.hero-actions'); inEl('.hero-domains');
+        window.__cfStartHolo && window.__cfStartHolo('ramp');
+        window.__cfStartReveal();
+        try { sessionStorage.setItem('cfIntroSeen', '1'); } catch (e) {}
+      }
+
+      // Skippable: any click, key, or scroll jumps to the finished state
+      window.addEventListener('pointerdown', finish);
+      window.addEventListener('keydown', finish);
+      window.addEventListener('wheel', finish, { passive: true });
+      window.addEventListener('touchmove', finish, { passive: true });
+    })();
+
+    // ── FORUM (giscus / GitHub Discussions) ──
+    // To activate: fill in the 4 values below (from https://giscus.app after the
+    // one-time GitHub setup — see forum_setup_giscus.md). Leave empty = section stays hidden.
+    (function () {
+      var GISCUS = {
+        repo:       '',   // e.g. 'michaelkormann/computefreedom-forum'
+        repoId:     '',   // from giscus.app
+        category:   '',   // e.g. 'Forum'
+        categoryId: ''    // from giscus.app
+      };
+      if (!GISCUS.repo || !GISCUS.repoId || !GISCUS.categoryId) return;
+
+      document.getElementById('forum').hidden = false;
+      document.getElementById('navForum').hidden = false;
+      document.getElementById('forumFullLink').href = 'https://github.com/' + GISCUS.repo + '/discussions';
+
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      s.async = true;
+      s.crossOrigin = 'anonymous';
+      s.setAttribute('data-repo', GISCUS.repo);
+      s.setAttribute('data-repo-id', GISCUS.repoId);
+      s.setAttribute('data-category', GISCUS.category || 'General');
+      s.setAttribute('data-category-id', GISCUS.categoryId);
+      s.setAttribute('data-mapping', 'specific');
+      s.setAttribute('data-term', 'ComputeFreedom — Open Forum');
+      s.setAttribute('data-strict', '0');
+      s.setAttribute('data-reactions-enabled', '1');
+      s.setAttribute('data-emit-metadata', '0');
+      s.setAttribute('data-input-position', 'top');
+      s.setAttribute('data-theme', 'transparent_dark');
+      s.setAttribute('data-lang', 'en');
+      document.getElementById('giscusMount').appendChild(s);
+
+      // Re-run reveal observer for the now-visible section
+      document.querySelectorAll('#forum .reveal').forEach(function (el) { el.classList.add('in'); });
     })();
   </script>
 </body>
