@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/AREPO", "destination": "/index.html" },
+    { "source": "/arepo", "destination": "/index.html" }
+  ]
+}

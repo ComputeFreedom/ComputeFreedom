@@ -6,12 +6,12 @@
   <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
   <meta name="theme-color" content="#08111A" />
   <title>Compute Freedom — The Right to Run. The Duty to Restrain.</title>
+  <!-- v3.2 · 13.07.2026 · tabs statt Scroll-Sektionen · Tab 00 „The Horizon“ · Dispatch 13 July -->
   <meta name="description" content="Two obligations. One architecture. Local AI access for the citizen; a binding international treaty for the frontier. Compute sovereignty is the precondition for holding AI to account." />
 
   <link id="favicon" rel="icon" type="image/svg+xml" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <!-- Self-hosted fonts (DSGVO: no request to Google servers) -->
+  <link rel="stylesheet" href="fonts.css" />
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -29,6 +29,13 @@
       --lightblue:     #A8BCC7;
       --blue-bright:   #C6D7E0;
       --sand:          #B8A082;
+      --moss:          #6FA07C;
+      --moss-bright:   #8CC29A;
+      --ultra:         #A78BCC;
+      --ultra-bright:  #C9B3E8;
+      --gold:          #E3C878;
+      --mono:          'JetBrains Mono', ui-monospace, monospace;
+      --serif:         'Newsreader', 'DM Serif Display', serif;
 
       --ink:           #D4DDE4;
       --ink-soft:      #C3D0D8;
@@ -93,6 +100,10 @@
       text-shadow: 0 0 10px rgba(168, 188, 199, 0.9), 0 0 24px rgba(168, 188, 199, 0.5);
     }
 
+    .ver-tag {
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em;
+      color: var(--ink-dim); white-space: nowrap; transform: translateY(-1px);
+    }
     .nav-links { display: flex; align-items: center; gap: 30px; }
     .nav-links a {
       font-family: 'JetBrains Mono', monospace; font-size: 12.5px; letter-spacing: 0.08em;
@@ -211,8 +222,8 @@
     .dispatch-body { font-size: 16px; color: var(--ink-soft); margin-bottom: 14px; max-width: 74ch; }
     .dispatch-body b { color: var(--ink); font-weight: 600; }
     .dispatch-kicker {
-      font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(1.2rem, 2.2vw, 1.5rem);
-      line-height: 1.4; color: var(--sand); margin: 18px 0 16px; max-width: 70ch;
+      font-family: 'IBM Plex Sans', sans-serif; font-style: normal; font-weight: 700;
+      font-size: clamp(1.15rem, 2vw, 1.4rem); line-height: 1.45; color: var(--blue-bright); margin: 18px 0 16px; max-width: 72ch;
     }
     .dispatch-src { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.06em; color: var(--ink-dim); }
 
@@ -229,8 +240,8 @@
       line-height: 1.04; letter-spacing: -0.01em; color: var(--ink); text-wrap: balance;
     }
     .sec-head p.kicker {
-      font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(1.2rem, 2.4vw, 1.7rem);
-      line-height: 1.45; color: var(--sand);
+      font-family: 'IBM Plex Sans', sans-serif; font-style: normal; font-weight: 700;
+      font-size: clamp(1.15rem, 2vw, 1.4rem); line-height: 1.5; color: var(--blue-bright);
     }
 
     p.body { margin-bottom: 1.25em; max-width: 68ch; color: var(--ink-soft); }
@@ -238,6 +249,7 @@
     .body b, .body strong { color: var(--ink); font-weight: 600; }
     .term-burnt { color: var(--burnt); font-weight: 600; }
     .term-blue  { color: var(--lightblue); font-weight: 600; }
+    .term-ultra { color: var(--ultra); font-weight: 600; }
 
     .pull {
       font-family: 'DM Serif Display', serif; font-size: clamp(1.6rem, 4vw, 2.7rem); line-height: 1.16;
@@ -245,7 +257,7 @@
       border-left: 2px solid var(--burnt); padding: 6px 0 6px 28px; margin: clamp(32px,5vw,56px) 0; max-width: 22ch;
     }
     .pull.blue { border-color: var(--lightblue); }
-    .pull em { color: var(--sand); font-style: italic; }
+    .pull em { color: var(--blue-bright); font-weight: 700; font-style: normal; font-family: 'IBM Plex Sans', sans-serif; font-size: 0.86em; letter-spacing: 0; }
 
     .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
     .card {
@@ -295,7 +307,7 @@
     }
     .record .claim { color: var(--ink); font-size: 15.5px; line-height: 1.5; }
     .record .when { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-dim); margin-top: 10px; display: block; }
-    .records-note { font-size: 13.5px; color: var(--ink-dim); font-style: italic; max-width: 70ch; }
+    .records-note { font-size: 13.5px; color: var(--ink-dim); max-width: 70ch; }
 
     .treaties { display: flex; flex-wrap: wrap; gap: 12px; margin: 24px 0; }
     .treaties span {
@@ -305,11 +317,11 @@
 
     .bio {
       background: var(--surface); border: 1px solid var(--hairline); border-radius: 4px;
-      padding: clamp(28px, 4vw, 44px); margin-top: 36px; border-top: 3px solid var(--sand);
+      padding: clamp(28px, 4vw, 44px); margin-top: 36px; border-top: 3px solid var(--hairline-2);
     }
     .bio .who {
       font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--sand); margin-bottom: 14px; display: block;
+      color: var(--burnt); margin-bottom: 14px; display: block;
     }
     .bio .name { font-family: 'DM Serif Display', serif; font-size: clamp(1.5rem,3vw,2rem); color: var(--ink); margin-bottom: 14px; }
 
@@ -360,12 +372,248 @@
     .foot-grid { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
     .foot-brand { display: flex; align-items: center; gap: 12px; }
     .foot-brand img { height: 30px; }
+    .foot-nav { display: flex; gap: 22px; flex-wrap: wrap; }
+    .foot-nav a { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-dim); }
+    .foot-nav a:hover { color: var(--lightblue); }
     .foot-meta { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--ink-dim); letter-spacing: 0.04em; }
     .foot-meta a { color: var(--ink-dim); }
     .foot-meta a:hover { color: var(--lightblue); }
     .foot-tag {
-      font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.35rem; color: var(--sand);
+      font-family: 'IBM Plex Sans', sans-serif; font-style: normal; font-weight: 700; font-size: 1.15rem; letter-spacing: 0.01em; color: var(--blue-bright);
       margin-top: 28px; padding-top: 28px; border-top: 1px solid var(--hairline); text-align: center; text-wrap: balance;
+    }
+
+    /* ─────────────── TABS (v3.2) ─────────────── */
+    .tabsbar {
+      position: sticky; top: 68px; z-index: 90;
+      background: rgba(5, 11, 17, 0.78);
+      backdrop-filter: blur(14px) saturate(130%);
+      -webkit-backdrop-filter: blur(14px) saturate(130%);
+      border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline);
+    }
+    .tabbar { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; }
+    .tabbar::-webkit-scrollbar { display: none; }
+    .tabbar button {
+      font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--ink-dim); background: none; border: 0; border-bottom: 2px solid transparent;
+      padding: 15px 16px 13px; cursor: pointer; white-space: nowrap; transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    .tabbar button b { color: var(--burnt); font-weight: 600; margin-right: 8px; }
+    .tabbar button:hover { color: var(--ink); }
+    .tabbar button.on { color: var(--ink); border-bottom-color: var(--burnt); }
+    .tabbar button[hidden] { display: none; }
+    section.band.tabpanel { display: none; border-top: 0; padding: clamp(44px, 7vw, 84px) 0; }
+    section.band.tabpanel.on { display: block; animation: tabfade 0.45s var(--ease); }
+    @keyframes tabfade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+    /* ─────────────── THE HORIZON · instrument (v3.2, tab 00) ─────────────── */
+    .horizon {
+      border: 1px solid var(--hairline-2); border-radius: 4px;
+      background: linear-gradient(180deg, var(--surface) 0%, var(--abyss) 100%);
+      padding: clamp(20px, 3.4vw, 40px);
+    }
+    .hz-top { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 22px; margin-bottom: 26px; }
+    .hz-date-block { min-width: 220px; }
+    .hz-viewdate { font-family: var(--mono); font-size: clamp(1.7rem, 3vw, 2.3rem); font-weight: 600; color: var(--ink); letter-spacing: 0.04em; line-height: 1.1; }
+    .hz-viewdate .yr { color: var(--burnt-bright); }
+    .hz-viewdate.past .yr { color: var(--moss-bright); }
+    .hz-offset { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-dim); margin-top: 7px; }
+    .hz-offset.today { color: var(--blue-bright); }
+    .hz-stagebar { display: flex; gap: 8px; flex-wrap: wrap; }
+    .hz-stage {
+      border: 1px solid var(--hairline-2); border-radius: 3px; padding: 9px 13px 7px;
+      text-align: center; min-width: 78px; transition: border-color 0.3s ease, background 0.3s ease;
+    }
+    .hz-stage .nm { font-family: var(--mono); font-size: 14px; font-weight: 700; letter-spacing: 0.08em; color: var(--ink-dim); display: block; }
+    .hz-stage .nm .plus { color: var(--lightblue); text-transform: none; letter-spacing: 0.02em; }
+    .hz-stage .nm .agi { color: var(--burnt); }
+    .hz-stage .nm .asi { color: var(--ultra); }
+    .hz-stage .dt { font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em; color: var(--ink-dim); opacity: 0.75; display: block; margin-top: 2px; white-space: nowrap; }
+    .hz-stage.passed { border-color: var(--hairline); background: rgba(168,188,199,0.05); }
+    .hz-stage.passed .nm { color: var(--lightblue); }
+    .hz-stage.active { border-color: var(--burnt-bright); background: rgba(184,80,37,0.12); box-shadow: 0 0 22px rgba(221,119,64,0.18); }
+    .hz-stage.active .nm { color: var(--burnt-bright); text-shadow: 0 0 12px rgba(221,119,64,0.65); }
+    .hz-stage.active .nm .agi { color: var(--burnt-bright); text-shadow: 0 0 12px rgba(221,119,64,0.65); }
+    .hz-stage.active .nm .plus { color: var(--blue-bright); text-shadow: 0 0 12px rgba(168,188,199,0.7); }
+    .hz-stage.active .dt { color: var(--ink-soft); opacity: 1; }
+    .hz-stage.asi-b.active { border-color: var(--ultra-bright); background: rgba(167,139,204,0.10); box-shadow: 0 0 22px rgba(167,139,204,0.22); }
+    .hz-stage.asi-b.active .nm .asi { color: var(--ultra-bright); text-shadow: 0 0 12px rgba(201,179,232,0.75); }
+    .hz-stage.legacy.active { border-color: var(--moss-bright); background: rgba(111,160,124,0.12); box-shadow: 0 0 22px rgba(111,160,124,0.18); }
+    .hz-stage.legacy.active .nm { color: var(--moss-bright); text-shadow: 0 0 12px rgba(140,194,154,0.6); }
+    .hz-count { text-align: right; min-width: 200px; }
+    .hz-count .lbl { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-dim); }
+    .hz-count .lbl .plus { color: var(--lightblue); text-transform: none; }
+    .hz-count .lbl .agi { color: var(--burnt-bright); }
+    .hz-count .lbl .asi { color: var(--ultra-bright); }
+    .hz-count .num { font-family: var(--mono); font-size: clamp(1.5rem, 2.6vw, 2rem); font-weight: 600; color: var(--burnt-bright); line-height: 1.15; text-shadow: 0 0 16px rgba(221,119,64,0.4); }
+    .hz-count .num.ultra { color: var(--ultra-bright); text-shadow: 0 0 16px rgba(201,179,232,0.45); }
+    .hz-count .sub { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; color: var(--ink-dim); }
+    .hz-meaning {
+      font-family: var(--serif); font-size: clamp(1.05rem, 1.7vw, 1.3rem); color: var(--blue-bright);
+      border-left: 2px solid var(--burnt); padding: 4px 0 4px 20px; margin-bottom: 30px; max-width: 60ch; line-height: 1.5;
+    }
+    .hz-meaning.past { border-left-color: var(--moss); color: var(--moss-bright); }
+    .hz-meaning.ultra { border-left-color: var(--ultra); }
+    .hz-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 14px; }
+    .scenario { display: inline-flex; border: 1px solid var(--hairline-2); border-radius: 3px; overflow: hidden; }
+    .scenario button {
+      font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase;
+      background: transparent; color: var(--ink-dim); border: 0; padding: 9px 16px; cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .scenario button + button { border-left: 1px solid var(--hairline); }
+    .scenario button:hover { color: var(--ink); }
+    .scenario button.on { background: var(--burnt); color: var(--marianen); font-weight: 700; }
+    .stepper { display: inline-flex; gap: 8px; flex-wrap: wrap; }
+    .stepper button {
+      font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase;
+      background: var(--surface-2); color: var(--ink-soft); border: 1px solid var(--hairline-2); border-radius: 3px;
+      padding: 8px 14px; cursor: pointer; transition: border-color 0.2s ease, color 0.2s ease;
+    }
+    .stepper button:hover { border-color: var(--burnt-bright); color: var(--ink); }
+    .stepper button.today-btn { color: var(--blue-bright); }
+    .stepper button.legacy-btn { color: var(--moss-bright); }
+    .stepper button.play.on { border-color: var(--burnt-bright); color: var(--burnt-bright); }
+    .hz-track-outer { padding: 34px 0 46px; cursor: pointer; touch-action: none; }
+    .hz-track { position: relative; height: 2px; background: var(--hairline-2); border-radius: 1px; }
+    .hz-track .era-band { position: absolute; top: -5px; bottom: -5px; border-radius: 2px; }
+    .hz-track .era-band .era-lbl {
+      position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+      font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap;
+    }
+    .era-early { background: rgba(184,160,130,0.10); } .era-early .era-lbl { color: var(--sand); opacity: 0.8; }
+    .era-gold { background: rgba(111,160,124,0.20); } .era-gold .era-lbl { color: var(--gold); }
+    .era-plat { background: rgba(168,188,199,0.10); } .era-plat .era-lbl { color: var(--lightblue); opacity: 0.85; }
+    .era-ai { background: rgba(184,80,37,0.12); } .hz-track .era-ai .era-lbl { color: var(--burnt-bright); left: 8px; transform: none; }
+    .hz-track .agi-band { position: absolute; top: -8px; bottom: -8px; background: rgba(221,119,64,0.45); border-radius: 2px; box-shadow: 0 0 12px rgba(221,119,64,0.5); }
+    .hz-marker { position: absolute; top: 50%; transform: translate(-50%, -50%); }
+    .hz-marker .tick { width: 2px; height: 16px; background: var(--hairline-2); margin: 0 auto; }
+    .hz-marker .cap {
+      position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+      font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; color: var(--ink-dim); white-space: nowrap;
+    }
+    .hz-marker.milestone .tick { background: var(--burnt); height: 20px; }
+    .hz-marker.milestone .cap { color: var(--burnt-bright); }
+    .hz-marker.milestone.asi-m .tick { background: var(--ultra); }
+    .hz-marker.milestone.asi-m .cap { color: var(--ultra-bright); }
+    .hz-marker.minor .tick { background: rgba(221,119,64,0.5); height: 12px; }
+    .hz-marker.minor .cap { color: var(--ink-dim); font-size: 9.5px; top: -24px; }
+    .hz-marker.today-mark .tick { background: var(--blue-bright); height: 24px; box-shadow: 0 0 10px rgba(198,215,224,0.7); }
+    .hz-marker.today-mark .cap { color: var(--blue-bright); top: -28px; }
+    .hz-cursor {
+      position: absolute; top: 50%; transform: translate(-50%, -50%);
+      width: 15px; height: 15px; border-radius: 50%;
+      background: var(--burnt-bright); border: 2px solid var(--marianen);
+      box-shadow: 0 0 0 1px var(--burnt-bright), 0 0 18px rgba(221,119,64,0.8); z-index: 3;
+    }
+    .hz-cursor.past { background: var(--moss-bright); box-shadow: 0 0 0 1px var(--moss-bright), 0 0 18px rgba(140,194,154,0.8); }
+    .gen-band { position: relative; height: 30px; margin: 2px 0 10px; }
+    .gen-seg {
+      position: absolute; top: 0; bottom: 0; border: 1px solid var(--hairline); border-radius: 3px;
+      display: flex; align-items: center; justify-content: center; overflow: hidden;
+      font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-dim);
+      background: rgba(168,188,199,0.04); transition: border-color 0.3s ease, color 0.3s ease;
+    }
+    .gen-seg span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 4px; }
+    .gen-seg.on { border-color: var(--blue-bright); color: var(--blue-bright); background: rgba(168,188,199,0.10); }
+    .gen-cap { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--ink-dim); line-height: 1.7; margin-bottom: clamp(24px, 4vw, 38px); }
+    .gen-cap b { color: var(--blue-bright); font-weight: 600; }
+    .gen-cap .age { color: var(--ink-soft); }
+    .hz-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(22px, 3.5vw, 44px); margin-top: 8px; }
+    .hz-col-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 14px; }
+    .hz-col-label .hl { color: var(--moss-bright); }
+    .caps { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .cap-chip { position: relative; border: 1px solid var(--hairline); border-radius: 3px; overflow: hidden; padding: 10px 14px; background: var(--surface-2); }
+    .cap-chip .fillbar { position: absolute; inset: 0; width: 0%; background: rgba(184,80,37,0.28); transition: width 0.45s var(--ease); }
+    .cap-chip.maxed .fillbar { background: rgba(184,80,37,0.42); }
+    .cap-chip.maxed { border-color: rgba(221,119,64,0.55); box-shadow: 0 0 14px rgba(221,119,64,0.14); }
+    .cap-chip .cap-nm { position: relative; font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.06em; color: var(--ink-soft); }
+    .cap-chip.maxed .cap-nm { color: var(--ink); font-weight: 600; }
+    .cap-chip .cap-lv { position: relative; font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; color: var(--ink-dim); display: block; margin-top: 1px; }
+    .cap-chip.maxed .cap-lv { color: var(--burnt-bright); }
+    .machine { border: 1px solid rgba(111,160,124,0.35); border-radius: 3px; background: var(--surface-2); padding: 18px 20px; display: flex; gap: 22px; align-items: flex-start; }
+    .machine.early { border-color: rgba(184,160,130,0.35); }
+    .machine.plat { border-color: rgba(168,188,199,0.30); }
+    .machine .m-icon { flex-shrink: 0; width: 118px; color: var(--moss-bright); filter: drop-shadow(0 0 8px rgba(140,194,154,0.25)); }
+    .machine.early .m-icon { color: var(--sand); filter: drop-shadow(0 0 8px rgba(184,160,130,0.25)); }
+    .machine.plat .m-icon { color: var(--blue-bright); filter: drop-shadow(0 0 8px rgba(168,188,199,0.25)); }
+    .machine .m-icon svg { width: 100%; height: auto; display: block; }
+    .machine .m-name { font-family: var(--mono); font-size: 16px; font-weight: 700; letter-spacing: 0.04em; color: var(--ink); margin-bottom: 8px; }
+    .machine .m-row { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.03em; color: var(--ink-soft); padding: 2.5px 0; }
+    .machine .m-row b { color: var(--ink-dim); font-weight: 500; display: inline-block; min-width: 78px; text-transform: uppercase; font-size: 10px; letter-spacing: 0.08em; }
+    .machine .m-media { display: flex; gap: 12px; margin-top: 12px; color: var(--ink-dim); }
+    .machine .m-media svg { width: 40px; height: auto; opacity: 0.85; }
+    .hz-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .hz-stat { border: 1px solid var(--hairline); border-radius: 3px; padding: 12px 15px 10px; background: var(--surface-2); }
+    .hz-stat .s-lbl { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-dim); }
+    .hz-stat .s-val { font-family: var(--mono); font-size: clamp(1.05rem, 1.7vw, 1.35rem); font-weight: 600; color: var(--ink); line-height: 1.3; }
+    .hz-stat .s-val.neg { color: var(--burnt-bright); }
+    .hz-stat .s-val.txt { font-size: clamp(0.85rem, 1.3vw, 1rem); }
+    .hz-stat .s-sub { font-family: var(--mono); font-size: 10px; color: var(--ink-dim); letter-spacing: 0.05em; }
+    .hz-fleet { margin-top: clamp(28px, 4vw, 42px); }
+    .fleet-line { font-family: var(--mono); font-size: clamp(0.85rem, 1.4vw, 1rem); color: var(--ink-soft); margin-bottom: 14px; letter-spacing: 0.02em; }
+    .fleet-line b { color: var(--burnt-bright); font-weight: 700; }
+    .fleet-line em { color: var(--blue-bright); font-style: normal; font-weight: 600; }
+    .fleet-line .plus { color: var(--lightblue); }
+    .fleet-line .agi { color: var(--burnt-bright); }
+    .fleet-line .asi { color: var(--ultra-bright); }
+    .fleet-line.past b { color: var(--moss-bright); }
+    .waffle { position: relative; display: grid; grid-template-columns: repeat(auto-fill, minmax(12px, 1fr)); gap: 3px; }
+    .waffle i { display: block; aspect-ratio: 1; border-radius: 1.5px; background: rgba(168,188,199,0.07); transition: background 0.3s ease; }
+    .waffle i.on { background: var(--burnt); }
+    .waffle i.on.hot { background: var(--burnt-bright); box-shadow: 0 0 6px rgba(221,119,64,0.55); }
+    .waffle.gold i.on { background: var(--moss); }
+    .waffle.gold i.on.hot { background: var(--moss-bright); box-shadow: 0 0 6px rgba(140,194,154,0.55); }
+    .waffle.early i.on { background: rgba(184,160,130,0.75); }
+    .waffle.early i.on.hot { background: var(--sand); box-shadow: 0 0 6px rgba(184,160,130,0.5); }
+    .waffle.plat i.on { background: rgba(168,188,199,0.65); }
+    .waffle.plat i.on.hot { background: var(--blue-bright); box-shadow: 0 0 6px rgba(168,188,199,0.5); }
+    .waffle.ultra i.on { background: var(--ultra); }
+    .waffle.ultra i.on.hot { background: var(--ultra-bright); box-shadow: 0 0 6px rgba(201,179,232,0.55); }
+    .waffle .locked-cap {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-dim);
+      background: linear-gradient(180deg, rgba(8,17,26,0.25), rgba(8,17,26,0.55));
+    }
+    .task-horizon { margin-top: 12px; }
+    .th-bar { position: relative; height: 4px; background: rgba(168,188,199,0.1); border-radius: 2px; overflow: hidden; }
+    .th-bar .th-fill { position: absolute; left: 0; top: 0; bottom: 0; background: linear-gradient(90deg, var(--lightblue), var(--burnt-bright)); transition: width 0.45s var(--ease); }
+    .th-cap { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.07em; color: var(--ink-dim); margin-top: 7px; }
+    .hz-tech { margin-top: clamp(28px, 4vw, 42px); display: grid; grid-template-columns: 1fr 1fr 1fr; gap: clamp(14px, 2.5vw, 26px); }
+    .tech-col .t-lbl { font-family: var(--mono); font-size: 11px; letter-spacing: 0.13em; text-transform: uppercase; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--hairline); }
+    .tech-col.exists .t-lbl { color: var(--blue-bright); }
+    .tech-col.emerging .t-lbl { color: var(--burnt-bright); }
+    .tech-col.fiction .t-lbl { color: var(--ink-dim); }
+    .tech-col ul { list-style: none; margin: 0; padding: 0; }
+    .tech-col li { font-family: var(--mono); font-size: 12px; letter-spacing: 0.03em; color: var(--ink-soft); padding: 5px 0 5px 18px; position: relative; }
+    .tech-col li::before { content: ""; position: absolute; left: 0; top: 0.85em; width: 9px; height: 9px; border-radius: 2px; }
+    .tech-col.exists li::before { background: var(--lightblue); }
+    .tech-col.emerging li::before { background: var(--burnt); }
+    .tech-col.fiction li { color: var(--ink-dim); }
+    .tech-col.fiction li::before { background: rgba(168,188,199,0.18); }
+    .tech-col li.none { color: var(--ink-dim); opacity: 0.55; padding-left: 0; font-style: italic; }
+    .tech-col li.none::before { display: none; }
+    .hz-note { margin-top: clamp(30px, 4.5vw, 46px); padding-top: 22px; border-top: 1px solid var(--hairline); font-size: 13.5px; line-height: 1.8; color: var(--ink-dim); max-width: 92ch; }
+    .hz-note b { color: var(--ink-soft); font-weight: 600; }
+    .hz-note a { border-bottom: 1px solid rgba(168,188,199,0.3); }
+    @media (max-width: 860px) {
+      .hz-grid { grid-template-columns: 1fr; }
+      .hz-count { text-align: left; }
+      .hz-tech { grid-template-columns: 1fr; }
+      .machine { flex-direction: column; }
+      .gen-seg { font-size: 8px; }
+    }
+    @media (max-width: 640px) {
+      .hz-marker .cap-dt { display: none; }
+      .gen-seg span { display: none; }
+      .hz-marker .cap { display: none; }
+      .hz-marker.milestone .cap, .hz-marker.today-mark .cap { display: block; }
+      .hz-track .era-band .era-lbl { display: none; }
+    }
+    @media (max-width: 480px) {
+      .caps { grid-template-columns: 1fr; }
+      .hz-stats { grid-template-columns: 1fr; }
+      .hz-stage { min-width: 62px; padding: 7px 9px 5px; }
     }
 
     /* ─────────── OPENING · straight into the hologram ─────────── */
@@ -409,6 +657,7 @@
       body { font-size: 16px; }
       .wrap { padding: 0 20px; }
       .wordmark { font-size: 17px; letter-spacing: 0.01em; }
+      .ver-tag { font-size: 9.5px; }
     }
   </style>
   <script>
@@ -420,8 +669,35 @@
       }
     } catch (e) {}
   </script>
+<style>
+  .lang-toggle{background:none;border:1px solid var(--hairline-2);color:var(--ink-dim);cursor:pointer;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;font-weight:600;letter-spacing:.08em;padding:6px 10px;border-radius:3px;margin-left:20px;line-height:1;transition:color .2s,border-color .2s}
+  .lang-toggle:hover{color:var(--ink);border-color:var(--ink-dim)}
+  @media(max-width:820px){.lang-toggle{margin-left:10px;padding:6px 9px}}
+  /* social glyphs */
+  .soc-ico{display:inline-block;width:16px;height:16px;margin-right:9px;vertical-align:-3px;color:var(--lightblue);flex:0 0 auto}
+  .soc-ico svg{display:block;width:100%;height:100%}
+  .socials a{display:flex;align-items:center}
+  /* AREPO teaser (v3.3): full-width SATOR storm band + compact wide grid */
+  .arepo-panel{border-top:0;padding:clamp(34px,5vh,64px) 0 clamp(36px,5vw,64px)}
+  .arepo-storm{scroll-margin-top:130px}
+  .arepo-storm{position:relative;width:100%;height:clamp(240px,30vh,300px);border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);background:radial-gradient(120% 150% at 50% 34%,rgba(184,80,37,0.09),transparent 60%);overflow:hidden}
+  .arepo-storm canvas{display:block;width:100%;height:100%}
+  .arepo-url{position:absolute;right:clamp(16px,3vw,40px);bottom:11px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--burnt-bright);opacity:.75}
+  .arepo-fullname{position:absolute;left:50%;top:57%;transform:translate(-50%,-50%);width:min(84%,640px);text-align:center;font-family:var(--mono);font-size:clamp(9px,1.05vw,12.5px);letter-spacing:.16em;text-transform:uppercase;color:var(--burnt-bright);opacity:0;transition:opacity 1.1s ease;pointer-events:none;text-shadow:0 0 10px rgba(8,17,26,0.95),0 0 20px rgba(8,17,26,0.85)}
+  .arepo-fullname.show{opacity:.9}
+  .arepo-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(24px,4vw,56px);align-items:start;padding-top:clamp(24px,3.4vw,40px)}
+  .arepo-lead .sec-num{margin-bottom:16px}
+  .arepo-tagline{font-family:'DM Serif Display',serif;font-weight:400;font-size:clamp(1.5rem,3vw,2.4rem);line-height:1.13;letter-spacing:-.01em;color:var(--ink);text-wrap:balance;margin:0}
+  .arepo-lede{font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:clamp(1.02rem,1.5vw,1.2rem);line-height:1.5;color:var(--blue-bright);margin:0 0 14px}
+  .arepo-pitch{color:var(--ink-soft);font-size:16px;line-height:1.7;max-width:56ch;margin:0 0 22px}
+  .arepo-foot{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+  .arepo-status{color:var(--ink-soft);font-size:15px;max-width:38ch}
+  .arepo-status b{color:var(--ink)}
+  @media(max-width:820px){.arepo-grid{grid-template-columns:1fr;gap:18px}.arepo-tagline{font-size:clamp(1.5rem,6vw,2rem)}}
+  </style>
 </head>
 <body>
+  <script>window.CFLANG=(function(){try{var p=new URLSearchParams(location.search).get('lang');if(p==='de'||p==='en'){localStorage.setItem('cf-lang',p);return p;}var s=localStorage.getItem('cf-lang');return s==='de'?'de':'en';}catch(e){return 'en';}})();document.documentElement.lang=window.CFLANG;</script>
 
   <!-- ░░ HEADER ░░ -->
   <header>
@@ -445,14 +721,18 @@
           <g class="gBar"><rect x="974.0" y="-1370.0" width="91.0" height="1634.0" fill="#A8BCC7"/></g>
         </svg>
         <span class="wordmark">Com<b>p</b>ute&nbsp;Free<i>d</i>om</span>
+        <span class="ver-tag">v36.0</span>
       </a>
       <nav class="nav-links" id="navLinks" aria-label="Primary">
-        <a href="#principle">Principle</a>
-        <a href="#mechanism">Mechanism</a>
-        <a href="#origin">Origin</a>
-        <a href="#forum" id="navForum" hidden>Forum</a>
-        <a href="#contact" class="nav-cta">Get involved</a>
+        <a data-i18n="nav.horizon" href="#horizon">Horizon</a>
+        <a data-i18n="nav.principle" href="#principle">Principle</a>
+        <a data-i18n="nav.mechanism" href="#mechanism">Mechanism</a>
+        <a data-i18n="nav.origin" href="#origin">Origin</a>
+        <a data-i18n="nav.forum" href="#forum" id="navForum" hidden>Forum</a>
+        <a href="#arepo" data-i18n="nav.arepo">AREPO</a>
+        <a data-i18n="nav.cta" href="#contact" class="nav-cta">Get involved</a>
       </nav>
+      <button class="lang-toggle" id="langToggle" aria-label="Language / Sprache">DE</button>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
       </button>
@@ -461,18 +741,20 @@
 
   <!-- ░░ TICKER ░░ -->
   <div class="ticker" aria-hidden="true">
-    <div class="track">
-      <span class="brk"><b>● LIVE · GENEVA, 6–7 JULY</b> &nbsp; The UN&apos;s Global Dialogue on AI Governance convenes its first session. <em>Every state at one table.</em></span>
+    <div class="track" data-i18n="ticker.track">
+      <span class="brk"><b>● GENEVA HAS MET</b> &nbsp; First Global Dialogue session closes; the science panel says frontier safety <em>cannot be guaranteed.</em> Next: New York, May 2027.</span>
       <span><b>EO, 2 June:</b> Washington takes 30 days of early access. <em>The public keeps waiting.</em></span>
       <span>The right to run. <em>The duty to restrain.</em></span>
       <span>Open weights hold the gap to the frontier at months. <b>The right to run, exercised.</b></span>
-      <span><b>AGI+</b> — self-regulation ends, treaty law begins.</span>
+      <span><b>00 · Horizon</b> — eighty years on one line, below. <em>It moves with the calendar.</em></span>
+      <span><b>AGI</b><em>plus</em> — self-regulation ends, treaty law begins.</span>
       <span>If you don&apos;t run it, <em>you cannot control it.</em></span>
-      <span class="brk"><b>● LIVE · GENEVA, 6–7 JULY</b> &nbsp; The UN&apos;s Global Dialogue on AI Governance convenes its first session. <em>Every state at one table.</em></span>
+      <span class="brk"><b>● GENEVA HAS MET</b> &nbsp; First Global Dialogue session closes; the science panel says frontier safety <em>cannot be guaranteed.</em> Next: New York, May 2027.</span>
       <span><b>EO, 2 June:</b> Washington takes 30 days of early access. <em>The public keeps waiting.</em></span>
       <span>The right to run. <em>The duty to restrain.</em></span>
       <span>Open weights hold the gap to the frontier at months. <b>The right to run, exercised.</b></span>
-      <span><b>AGI+</b> — self-regulation ends, treaty law begins.</span>
+      <span><b>00 · Horizon</b> — eighty years on one line, below. <em>It moves with the calendar.</em></span>
+      <span><b>AGI</b><em>plus</em> — self-regulation ends, treaty law begins.</span>
       <span>If you don&apos;t run it, <em>you cannot control it.</em></span>
     </div>
   </div>
@@ -482,15 +764,15 @@
   <section class="hero">
     <div class="wrap">
       <div class="hero-copy">
-        <span class="eyebrow reveal">Compute Sovereignty · v35.0 · July 2026</span>
-        <h1 class="reveal">The Right to <span class="run">Run.</span><br/>The Duty to <span class="restrain">Restrain.</span></h1>
-        <p class="hero-lede reveal">
+        <span data-i18n="hero.eyebrow" class="eyebrow reveal">Compute Sovereignty · v36.0 · July 2026</span>
+        <h1 data-i18n="hero.h1" class="reveal">The Right to <span class="run">Run.</span><br/>The Duty to <span class="restrain">Restrain.</span></h1>
+        <p class="hero-lede reveal" data-i18n="hero.lede">
           Two legal obligations: a <b>lower</b> boundary, and an <b>upper</b> one.
           Local AI for the citizen; a binding treaty for the frontier.
         </p>
         <div class="hero-actions reveal">
-          <a class="btn btn-primary" href="#mechanism">Read the argument →</a>
-          <a class="btn btn-ghost" href="#contact">Take a position</a>
+          <a data-i18n="hero.btnPrimary" class="btn btn-primary" href="#mechanism">Read the argument →</a>
+          <a data-i18n="hero.btnGhost" class="btn btn-ghost" href="#contact">Take a position</a>
         </div>
         <div class="hero-domains reveal">
           <a href="https://computefreedom.com">computefreedom.com</a>
@@ -501,7 +783,7 @@
 
       <div class="holo-stage reveal">
         <div class="holo-wrap"><canvas id="holo" width="600" height="540"></canvas></div>
-        <div class="holo-meta"><b>If you don&apos;t run it, you cannot control it.</b></div>
+        <div class="holo-meta" data-i18n="hero.holoMeta"><b>If you don&apos;t run it, you cannot control it.</b></div>
       </div>
     </div>
   </section>
@@ -510,20 +792,136 @@
   <section class="dispatch" id="dispatch" aria-label="Urgent dispatch">
     <div class="wrap">
       <div class="dispatch-card reveal">
-        <span class="dispatch-label"><span class="live-dot"></span>Dispatch · 1 July 2026</span>
-        <h2 class="dispatch-head">In 5 days, the species gets its table in Geneva.</h2>
-        <p class="dispatch-body">On 6 and 7 July, the United Nations convenes the first session of its <b>Global Dialogue on AI Governance</b> in Geneva. Born out of the 2024 Global Digital Compact, it is the first standing forum where every member state, with an independent scientific panel reporting in, addresses one question: <b>who authorizes the frontier?</b></p>
-        <p class="dispatch-body">Washington answered early. A June executive order grants the US government <b>30 days of access to covered frontier models</b> before the public sees them, under a framework the order itself calls voluntary. Early access for the state, gated access for everyone else: June&apos;s pattern, now in writing. And below the gate, the open-weight wave keeps building. GLM-5.2 ships under MIT license, MiniMax M3 and NVIDIA&apos;s Nemotron 3 follow, and the distance to the frontier holds at 3 to 6 months. <b>The right to run is being exercised, permission or none.</b></p>
-        <p class="dispatch-kicker">A treaty needs a table before it needs a text. Geneva sets the table. Whether the species gets a voice there, or only a seat, is the question Compute Freedom exists to ask.</p>
-        <p class="dispatch-src">White House executive order, 2 June 2026 · UN Global Dialogue on AI Governance, Geneva · Public reporting, June 2026.</p>
+        <span data-i18n="disp.label" class="dispatch-label"><span class="live-dot"></span>Dispatch · 13 July 2026</span>
+        <h2 data-i18n="disp.head" class="dispatch-head">The table is set. Now comes the text.</h2>
+        <p class="dispatch-body" data-i18n="disp.body1">On 6 and 7 July the <b>UN Global Dialogue on AI Governance</b> held its first session in Geneva: every member state in one room, opened by the Secretary-General and the President of the General Assembly. Guterres put four priorities on the record — common safety standards, human-rights red lines, capacity-building for developing countries, and environmental transparency. Autonomous weapons he called morally repugnant.</p>
+        <p class="dispatch-body" data-i18n="disp.body2">The sharper signal came from the scientists. The Dialogue&apos;s independent panel — forty experts co-chaired by <b>Yoshua Bengio</b> and <b>Maria Ressa</b> — delivered its first report days before the session: science <b>&ldquo;cannot guarantee&rdquo;</b> that frontier AI will avoid catastrophic harm. That is the official advisory language of the body every state asked for guidance, and it binds no one. The second session convenes in New York in <b>May 2027</b>: ten months in which the frontier ships at competitive tempo.</p>
+        <p class="dispatch-kicker" data-i18n="disp.kicker">A treaty needs a table before it needs a text. The table now exists. The Horizon below counts what the frontier does while the text is being argued.</p>
+        <p class="dispatch-src" data-i18n="disp.src">UN Global Dialogue on AI Governance, Geneva, 6–7 July 2026 · Independent International Scientific Panel on AI, first report, 1 July 2026 · Public reporting, July 2026.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ TAB BAR (v3.2) ░░ -->
+  <div class="tabsbar">
+    <div class="wrap">
+      <nav class="tabbar" id="tabBar" aria-label="Sections">
+        <button data-i18n="tab.horizon" id="tabbtn-horizon" data-tab="horizon"><b>00</b>Horizon</button>
+        <button data-i18n="tab.principle" id="tabbtn-principle" data-tab="principle"><b>01</b>The Principle</button>
+        <button data-i18n="tab.mechanism" id="tabbtn-mechanism" data-tab="mechanism"><b>02</b>The Mechanism</button>
+        <button data-i18n="tab.origin" id="tabbtn-origin" data-tab="origin"><b>03</b>Who &amp; Why</button>
+        <button data-i18n="tab.contact" id="tabbtn-contact" data-tab="contact"><b>04</b>Take a Position</button>
+        <button data-i18n="tab.forum" id="tabbtn-forum" data-tab="forum" hidden><b>05</b>The Forum</button>
+        <button id="tabbtn-arepo" data-tab="arepo" data-i18n="tab.arepo"><b>06</b>AREPO</button>
+      </nav>
+    </div>
+  </div>
+
+  <!-- ░░ 00 · THE HORIZON ░░ -->
+  <section class="band tabpanel" id="horizon">
+    <div class="wrap">
+      <div class="sec-head reveal" data-i18n="head.horizon">
+        <span class="sec-num">00 — Horizon</span>
+        <h2>Where this is heading. And where we came from.</h2>
+        <p class="kicker">Eighty years on one line. Ahead of us: AI, <span style="color:var(--burnt-bright)">AGI</span>, <span style="color:var(--burnt-bright)">AGI</span><span style="color:var(--lightblue)">plus</span>, <span style="color:var(--ultra-bright)">ASI</span> — dated by the people who forecast for a living. Behind us: the machines that raised us. The instrument moves with the calendar; come back tomorrow and it has crept forward on its own. Drag the line anywhere. Backwards is the friendly direction.</p>
+      </div>
+
+      <div class="horizon">
+        <div class="hz-top">
+          <div class="hz-date-block">
+            <div class="hz-viewdate" id="viewDate">—</div>
+            <div class="hz-offset" id="viewOffset">—</div>
+          </div>
+          <div class="hz-stagebar" id="stageBar"></div>
+          <div class="hz-count">
+            <div class="lbl" id="countLbl">—</div>
+            <div class="num" id="countNum">—</div>
+            <div class="sub" id="countSub">—</div>
+          </div>
+        </div>
+
+        <div class="hz-meaning" id="stageMeaning">—</div>
+
+        <div class="hz-controls">
+          <div class="scenario" id="scenarioBox" role="group" aria-label="Forecast scenario">
+            <button data-sc="fast">Fast</button>
+            <button data-sc="median" class="on">Median</button>
+            <button data-sc="slow">Slow</button>
+          </div>
+          <div class="stepper">
+            <button id="legacyBtn" class="legacy-btn" aria-label="Jump to 1985">1985</button>
+            <button id="backY" aria-label="Back one year">« year</button>
+            <button id="backM" aria-label="Back one month">‹ month</button>
+            <button id="todayBtn" class="today-btn">Today</button>
+            <button id="fwdM" aria-label="Forward one month">month ›</button>
+            <button id="fwdY" aria-label="Forward one year">year »</button>
+            <button id="playBtn" class="play" aria-label="Play timeline">▶ play</button>
+          </div>
+        </div>
+
+        <div class="hz-track-outer" id="trackOuter">
+          <div class="hz-track" id="track">
+            <div class="hz-cursor" id="cursor"></div>
+          </div>
+        </div>
+
+        <div class="gen-band" id="genBand"></div>
+        <div class="gen-cap" id="genCap">—</div>
+
+        <div class="hz-grid">
+          <div>
+            <div id="capsWrap">
+              <div class="hz-col-label">AI capabilities · vs. best human experts</div>
+              <div class="caps" id="capsBox"></div>
+            </div>
+            <div id="machineWrap" style="display:none">
+              <div class="hz-col-label"><span class="hl">The machine</span> · <span id="machineYear"></span></div>
+              <div class="machine" id="machineBox"></div>
+            </div>
+          </div>
+          <div>
+            <div class="hz-col-label" id="statsLabel">The economics · projected</div>
+            <div class="hz-stats" id="statsBox"></div>
+          </div>
+        </div>
+
+        <div class="hz-fleet">
+          <div class="fleet-line" id="fleetLine">—</div>
+          <div class="waffle" id="waffle" aria-hidden="true"></div>
+          <div class="task-horizon" id="taskHorizon">
+            <div class="th-bar"><div class="th-fill" id="thFill"></div></div>
+            <div class="th-cap" id="thCap">—</div>
+          </div>
+        </div>
+
+        <div class="hz-tech">
+          <div class="tech-col exists"><div class="t-lbl">In the world</div><ul id="techExists"></ul></div>
+          <div class="tech-col emerging"><div class="t-lbl">Arriving</div><ul id="techEmerging"></ul></div>
+          <div class="tech-col fiction"><div class="t-lbl">Still fiction</div><ul id="techFiction"></ul></div>
+        </div>
+
+        <div class="hz-note" data-i18n="hz.note">
+          <b>How to read this.</b> The AGI band <b>[Feb–Oct 2026]</b> follows the camp that says general-purpose AI
+          is already underfoot: <a href="https://www.noemamag.com/artificial-general-intelligence-is-already-here/" target="_blank" rel="noopener">Agüera
+          y Arcas &amp; Norvig</a> called today's models general intelligence back in 2023, Tyler Cowen called o3 AGI
+          in April 2025, and Ethan Mollick describes what we have as
+          <a href="https://www.oneusefulthing.org/p/on-jagged-agi-o3-gemini-25-and-everything" target="_blank" rel="noopener">jagged AGI</a>.
+          Survey medians still put the crossing years later — the width of the band is that disagreement. The ASI dates
+          come from the <a href="https://www.metaculus.com/questions/5121/" target="_blank" rel="noopener">Metaculus community forecast</a>,
+          the <a href="https://blog.aifutures.org/p/clarifying-how-our-ai-timelines-forecasts" target="_blank" rel="noopener">AI Futures Project</a>
+          and the <a href="https://forecastingresearch.substack.com/p/leap-wave-8-ai-timelines" target="_blank" rel="noopener">LEAP expert survey</a>
+          (all 2026). The past on this line is real hardware you could once buy. The future between the thresholds is
+          scenario interpolation in the spirit of <a href="https://ai-2027.com" target="_blank" rel="noopener">ai-2027.com</a>,
+          scaled so that today's column matches today's published figures. Error bars widen in both directions from today.
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ░░ PRINCIPLE ░░ -->
-  <section class="band" id="principle">
+  <section class="band tabpanel" id="principle">
     <div class="wrap">
-      <div class="sec-head reveal">
+      <div class="sec-head reveal" data-i18n="head.principle">
         <span class="sec-num">01 — The Principle</span>
         <h2>Two thresholds. One architecture.</h2>
         <p class="kicker">AI is too consequential to remain in the hands of a small number of unaccountable actors, neither at the point of access nor at the point of risk.</p>
@@ -531,126 +929,126 @@
 
       <div class="grid-2">
         <article class="card burnt reveal">
-          <span class="tag">Lower boundary · The citizen</span>
-          <h3>The Threshold Obligation</h3>
-          <p>Once AI crosses a defined capability threshold, developers should be legally required to offer a version runnable on personal hardware, without cloud dependency, without ongoing access fees, without surveillance. It secures the right of the citizen to a machine that answers to them.</p>
+          <span data-i18n="prin.card1tag" class="tag">Lower boundary · The citizen</span>
+          <h3 data-i18n="prin.card1h3">The Threshold Obligation</h3>
+          <p data-i18n="prin.card1p">Once AI crosses a defined capability threshold, developers should be legally required to offer a version runnable on personal hardware, without cloud dependency, without ongoing access fees, without surveillance. It secures the right of the citizen to a machine that answers to them.</p>
         </article>
         <article class="card blue reveal">
-          <span class="tag">Upper boundary · The species</span>
-          <h3>The Treaty Obligation</h3>
-          <p>Once frontier development crosses into <span class="term-blue">AGI</span>, <span class="term-blue">AGI+</span>, and <span class="term-blue">ASI</span>, no single corporation and no single state holds the democratic mandate to proceed alone. Decisions of consequence to the species require legitimation by the species, encoded in a binding international treaty, with verifiable limits, IAEA-grade inspections, and pause mechanisms anchored in law.</p>
+          <span data-i18n="prin.card2tag" class="tag">Upper boundary · The species</span>
+          <h3 data-i18n="prin.card2h3">The Treaty Obligation</h3>
+          <p data-i18n="prin.card2p">Once frontier development crosses into <span class="term-burnt">AGI</span>, <span class="term-burnt">AGI</span><span class="term-blue">plus</span>, and <span class="term-ultra">ASI</span>, no single corporation and no single state holds the democratic mandate to proceed alone. Decisions of consequence to the species require legitimation by the species, encoded in a binding international treaty, with verifiable limits, IAEA-grade inspections, and pause mechanisms anchored in law.</p>
         </article>
       </div>
 
-      <p class="pull reveal">Open source is not the same as <em>compute sovereignty.</em></p>
+      <p class="pull reveal" data-i18n="prin.pull">Open source is not the same as <em>compute sovereignty.</em></p>
 
-      <p class="body reveal">Releasing model weights that only function at scale on hyperscaler infrastructure is a formal gesture without functional substance. The code may be visible; the capability remains inaccessible. Whoever controls the inference infrastructure controls the knowledge. If that knowledge becomes foundational to medicine, education, law, and governance, concentrating it in three to five private corporations is not a market outcome we should accept by default.</p>
+      <p class="body reveal" data-i18n="prin.body1">Releasing model weights that only function at scale on hyperscaler infrastructure is a formal gesture without functional substance. The code may be visible; the capability remains inaccessible. Whoever controls the inference infrastructure controls the knowledge. If that knowledge becomes foundational to medicine, education, law, and governance, concentrating it in three to five private corporations is not a market outcome we should accept by default.</p>
 
-      <p class="body reveal"><strong>The pattern is old. Only the scale is new.</strong></p>
+      <p class="body reveal" data-i18n="prin.body2"><strong>The pattern is old. Only the scale is new.</strong></p>
     </div>
   </section>
 
   <!-- ░░ MECHANISM ░░ -->
-  <section class="band" id="mechanism">
+  <section class="band tabpanel" id="mechanism">
     <div class="wrap">
-      <div class="sec-head reveal">
+      <div class="sec-head reveal" data-i18n="head.mechanism">
         <span class="sec-num">02 — The Mechanism</span>
         <h2>Two obligations. One architecture.</h2>
         <p class="kicker">The Threshold Obligation secures the lower boundary: the right of the citizen to a machine they actually control. The Treaty Obligation secures the upper one: the right of the species to a voice in decisions taken in its name. Each obligation, alone, is symbolic. Together, they are an architecture.</p>
       </div>
 
-      <h3 class="subhead reveal"><span class="mini">Lower boundary</span>The Threshold Obligation</h3>
-      <p class="body reveal">The standard response to concerns about AI concentration is a language of openness: papers, benchmarks, model cards, APIs, and occasional weight releases. But this answer mistakes visibility for access, and access for sovereignty.</p>
-      <p class="body reveal">Even where model weights are released, the most capable systems remain practically dependent on infrastructure costing hundreds of thousands or millions of dollars. Researchers may inspect parts of the stack. Citizens may, in theory, audit it. But they cannot run frontier capability independently. The appearance of openness remains; the substance of control does not.</p>
-      <p class="body reveal">Compute Freedom proposes a concrete mechanism: once an AI system crosses a defined capability threshold, its developer should be legally required to offer a compressed, locally-runnable version: on consumer hardware, offline-capable, without mandatory cloud authentication.</p>
+      <h3 data-i18n="mech.sub1" class="subhead reveal"><span class="mini">Lower boundary</span>The Threshold Obligation</h3>
+      <p class="body reveal" data-i18n="mech.p1">The standard response to concerns about AI concentration is a language of openness: papers, benchmarks, model cards, APIs, and occasional weight releases. But this answer mistakes visibility for access, and access for sovereignty.</p>
+      <p class="body reveal" data-i18n="mech.p2">Even where model weights are released, the most capable systems remain practically dependent on infrastructure costing hundreds of thousands or millions of dollars. Researchers may inspect parts of the stack. Citizens may, in theory, audit it. But they cannot run frontier capability independently. The appearance of openness remains; the substance of control does not.</p>
+      <p class="body reveal" data-i18n="mech.p3">Compute Freedom proposes a concrete mechanism: once an AI system crosses a defined capability threshold, its developer should be legally required to offer a compressed, locally-runnable version: on consumer hardware, offline-capable, without mandatory cloud authentication.</p>
 
-      <p class="pull blue reveal">The obligation is the principle. <em>The threshold is the negotiation.</em></p>
+      <p class="pull blue reveal" data-i18n="mech.pull1">The obligation is the principle. <em>The threshold is the negotiation.</em></p>
 
-      <p class="body reveal">The precise capability threshold is left open here by design. Defining it is a technical and political question that belongs in public deliberation, with input from engineers, ethicists, policymakers, and affected communities. We invite that negotiation to begin.</p>
+      <p class="body reveal" data-i18n="mech.p4">The precise capability threshold is left open here by design. Defining it is a technical and political question that belongs in public deliberation, with input from engineers, ethicists, policymakers, and affected communities. We invite that negotiation to begin.</p>
 
       <ul class="spec reveal">
-        <li><b>Frontier models can today be compressed</b> to run on consumer hardware with modest capability loss. The technical barrier is not fundamental.</li>
-        <li><b>The economic incentive to prevent local deployment is structural:</b> cloud inference is the revenue model.</li>
-        <li><b>No legal framework currently compels disclosure</b> of whether compression is feasible.</li>
-        <li><b>The public has no mechanism to verify</b> industry claims about what is and is not possible.</li>
+        <li data-i18n="mech.spec1a"><b>Frontier models can today be compressed</b> to run on consumer hardware with modest capability loss. The technical barrier is not fundamental.</li>
+        <li data-i18n="mech.spec1b"><b>The economic incentive to prevent local deployment is structural:</b> cloud inference is the revenue model.</li>
+        <li data-i18n="mech.spec1c"><b>No legal framework currently compels disclosure</b> of whether compression is feasible.</li>
+        <li data-i18n="mech.spec1d"><b>The public has no mechanism to verify</b> industry claims about what is and is not possible.</li>
       </ul>
 
-      <p class="body reveal">The pharmaceutical parallel is instructive. Drug developers are required to disclose formulations, submit to regulatory review, and, after a period, open compounds to generics. We accept that the public has a legitimate interest in not having life-critical knowledge permanently locked inside private infrastructure. <strong>AI is becoming life-critical knowledge. The argument is the same.</strong></p>
-      <p class="body reveal">This argument leaves commercial AI development intact. What it adds is a structural floor beneath it: a minimum condition of compute sovereignty that keeps independent verification, academic research, and democratic accountability possible.</p>
+      <p class="body reveal" data-i18n="mech.p5">The pharmaceutical parallel is instructive. Drug developers are required to disclose formulations, submit to regulatory review, and, after a period, open compounds to generics. We accept that the public has a legitimate interest in not having life-critical knowledge permanently locked inside private infrastructure. <strong>AI is becoming life-critical knowledge. The argument is the same.</strong></p>
+      <p class="body reveal" data-i18n="mech.p6">This argument leaves commercial AI development intact. What it adds is a structural floor beneath it: a minimum condition of compute sovereignty that keeps independent verification, academic research, and democratic accountability possible.</p>
 
-      <h3 class="subhead reveal"><span class="mini">Upper boundary</span>The Treaty Obligation</h3>
-      <p class="body reveal">The lower threshold protects the citizen. The upper threshold protects the species, and we have been quiet about it for too long.</p>
-      <p class="body reveal">As frontier systems advance toward general human-level capability and beyond — <span class="term-blue">AGI</span>, <span class="term-blue">AGI+</span>, and <span class="term-blue">ASI</span> — their development becomes a matter of consequence beyond any single state or any single corporation. The current trajectory has neither democratic mandate nor binding treaty. Stargate, Colossus, the multi-hundred-billion-dollar build-outs of OpenAI, Google, and xAI, all dependent on the de facto NVIDIA monopoly on frontier training silicon, proceed at competitive tempo, accountable to shareholders rather than citizens.</p>
-      <p class="body reveal">The physical signature of this race is no longer subtle. When an AI company announces it needs <span class="term-burnt">ten new nuclear reactors</span> to train its next model, a constitutional state owes its citizens one question before any admiration: <strong>by whose authority?</strong> That this question has barely been asked is a failure of contemporary political thought.</p>
+      <h3 data-i18n="mech.sub2" class="subhead reveal"><span class="mini">Upper boundary</span>The Treaty Obligation</h3>
+      <p class="body reveal" data-i18n="mech.p7">The lower threshold protects the citizen. The upper threshold protects the species, and we have been quiet about it for too long.</p>
+      <p class="body reveal" data-i18n="mech.p8">As frontier systems advance toward general human-level capability and beyond — <span class="term-burnt">AGI</span>, <span class="term-burnt">AGI</span><span class="term-blue">plus</span>, and <span class="term-ultra">ASI</span> — their development becomes a matter of consequence beyond any single state or any single corporation. The current trajectory has neither democratic mandate nor binding treaty. Stargate, Colossus, the multi-hundred-billion-dollar build-outs of OpenAI, Google, and xAI, all dependent on the de facto NVIDIA monopoly on frontier training silicon, proceed at competitive tempo, accountable to shareholders rather than citizens.</p>
+      <p class="body reveal" data-i18n="mech.p9">The physical signature of this race is no longer subtle. When an AI company announces it needs <span class="term-burnt">ten new nuclear reactors</span> to train its next model, a constitutional state owes its citizens one question before any admiration: <strong>by whose authority?</strong> That this question has barely been asked is a failure of contemporary political thought.</p>
 
-      <h3 class="subhead reveal"><span class="mini">Public record</span>The Failure of Self-Regulation</h3>
-      <p class="body reveal">Anthropic refused to remove safeguards preventing Claude from being used for autonomous weapon targeting or mass domestic surveillance. The Pentagon responded by designating the company a <span class="term-burnt">supply-chain risk</span>. OpenAI, Google, and xAI have moved into classified defense deployments under less restrictive arrangements. Without treaty law, voluntary safety commitments become bargaining chips under pressure.</p>
+      <h3 data-i18n="mech.sub3" class="subhead reveal"><span class="mini">Public record</span>The Failure of Self-Regulation</h3>
+      <p class="body reveal" data-i18n="mech.p10">Anthropic refused to remove safeguards preventing Claude from being used for autonomous weapon targeting or mass domestic surveillance. The Pentagon responded by designating the company a <span class="term-burnt">supply-chain risk</span>. OpenAI, Google, and xAI have moved into classified defense deployments under less restrictive arrangements. Without treaty law, voluntary safety commitments become bargaining chips under pressure.</p>
 
       <div class="records">
-        <div class="record reveal"><span class="src">Public Record · United Nations</span><span class="claim">First session of the UN Global Dialogue on AI Governance convenes in Geneva.</span><span class="when">6–7 July 2026</span></div>
-        <div class="record reveal"><span class="src">Public Record · White House</span><span class="claim">Executive order gives the US government 30-day early access to covered frontier models before release.</span><span class="when">2 June 2026</span></div>
-        <div class="record reveal"><span class="src">Public Record</span><span class="claim">Pentagon designates Anthropic a &ldquo;supply-chain risk&rdquo; over weapons-use safeguards.</span><span class="when">March 2026</span></div>
-        <div class="record reveal"><span class="src">Public Record</span><span class="claim">OpenAI and xAI sign expansive defense deployments as the compute race accelerates.</span><span class="when">February 2026</span></div>
-        <div class="record reveal"><span class="src">Public Record</span><span class="claim">Frontier AI build-out triggers commitments to multiple new nuclear reactors.</span><span class="when">2025–2026</span></div>
-        <div class="record reveal"><span class="src">Public Statement · Center for AI Safety</span><span class="claim">Hinton, Bengio, Altman, Hassabis: AI risk on par with pandemics and nuclear war.</span><span class="when">May 2023</span></div>
+        <div class="record reveal" data-i18n="mech.rec1"><span class="src">Public Record · United Nations</span><span class="claim">First session of the UN Global Dialogue meets in Geneva; its science panel reports days earlier that frontier safety cannot be guaranteed.</span><span class="when">6–7 July 2026</span></div>
+        <div class="record reveal" data-i18n="mech.rec2"><span class="src">Public Record · White House</span><span class="claim">Executive order gives the US government 30-day early access to covered frontier models before release.</span><span class="when">2 June 2026</span></div>
+        <div class="record reveal" data-i18n="mech.rec3"><span class="src">Public Record</span><span class="claim">Pentagon designates Anthropic a &ldquo;supply-chain risk&rdquo; over weapons-use safeguards.</span><span class="when">March 2026</span></div>
+        <div class="record reveal" data-i18n="mech.rec4"><span class="src">Public Record</span><span class="claim">OpenAI and xAI sign expansive defense deployments as the compute race accelerates.</span><span class="when">February 2026</span></div>
+        <div class="record reveal" data-i18n="mech.rec5"><span class="src">Public Record</span><span class="claim">Frontier AI build-out triggers commitments to multiple new nuclear reactors.</span><span class="when">2025–2026</span></div>
+        <div class="record reveal" data-i18n="mech.rec6"><span class="src">Public Statement · Center for AI Safety</span><span class="claim">Hinton, Bengio, Altman, Hassabis: AI risk on par with pandemics and nuclear war.</span><span class="when">May 2023</span></div>
       </div>
-      <p class="records-note reveal">Paraphrased summaries of public reporting. See linked sources via the contact channel for citations.</p>
+      <p class="records-note reveal" data-i18n="mech.recnote">Paraphrased summaries of public reporting. See linked sources via the contact channel for citations.</p>
 
-      <p class="body reveal" style="margin-top:2em">We have built such treaties before.</p>
+      <p class="body reveal" style="margin-top:2em" data-i18n="mech.treatyline">We have built such treaties before.</p>
       <div class="treaties reveal">
-        <span>The Non-Proliferation Treaty</span>
-        <span>The IAEA</span>
-        <span>The Biological Weapons Convention</span>
-        <span>The Montreal Protocol</span>
+        <span data-i18n="mech.tr1">The Non-Proliferation Treaty</span>
+        <span data-i18n="mech.tr2">The IAEA</span>
+        <span data-i18n="mech.tr3">The Biological Weapons Convention</span>
+        <span data-i18n="mech.tr4">The Montreal Protocol</span>
       </div>
-      <p class="body reveal">None were utopian when proposed; all function today: imperfect, monitored, real. The technologies they govern are no more dual-use or globally consequential than frontier AI. The institutional infrastructure exists. Only the <span class="term-burnt">will</span> is missing.</p>
+      <p class="body reveal" data-i18n="mech.p11">None were utopian when proposed; all function today: imperfect, monitored, real. The technologies they govern are no more dual-use or globally consequential than frontier AI. The institutional infrastructure exists. Only the <span class="term-burnt">will</span> is missing.</p>
 
-      <p class="body reveal">The case is not ours alone. The 2023 Center for AI Safety statement, which placed AI risk on the same axis as pandemics and nuclear war, was signed by <strong>Geoffrey Hinton</strong>, <strong>Yoshua Bengio</strong>, <strong>Sam Altman</strong>, and <strong>Demis Hassabis</strong>. The signatories include the very executives currently building the frontier. Coming from them, the warning is <strong>a confession</strong>. It has produced no binding constraint on their own behavior, because none has been demanded of them.</p>
+      <p class="body reveal" data-i18n="mech.p12">The case is not ours alone. The 2023 Center for AI Safety statement, which placed AI risk on the same axis as pandemics and nuclear war, was signed by <strong>Geoffrey Hinton</strong>, <strong>Yoshua Bengio</strong>, <strong>Sam Altman</strong>, and <strong>Demis Hassabis</strong>. The signatories include the very executives currently building the frontier. Coming from them, the warning is <strong>a confession</strong>. It has produced no binding constraint on their own behavior, because none has been demanded of them.</p>
 
-      <p class="pull reveal">€20 becomes €200, €2,000, <em>or simply unavailable at your tier.</em></p>
-      <p class="body reveal">The pricing model is changing under everyone&apos;s feet. Flat subscriptions are giving way to metered inference. If access to intelligence becomes a metered utility, understanding becomes a function of budget. These thresholds are a matter of months. <strong>Whoever does not act now will have no leverage later.</strong></p>
+      <p class="pull reveal" data-i18n="mech.pull2">€20 becomes €200, €2,000, <em>or simply unavailable at your tier.</em></p>
+      <p class="body reveal" data-i18n="mech.p13">The pricing model is changing under everyone&apos;s feet. Flat subscriptions are giving way to metered inference. If access to intelligence becomes a metered utility, understanding becomes a function of budget. These thresholds are a matter of months. <strong>Whoever does not act now will have no leverage later.</strong></p>
 
-      <h3 class="subhead reveal"><span class="mini">What the Treaty Obligation demands</span>A mandate from the species</h3>
+      <h3 data-i18n="mech.sub4" class="subhead reveal"><span class="mini">What the Treaty Obligation demands</span>A mandate from the species</h3>
       <ul class="spec reveal">
-        <li><b>A binding international agreement</b> defining the capability and infrastructural thresholds beyond which AI development requires multilateral authorization.</li>
-        <li><b>Verifiable compute and energy limits</b> at the frontier, monitored under an inspection regime equivalent in seriousness to the IAEA.</li>
-        <li><b>Pause mechanisms anchored in treaty law</b> rather than corporate self-restraint, triggered by demonstrated capability or demonstrated risk.</li>
-        <li><b>The inclusion of every frontier-capable state,</b> explicitly including China, whose stated willingness to engage in international AI safety dialogue has been more substantive than the Western reflex acknowledges.</li>
-        <li><b>Public, citizen-accessible reporting</b> on frontier development, breaking the opacity of corporate self-assessment that currently passes for governance.</li>
+        <li data-i18n="mech.spec2a"><b>A binding international agreement</b> defining the capability and infrastructural thresholds beyond which AI development requires multilateral authorization.</li>
+        <li data-i18n="mech.spec2b"><b>Verifiable compute and energy limits</b> at the frontier, monitored under an inspection regime equivalent in seriousness to the IAEA.</li>
+        <li data-i18n="mech.spec2c"><b>Pause mechanisms anchored in treaty law</b> rather than corporate self-restraint, triggered by demonstrated capability or demonstrated risk.</li>
+        <li data-i18n="mech.spec2d"><b>The inclusion of every frontier-capable state,</b> explicitly including China, whose stated willingness to engage in international AI safety dialogue has been more substantive than the Western reflex acknowledges.</li>
+        <li data-i18n="mech.spec2e"><b>Public, citizen-accessible reporting</b> on frontier development, breaking the opacity of corporate self-assessment that currently passes for governance.</li>
       </ul>
 
-      <p class="pull blue reveal">The citizen below. The species above. <em>The corporation answers to neither.</em></p>
+      <p class="pull blue reveal" data-i18n="mech.pull3">The citizen below. The species above. <em>The corporation answers to neither.</em></p>
     </div>
   </section>
 
   <!-- ░░ ORIGIN ░░ -->
-  <section class="band" id="origin">
+  <section class="band tabpanel" id="origin">
     <div class="wrap">
-      <div class="sec-head reveal">
+      <div class="sec-head reveal" data-i18n="head.origin">
         <span class="sec-num">03 — Who &amp; Why</span>
         <h2>Why I built Compute Freedom.</h2>
       </div>
 
-      <p class="body reveal">I am not building Compute Freedom as a personal platform. I am building it because I have seen this pattern before. In science, information can be public while understanding remains concentrated. Data may be shared. Papers may be accessible. Methods may be described. But the real power lies in the infrastructure that turns information into knowledge. <strong>The data was open. The understanding was not.</strong></p>
+      <p class="body reveal" data-i18n="orig.p1">I am not building Compute Freedom as a personal platform. I am building it because I have seen this pattern before. In science, information can be public while understanding remains concentrated. Data may be shared. Papers may be accessible. Methods may be described. But the real power lies in the infrastructure that turns information into knowledge. <strong>The data was open. The understanding was not.</strong></p>
 
-      <p class="body reveal">Artificial intelligence is now reproducing that same structure at civilizational scale. The language of openness remains, but the substance of control is moving into <span class="term-burnt">centralized compute, centralized inference, and centralized permission.</span></p>
+      <p class="body reveal" data-i18n="orig.p2">Artificial intelligence is now reproducing that same structure at civilizational scale. The language of openness remains, but the substance of control is moving into <span class="term-burnt">centralized compute, centralized inference, and centralized permission.</span></p>
 
-      <p class="body reveal">Compute Freedom exists to challenge that arrangement. It argues that control over foundational intelligence must not remain the privilege of a few firms, or the <span class="term-blue">accidental by-product</span> of their business models.</p>
+      <p class="body reveal" data-i18n="orig.p3">Compute Freedom exists to challenge that arrangement. It argues that control over foundational intelligence must not remain the privilege of a few firms, or the <span class="term-blue">accidental by-product</span> of their business models.</p>
 
       <div class="bio reveal">
-        <span class="who">The initiator</span>
+        <span data-i18n="orig.bioWho" class="who">The initiator</span>
         <div class="name">Michael S. D. Kormann</div>
-        <p class="body">A translational scientist and Professor of Translational Genomics and Gene Therapy in Pediatrics, with a PhD in Biology, a former European Research Council Starting Grant, publications in journals including Nature Biotechnology and the Journal of Clinical Investigation, and international recognition including the Maurizio Vignola Award.</p>
+        <p class="body" data-i18n="orig.bioP">A translational scientist and Professor of Translational Genomics and Gene Therapy in Pediatrics, with a PhD in Biology, a former European Research Council Starting Grant, publications in journals including Nature Biotechnology and the Journal of Clinical Investigation, and international recognition including the Maurizio Vignola Award.</p>
       </div>
 
-      <p class="pull reveal" style="margin-bottom:0">If intelligence becomes infrastructure, <em>its governance cannot remain private.</em></p>
+      <p class="pull reveal" style="margin-bottom:0" data-i18n="orig.pull">If intelligence becomes infrastructure, <em>its governance cannot remain private.</em></p>
     </div>
   </section>
 
   <!-- ░░ CONTACT ░░ -->
-  <section class="band" id="contact">
+  <section class="band tabpanel" id="contact">
     <div class="wrap">
-      <div class="sec-head reveal">
+      <div class="sec-head reveal" data-i18n="head.contact">
         <span class="sec-num">04 — Take a Position</span>
         <h2>AI governance happens with you or without you.</h2>
         <p class="kicker">Discuss it publicly, challenge it, share it, improve it, wherever policy conversations actually happen. Use the form for collaborations, interviews, policy work, research input, or serious objections that should not be lost in a comment thread.</p>
@@ -658,12 +1056,13 @@
 
       <div class="contact-grid">
         <div class="contact-aside reveal">
-          <p class="pull blue" style="margin-top:0">Read. Share. <em>Reach out.</em></p>
+          <p class="pull blue" style="margin-top:0" data-i18n="cont.pull">Read. Share. <em>Reach out.</em></p>
           <div class="socials">
-            <a href="https://www.linkedin.com/in/prof-dr-rer-nat-michael-kormann-46251084/" target="_blank" rel="noopener">LinkedIn <span class="handle">Michael Kormann</span></a>
-            <a href="https://x.com/michael_kormann" target="_blank" rel="noopener">X <span class="handle">@michael_kormann</span></a>
-            <a href="https://bsky.app/profile/mkormann.bsky.social" target="_blank" rel="noopener">Bluesky <span class="handle">@mkormann.bsky.social</span></a>
-            <a href="https://mastodon.social/@the_sad_professor" target="_blank" rel="me noopener">Mastodon <span class="handle">@the_sad_professor</span></a>
+            <a href="https://www.linkedin.com/in/prof-dr-rer-nat-michael-kormann-46251084/" target="_blank" rel="noopener"><span class="soc-ico"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5A2.5 2.5 0 1 0 5 8.5a2.5 2.5 0 0 0-.02-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-.95 1.8-1.95 3.7-1.95 3.96 0 4.7 2.5 4.7 5.75V21H16v-5.6c0-1.34-.02-3.06-1.9-3.06-1.9 0-2.2 1.46-2.2 2.96V21H10z"/></svg></span>LinkedIn <span class="handle">Michael Kormann</span></a>
+            <a href="https://x.com/michael_kormann" target="_blank" rel="noopener"><span class="soc-ico"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-7.1 8.1L23 22h-6.6l-4.6-6-5.3 6H2.4l7.6-8.7L1.6 2h6.8l4.2 5.5L18.9 2zm-1.2 18h1.7L7.4 3.8H5.6L17.7 20z"/></svg></span>X <span class="handle">@michael_kormann</span></a>
+            <a href="https://bsky.app/profile/mkormann.bsky.social" target="_blank" rel="noopener"><span class="soc-ico"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M12 10.8C10.7 8.3 7.2 4.9 4.6 4.2 2.9 3.7 2 4.4 2 6.3c0 1.9 1.1 5 1.8 5.6.6.5 1.9.9 3.4.9-2.5.4-3.4 1.5-3.4 2.9 0 1.7 1.5 2.5 2.9 2.1C9 17.3 11 15 12 13.6c1 1.4 3 3.7 5.3 4.2 1.4.4 2.9-.4 2.9-2.1 0-1.4-.9-2.5-3.4-2.9 1.5 0 2.8-.4 3.4-.9.7-.6 1.8-3.7 1.8-5.6 0-1.9-.9-2.6-2.6-2.1C16.8 4.9 13.3 8.3 12 10.8z"/></svg></span>Bluesky <span class="handle">@mkormann.bsky.social</span></a>
+            <a href="https://www.instagram.com/prof_dr_michael_kormann/" target="_blank" rel="noopener"><span class="soc-ico"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5.2"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></span>Instagram <span class="handle">@prof_dr_michael_kormann</span></a>
+            <a href="https://mastodon.social/@the_sad_professor" target="_blank" rel="me noopener"><span class="soc-ico"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10c0-3.3 1.8-5 8-5s8 1.7 8 5c0 2.2-.2 3.9-.6 4.8-.7 1.6-2.7 1.9-4.4 1.9"/><path d="M8 12.6V9.8c0-1.2.9-2 2-2s2 .8 2 2v0c0-1.2 1-2 2-2s2 .8 2 2v2.8"/><path d="M8 16.6c1.6.5 3.6.6 5 .3"/></svg></span>Mastodon <span class="handle">@the_sad_professor</span></a>
           </div>
         </div>
 
@@ -671,31 +1070,31 @@
           <form id="contactForm" action="https://formspree.io/f/xeepeyrb" method="POST">
             <div class="row">
               <div class="field">
-                <label for="salutation">Salutation</label>
-                <select id="salutation" name="salutation">
+                <label data-i18n="cont.lblSal" for="salutation">Salutation</label>
+                <select data-i18n="cont.selSal" id="salutation" name="salutation">
                   <option value="">—</option>
                   <option>Mr.</option><option>Mrs.</option><option>Ms.</option><option>Mx.</option>
                 </select>
               </div>
               <div class="field">
-                <label for="title">Title</label>
-                <select id="title" name="title">
+                <label data-i18n="cont.lblTitle" for="title">Title</label>
+                <select data-i18n="cont.selTitle" id="title" name="title">
                   <option value="">—</option>
                   <option>Dr.</option><option>Prof.</option><option>Prof. Dr.</option>
                 </select>
               </div>
             </div>
             <div class="field">
-              <label for="name">Name</label>
-              <input id="name" name="name" type="text" required placeholder="Your name" />
+              <label data-i18n="cont.lblName" for="name">Name</label>
+              <input id="name" name="name" type="text" required placeholder="Your name" data-de-ph="Dein Name" />
             </div>
             <div class="field">
-              <label for="email">Email</label>
+              <label data-i18n="cont.lblEmail" for="email">Email</label>
               <input id="email" name="_replyto" type="email" required placeholder="you@example.com" />
             </div>
             <div class="field">
-              <label for="role">Background</label>
-              <select id="role" name="role">
+              <label data-i18n="cont.lblRole" for="role">Background</label>
+              <select data-i18n="cont.selRole" id="role" name="role">
                 <option value="">— Select —</option>
                 <option>Researcher / Academic</option>
                 <option>Policymaker / Regulator</option>
@@ -709,12 +1108,12 @@
               </select>
             </div>
             <div class="field">
-              <label for="message">Message</label>
-              <textarea id="message" name="message" required placeholder="Collaborations, interviews, policy work, research input, or serious objections."></textarea>
+              <label data-i18n="cont.lblMsg" for="message">Message</label>
+              <textarea id="message" name="message" required placeholder="Collaborations, interviews, policy work, research input, or serious objections." data-de-ph="Zusammenarbeit, Interviews, politische Arbeit, Forschungsbeiträge oder ernste Einwände."></textarea>
             </div>
-            <button type="submit" id="submitBtn">Send →</button>
+            <button data-i18n="cont.submit" type="submit" id="submitBtn">Send →</button>
             <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
-            <p class="form-note">
+            <p class="form-note" data-i18n="cont.note">
               Routes to a Proton inbox via Formspree. Privacy-respecting analytics: aggregate page views only.
               No cookies. No personal profiling. No advertising trackers.
             </p>
@@ -724,20 +1123,43 @@
     </div>
   </section>
 
+  <!-- ░░ 06 · AREPO (teaser) ░░ -->
+  <section class="band tabpanel arepo-panel" id="arepo">
+    <div class="arepo-storm" aria-hidden="true">
+      <canvas id="arepoStorm"></canvas>
+      <div class="arepo-fullname" id="arepoFullname">Architecture for Registered Endorsement of Pictorial Originals</div>
+      <span class="arepo-url">computefreedom.org/AREPO</span>
+    </div>
+    <div class="wrap arepo-grid">
+      <div class="arepo-lead reveal">
+        <span class="sec-num">06 — AREPO</span>
+        <p class="arepo-tagline" data-i18n="arepo.tagline">AI will flood the world with images. But it cannot forge your signature.</p>
+      </div>
+      <div class="arepo-body reveal">
+        <p class="arepo-lede" data-i18n="arepo.lede">Same principle, a different problem: when anyone can generate any image, how do you prove a picture is yours?</p>
+        <p class="arepo-pitch" data-i18n="arepo.pitch">AREPO lets a photographer or an editor vouch for an image. You sign it, anyone can check the signature, and if it holds, it came from you.</p>
+        <div class="arepo-foot">
+          <span class="arepo-status" data-i18n="arepo.status"><b>In development.</b> A short film explains it; the tool follows.</span>
+          <a class="btn btn-primary" href="#contact" data-i18n="arepo.cta">Get in touch →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ░░ FORUM (giscus — appears once configured, see script constants below) ░░ -->
-  <section class="band" id="forum" hidden>
+  <section class="band tabpanel" id="forum">
     <div class="wrap">
-      <div class="sec-head reveal">
+      <div class="sec-head reveal" data-i18n="head.forum">
         <span class="sec-num">05 — The Forum</span>
         <h2>The argument is open. Take it apart.</h2>
         <p class="kicker">Serious objections make the argument better. Post them here, in the open, where they can be read, answered, and kept.</p>
       </div>
       <div class="forum-actions reveal">
-        <a class="btn btn-ghost" id="forumFullLink" href="#" target="_blank" rel="noopener">Open the full forum on GitHub →</a>
+        <a data-i18n="forum.link" class="btn btn-ghost" id="forumFullLink" href="#" target="_blank" rel="noopener">Open the full forum on GitHub →</a>
       </div>
       <div class="forum-shell reveal">
         <div id="giscusMount"></div>
-        <p class="forum-note">Commenting runs on GitHub Discussions via giscus. A free GitHub account is required to post; reading is open to everyone. No trackers beyond GitHub itself.</p>
+        <p class="forum-note" data-i18n="forum.note">Commenting runs on GitHub Discussions via giscus. A free GitHub account is required to post; reading is open to everyone. No trackers beyond GitHub itself.</p>
       </div>
     </div>
   </section>
@@ -751,12 +1173,17 @@
           <img id="footLogo" alt="Compute Freedom p|d mark" />
           <span class="wordmark" style="font-size:15px">Com<b>p</b>ute&nbsp;Free<i>d</i>om</span>
         </div>
+        <nav class="foot-nav" aria-label="Secondary">
+          <a href="about.html" data-i18n="foot.about">About me</a>
+          <a data-i18n="foot.impressum" href="impressum.html">Impressum</a>
+          <a data-i18n="foot.privacy" href="datenschutz.html">Privacy</a>
+        </nav>
         <div class="foot-meta">
           <a href="https://computefreedom.com">computefreedom.com</a> · <a href="https://computefreedom.org">computefreedom.org</a>
         </div>
       </div>
-      <p class="foot-tag">If you don&apos;t run it, you cannot control it.</p>
-      <p class="foot-meta" style="text-align:center;margin-top:18px">© MMXXVI · Michael S. D. Kormann · All rights reserved · #ComputeFreedom</p>
+      <p class="foot-tag" data-i18n="foot.tag">If you don&apos;t run it, you cannot control it.</p>
+      <p class="foot-meta" style="text-align:center;margin-top:18px" data-i18n="foot.copy">© MMXXVI · Michael S. D. Kormann · All rights reserved · #ComputeFreedom</p>
     </div>
   </footer>
 
@@ -1050,17 +1477,18 @@
     // one-time GitHub setup — see forum_setup_giscus.md). Leave empty = section stays hidden.
     (function () {
       var GISCUS = {
-        repo:       '',   // e.g. 'michaelkormann/computefreedom-forum'
-        repoId:     '',   // from giscus.app
-        category:   '',   // e.g. 'Forum'
-        categoryId: ''    // from giscus.app
+        repo:       'ComputeFreedom/ComputeFreedom',  // GitHub repo behind the forum
+        repoId:     'R_kgDOSP3JQg',                    // from giscus.app (06.07.2026)
+        category:   'Announcements',                   // only maintainers + giscus open threads
+        categoryId: 'DIC_kwDOSP3JQs4DAUCy'             // from giscus.app (06.07.2026)
       };
       if (!GISCUS.repo || !GISCUS.repoId || !GISCUS.categoryId) return;
 
-      document.getElementById('forum').hidden = false;
       document.getElementById('navForum').hidden = false;
+      document.getElementById('tabbtn-forum').hidden = false;
       document.getElementById('forumFullLink').href = 'https://github.com/' + GISCUS.repo + '/discussions';
 
+      window.__cfLoadGiscus = function () {
       var s = document.createElement('script');
       s.src = 'https://giscus.app/client.js';
       s.async = true;
@@ -1078,10 +1506,878 @@
       s.setAttribute('data-theme', 'transparent_dark');
       s.setAttribute('data-lang', 'en');
       document.getElementById('giscusMount').appendChild(s);
-
-      // Re-run reveal observer for the now-visible section
-      document.querySelectorAll('#forum .reveal').forEach(function (el) { el.classList.add('in'); });
+      };
     })();
+    // ── TABS (v3.2) · one section at a time, no scroll walls ──
+    (function () {
+      var panels = ['horizon', 'principle', 'mechanism', 'origin', 'contact', 'arepo', 'forum'];
+      var giscusLoaded = false;
+
+      function openTab(id, updateHash) {
+        if (panels.indexOf(id) < 0) id = 'horizon';
+        var forumBtn = document.getElementById('tabbtn-forum');
+        if (id === 'forum' && forumBtn.hidden) id = 'horizon';
+        panels.forEach(function (p) {
+          var sec = document.getElementById(p);
+          var btn = document.getElementById('tabbtn-' + p);
+          var on = p === id;
+          if (sec) sec.classList.toggle('on', on);
+          if (btn) btn.classList.toggle('on', on);
+          if (sec && on) sec.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in'); });
+        });
+        if (id === 'forum' && !giscusLoaded && window.__cfLoadGiscus) {
+          giscusLoaded = true;
+          window.__cfLoadGiscus();
+        }
+        if (updateHash !== false) {
+          try { history.replaceState(null, '', '#' + id); } catch (e) {}
+        }
+      }
+      window.__cfOpenTab = openTab;
+
+      document.getElementById('tabBar').querySelectorAll('button').forEach(function (b) {
+        b.addEventListener('click', function () { openTab(b.dataset.tab); });
+      });
+
+      // In-page anchors (header nav, hero buttons) switch tabs instead of scrolling
+      document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+        var id = a.getAttribute('href').slice(1);
+        if (panels.indexOf(id) < 0) return;
+        a.addEventListener('click', function (e) {
+          e.preventDefault();
+          openTab(id);
+          var bar = document.querySelector('.tabsbar');
+          if (bar) bar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+
+      window.addEventListener('hashchange', function () {
+        openTab(location.hash ? location.hash.slice(1) : (/\/arepo\/?$/i.test(location.pathname) ? 'arepo' : 'horizon'), false);
+      });
+      openTab(location.hash ? location.hash.slice(1) : (/\/arepo\/?$/i.test(location.pathname) ? 'arepo' : 'horizon'), false);
+    })();
+
+    // ── 00 · THE HORIZON · date-driven instrument (v3.2) ──
+    (function () {
+      "use strict";
+
+      /* time base: months since Jan 2023 (negative = past) */
+      var MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+      var ym = function (y, m) { return (y - 2023) * 12 + (m - 1); };
+      var idxToDate = function (t) { var y = 2023 + Math.floor(t / 12); var m = ((Math.floor(t) % 12) + 12) % 12; return { y: y, m: m }; };
+      var fmt = function (t) { var d = idxToDate(t); return { mon: MONTHS[d.m], yr: String(d.y) }; };
+      var yearOf = function (t) { return idxToDate(t).y; };
+
+      var now = new Date();
+      var TODAY = ym(now.getFullYear(), now.getMonth() + 1) + (now.getDate() - 1) / 30.44;
+
+      var T1960 = ym(1960, 1), TGOLD = ym(1982, 8), T2005 = ym(2005, 1), T2022 = ym(2022, 1);
+      var AI_START = ym(2022, 11);
+      var BASE = ym(2023, 3);
+      var AGI_A = ym(2026, 2), AGI_B = ym(2026, 10);
+
+      var SCENARIOS = {
+        fast:   { label: "Fast",   m2: ym(2029, 6), asi: ym(2031, 3) },
+        median: { label: "Median", m2: ym(2032, 6), asi: ym(2034, 9) },
+        slow:   { label: "Slow",   m2: ym(2037, 6), asi: ym(2041, 1) }
+      };
+
+      var PLUS = '<span class="plus">plus</span>';
+      var AGIW = '<span class="agi">AGI</span>';
+      var ASIW = '<span class="asi">ASI</span>';
+      var STAGES = [
+        { nm: "AI",      html: "AI" },
+        { nm: "AGI",     html: AGIW },
+        { nm: "AGIplus", html: AGIW + PLUS },
+        { nm: "ASI",     html: ASIW }
+      ];
+      var MEANING = {
+        early: "Mainframes, punch cards and the first machines that fit on a desk. Software came in kilobytes, and you waited your turn at the terminal.",
+        gold:  "The golden age. Machines you could understand down to the last chip, games that loaded from tape, and every second Christmas a computer twice as fast.",
+        plat:  "Computing moved into pockets and clouds. The machine slipped out of your hands, and the feed arrived.",
+        ai:    "Systems that reason and act — still on a human leash, still under human tempo. Their task horizon doubles roughly every seven months.",
+        agi:   "The fuzzy crossing. By the definitions of Agüera y Arcas, Norvig, Cowen and Mollick, general-purpose intelligence is already underfoot: jagged at the edges, and here.",
+        plus:  "Past the best individual humans in a growing share of domains. AI research increasingly runs on AI, and the pace stops being negotiable.",
+        asi:   "Beyond the combined expertise of humanity. Whatever treaty and oversight exist at this point are the ones we get to keep."
+      };
+
+      var CAPS = [
+        ["Coding",      0.20, 1.02],
+        ["Forecasting", 0.40, 1.90],
+        ["Cyber",       0.45, 1.75],
+        ["Persuasion",  0.55, 2.20],
+        ["Bio design",  0.65, 2.40],
+        ["Robotics",    0.90, 2.90]
+      ];
+
+      var AISTATS = [
+        { lbl: "Frontier-lab revenue", unit: "/yr", anchors: [3e9, 5e10, 1.5e12, 6e12], money: true },
+        { lbl: "AI datacenter capex",  unit: "/yr", anchors: [1.5e11, 5e11, 3e12, 6e12], money: true },
+        { lbl: "Largest training run", unit: "FLOP", anchors: [2e25, 5e26, 1e29, 1e31] },
+        { lbl: "Public approval",      unit: "net sentiment", anchors: [-5, -18, -40, -50], linear: true }
+      ];
+
+      var EPOCHS = [
+        { from: ym(1960,1), name: "IBM 1401", icon: "mainframe", media: [],
+          ram: 4096, ramTxt: "4 KB (magnetic core)", cpu: "87 kHz", store: "punch cards & tape reels", chip: "discrete transistors", game: "Spacewar! (on the lab PDP-1)", mediaTxt: "punch cards & reels" },
+        { from: ym(1970,1), name: "DEC PDP-11", icon: "mainframe", media: [],
+          ram: 16384, ramTxt: "16 KB", cpu: "~1 MHz", store: "magnetic tape", chip: "Intel 4004 arrives (2,300 transistors)", game: "Pong, at the arcade", mediaTxt: "teletypes & tape" },
+        { from: ym(1977,6), name: "Apple II", icon: "crt", media: ["datasette"],
+          ram: 4096, ramTxt: "4 KB", cpu: "1 MHz", store: "cassette tape", chip: "MOS 6502", game: "Breakout", mediaTxt: "audio cassettes" },
+        { from: ym(1982,8), name: "Commodore 64", icon: "c64", media: ["datasette","floppy525"],
+          ram: 65536, ramTxt: "64 KB", cpu: "0.985 MHz", store: "Datasette & 5.25″ floppy", chip: "MOS 6510 + SID sound", game: "Boulder Dash · Elite", mediaTxt: "Datasette · 5.25″ floppy" },
+        { from: ym(1987,3), name: "Amiga 500", icon: "amiga", media: ["floppy35"],
+          ram: 524288, ramTxt: "512 KB", cpu: "7.09 MHz", store: "3.5″ floppy", chip: "Motorola 68000", game: "Defender of the Crown · Turrican", mediaTxt: "3.5″ floppy" },
+        { from: ym(1990,10), name: "386 PC + VGA", icon: "crt", media: ["floppy35"],
+          ram: 2097152, ramTxt: "2 MB", cpu: "33 MHz", store: "floppy + 40 MB hard disk", chip: "Intel 386 · VGA graphics", game: "The Secret of Monkey Island", mediaTxt: "floppies, everywhere" },
+        { from: ym(1993,12), name: "486 PC", icon: "tower", media: ["cd"],
+          ram: 8388608, ramTxt: "8 MB", cpu: "66 MHz", store: "CD-ROM arrives", chip: "Intel 486DX2", game: "Doom", mediaTxt: "CD-ROM" },
+        { from: ym(1996,10), name: "Pentium", icon: "tower", media: ["cd","gpu"],
+          ram: 16777216, ramTxt: "16 MB", cpu: "166 MHz", store: "CD", chip: "3dfx Voodoo — 3D arrives", game: "C&C: Red Alert", mediaTxt: "CDs everywhere" },
+        { from: ym(1999,9), name: "Pentium III", icon: "tower", media: ["dvd","gpu"],
+          ram: 134217728, ramTxt: "128 MB", cpu: "500 MHz", store: "DVD & CD-RW", chip: "GeForce 256 — the first “GPU”", game: "Half-Life · Age of Empires II", mediaTxt: "DVD" },
+        { from: ym(2002,6), name: "Pentium 4", icon: "tower", media: ["dvd"],
+          ram: 536870912, ramTxt: "512 MB", cpu: "2.4 GHz", store: "DVD-RW", chip: "Radeon 9700", game: "GTA: Vice City", mediaTxt: "DVD & MP3" },
+        { from: ym(2005,6), name: "Athlon 64 X2", icon: "tower", media: ["dvd"],
+          ram: 1073741824, ramTxt: "1 GB", cpu: "2.2 GHz × 2 cores", store: "USB sticks & DVD", chip: "first consumer dual-core", game: "World of Warcraft", mediaTxt: "MP3 & DSL" },
+        { from: ym(2007,6), name: "iPhone", icon: "phone", media: [],
+          ram: 134217728, ramTxt: "128 MB (in your pocket)", cpu: "412 MHz ARM", store: "flash memory & the cloud", chip: "ARM11", game: "Portal · Wii Sports", mediaTxt: "apps arrive" },
+        { from: ym(2010,10), name: "Quad-core desktop", icon: "gpu", media: ["console"],
+          ram: 4294967296, ramTxt: "4 GB", cpu: "3 GHz × 4 cores", store: "SSDs arrive", chip: "GeForce GTX 480", game: "Minecraft", mediaTxt: "streaming starts" },
+        { from: ym(2013,11), name: "PS4 era", icon: "console", media: ["phone"],
+          ram: 8589934592, ramTxt: "8 GB", cpu: "1.6 GHz × 8 cores", store: "SSD & cloud saves", chip: "AMD Jaguar APU", game: "GTA V", mediaTxt: "streaming & feeds" },
+        { from: ym(2016,5), name: "GTX 1080 era", icon: "gpu", media: ["console","phone"],
+          ram: 17179869184, ramTxt: "16 GB", cpu: "4 GHz × 4 cores", store: "NVMe SSD", chip: "GeForce GTX 1080", game: "Overwatch", mediaTxt: "everything streams" },
+        { from: ym(2019,7), name: "RTX era", icon: "gpu", media: ["phone"],
+          ram: 34359738368, ramTxt: "32 GB", cpu: "3.6 GHz × 8 cores", store: "NVMe", chip: "RTX 2080 — ray tracing", game: "Fortnite", mediaTxt: "cloud everything" }
+      ];
+
+      var TRANS = [[1960, 10],[1971, 2.3e3],[1985, 2.75e5],[1993, 3.1e6],[2000, 4.2e7],[2006, 5.8e8],[2012, 3.1e9],[2020, 1.6e10],[2026, 2e11]];
+      var NETUSERS = [[1990, 2e6],[1995, 4e7],[2000, 4e8],[2005, 1e9],[2010, 2e9],[2015, 3.2e9],[2021, 4.9e9],[2026, 5.6e9]];
+
+      var GENS = [
+        { n: "Boomers",   s: "Boomers", a: 1946, b: 1964, d: "postwar kids — TV arrived in their living rooms, the Moon landing in their teens" },
+        { n: "Gen X",     s: "Gen X",   a: 1965, b: 1980, d: "the latchkey kids — analog childhood, digital adulthood, a C64 under the bedroom desk" },
+        { n: "Gen Y · Millennials", s: "Gen Y", a: 1981, b: 1996, d: "grew up alongside the internet and remember both sides of the dial-up modem" },
+        { n: "Gen Z",     s: "Gen Z",   a: 1997, b: 2012, d: "never knew a world without the internet; smartphones arrived in primary school" },
+        { n: "Gen Alpha", s: "Alpha",   a: 2013, b: 2024, d: "raised on touchscreens — talking to machines is normal to them" },
+        { n: "Gen Beta",  s: "Beta",    a: 2025, b: 2039, d: "may share the world with AGI from their first day of school" }
+      ];
+
+      var TECH = [
+        ["The transistor", 1948, 1958],
+        ["Room-sized mainframes", 1952, 1962],
+        ["Video games", 1962, 1975],
+        ["Pocket calculators", 1970, 1976],
+        ["The home computer", 1975, 1982],
+        ["Datasette & floppy disk", 1977, 1983],
+        ["Graphical interfaces", 1984, 1992],
+        ["CD-ROM", 1985, 1994],
+        ["The World Wide Web", 1991, 1997],
+        ["3D graphics cards", 1995, 1999],
+        ["DVD", 1996, 2001],
+        ["Broadband at home", 1999, 2006],
+        ["Smartphones", 2004, 2010],
+        ["Social feeds", 2006, 2012],
+        ["Streaming instead of discs", 2007, 2015],
+        ["Voice assistants", 2011, 2017],
+        ["Reasoning chat models", ym(2022,11), ym(2024,6)],
+        ["AI coding assistants", ym(2021,6), ym(2025,1)],
+        ["Real-time voice translation", ym(2023,6), ym(2026,3)],
+        ["Reliable everyday agents", {g:0.80}, {g:1.15}],
+        ["Superhuman coding", {g:0.90}, {g:1.10}],
+        ["Autonomous AI research", {g:1.20}, {g:2.00}],
+        ["AI-designed gene therapies", {g:1.10}, {g:1.90}],
+        ["Humanoid robots at scale", {g:1.30}, {g:2.50}],
+        ["Fully automated R&D labs", {g:1.80}, {g:2.70}],
+        ["Self-expanding factories", {g:2.40}, {g:3.10}],
+        ["Nanoscale manufacturing", {g:2.80}, {g:3.60}]
+      ];
+
+      var SVG = function (body) { return '<svg viewBox="0 0 72 48" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + body + '</svg>'; };
+      var ICONS = {
+        mainframe: SVG('<rect x="6" y="4" width="26" height="40" rx="1"/><rect x="40" y="4" width="26" height="40" rx="1"/><circle cx="14" cy="14" r="4"/><circle cx="24" cy="14" r="4"/><path d="M10 26h18M10 32h18M10 38h12"/><rect x="46" y="10" width="14" height="8"/><path d="M46 26h14M46 32h14M46 38h8"/>'),
+        c64: SVG('<path d="M8 20 L64 20 L68 36 L4 36 Z"/><path d="M12 25 h44 M14 29 h40 M16 33 h36"/><path d="M8 20 L10 12 L62 12 L64 20"/><rect x="46" y="14" width="12" height="4"/>'),
+        amiga: SVG('<path d="M6 24 L66 24 L62 38 L10 38 Z"/><path d="M14 28 h40 M16 32 h36"/><path d="M50 24 L48 18 L60 18 L62 24"/><path d="M22 18 l4 -8 4 8"/>'),
+        datasette: SVG('<rect x="8" y="8" width="56" height="30" rx="2"/><circle cx="26" cy="21" r="5"/><circle cx="46" cy="21" r="5"/><path d="M31 21 h10"/><rect x="14" y="32" width="8" height="6"/><rect x="26" y="32" width="8" height="6"/><rect x="38" y="32" width="8" height="6"/>'),
+        floppy525: SVG('<rect x="16" y="4" width="40" height="40" rx="1"/><circle cx="36" cy="24" r="7"/><circle cx="36" cy="24" r="1.5"/><path d="M32 4 v6 h8 v-6"/>'),
+        floppy35: SVG('<rect x="16" y="4" width="40" height="40" rx="2"/><rect x="30" y="4" width="18" height="12"/><rect x="34" y="6" width="5" height="8"/><rect x="22" y="24" width="28" height="14"/>'),
+        cd: SVG('<circle cx="36" cy="24" r="19"/><circle cx="36" cy="24" r="5"/><path d="M22 14 a17 17 0 0 1 10 -6"/>'),
+        dvd: SVG('<circle cx="36" cy="24" r="19"/><circle cx="36" cy="24" r="5"/><path d="M22 14 a17 17 0 0 1 10 -6 M50 34 a17 17 0 0 1 -10 6"/>'),
+        crt: SVG('<rect x="12" y="4" width="48" height="30" rx="2"/><rect x="17" y="9" width="38" height="20"/><path d="M28 40 h16 M24 44 h24"/><path d="M36 34 v6"/>'),
+        tower: SVG('<rect x="24" y="4" width="24" height="40" rx="1"/><circle cx="36" cy="38" r="2.5"/><path d="M28 10 h16 M28 15 h16 M28 20 h10"/>'),
+        phone: SVG('<rect x="25" y="4" width="22" height="40" rx="4"/><path d="M32 8 h8"/><circle cx="36" cy="40" r="1.6"/>'),
+        gpu: SVG('<rect x="6" y="14" width="52" height="22" rx="2"/><circle cx="22" cy="25" r="7"/><circle cx="42" cy="25" r="7"/><path d="M22 25 l4 -4 M42 25 l4 -4"/><rect x="60" y="10" width="6" height="30"/><path d="M10 36 v6 h20"/>'),
+        console: SVG('<rect x="12" y="16" width="48" height="20" rx="9"/><path d="M24 22 v8 M20 26 h8"/><circle cx="48" cy="24" r="2"/><circle cx="54" cy="28" r="2"/>')
+      };
+
+      var scenKey = "median";
+      var scen = SCENARIOS[scenKey];
+      var viewT = TODAY;
+      var playing = false, playTimer = null;
+
+      try {
+        var p = new URLSearchParams(location.search);
+        if (SCENARIOS[p.get("scenario")]) { scenKey = p.get("scenario"); scen = SCENARIOS[scenKey]; }
+        var v = p.get("view");
+        if (v && /^\d{4}-\d{1,2}$/.test(v)) { var vp = v.split("-"); viewT = ym(+vp[0], +vp[1]); }
+      } catch (e) {}
+
+      var el = function (id) { return document.getElementById(id); };
+      var trackStart = function () { return T1960; };
+      var trackEnd = function () { return scen.asi + 20; };
+
+      function segs() {
+        return [
+          { a: T1960, b: T2005, p0: 0.00, p1: 0.30 },
+          { a: T2005, b: T2022, p0: 0.30, p1: 0.45 },
+          { a: T2022, b: trackEnd(), p0: 0.45, p1: 1.00 }
+        ];
+      }
+      function posOf(t) {
+        var ss = segs();
+        for (var i = 0; i < ss.length; i++) {
+          var s = ss[i];
+          if (t <= s.b || s.p1 === 1) {
+            if (t < s.a) return s.p0;
+            return s.p0 + (t - s.a) / (s.b - s.a) * (s.p1 - s.p0);
+          }
+        }
+        return 1;
+      }
+      function tOfPos(p2) {
+        p2 = Math.min(1, Math.max(0, p2));
+        var ss = segs();
+        for (var i = 0; i < ss.length; i++) {
+          var s = ss[i];
+          if (p2 <= s.p1) return s.a + (p2 - s.p0) / (s.p1 - s.p0) * (s.b - s.a);
+        }
+        return trackEnd();
+      }
+
+      function gOf(t) {
+        if (t <= AGI_B) return Math.max(0, (t - BASE) / (AGI_B - BASE));
+        if (t <= scen.m2) return 1 + (t - AGI_B) / (scen.m2 - AGI_B);
+        if (t <= scen.asi) return 2 + (t - scen.m2) / (scen.asi - scen.m2);
+        return Math.min(3.6, 3 + (t - scen.asi) / 30);
+      }
+      function tOfG(g) {
+        if (g <= 1) return BASE + g * (AGI_B - BASE);
+        if (g <= 2) return AGI_B + (g - 1) * (scen.m2 - AGI_B);
+        if (g <= 3) return scen.m2 + (g - 2) * (scen.asi - scen.m2);
+        return scen.asi + (g - 3) * 30;
+      }
+      function stageOf(t) {
+        if (t < AI_START) return -1;
+        if (t < AGI_A) return 0;
+        if (t < AGI_B) return 1;
+        if (t < scen.asi) return 2;
+        return 3;
+      }
+      var eraOf = function (t) { return t < TGOLD ? "early" : t < T2005 ? "gold" : t < T2022 ? "plat" : "ai"; };
+
+      function interp(anchors, g, linear) {
+        var seg = Math.min(2, Math.max(0, Math.floor(g)));
+        var f = Math.min(1, Math.max(0, g - seg));
+        var a = anchors[seg], b = anchors[seg + 1];
+        return linear ? a + (b - a) * f : a * Math.pow(b / a, f);
+      }
+      function interpYears(table, y) {
+        if (y <= table[0][0]) return table[0][1];
+        for (var i = 1; i < table.length; i++) {
+          if (y <= table[i][0]) {
+            var y0 = table[i - 1][0], v0 = table[i - 1][1], y1 = table[i][0], v1 = table[i][1];
+            return v0 * Math.pow(v1 / v0, (y - y0) / (y1 - y0));
+          }
+        }
+        return table[table.length - 1][1];
+      }
+      function money(v) {
+        if (v >= 1e12) return "US$" + (v / 1e12).toFixed(1).replace(/\.0$/, "") + "tn";
+        if (v >= 1e9)  return "US$" + Math.round(v / 1e9) + "bn";
+        return "US$" + Math.round(v / 1e6) + "m";
+      }
+      function flop(v) { var e = Math.floor(Math.log10 ? Math.log10(v) : Math.log(v) / Math.LN10); var m = v / Math.pow(10, e); return (m >= 1.5 ? Math.round(m) + "×" : "") + "10^" + e; }
+      function big(v) {
+        if (v >= 1e9) return (v / 1e9).toFixed(v < 3e9 ? 1 : 0) + "bn";
+        if (v >= 1e6) return (v / 1e6).toFixed(v < 3e6 ? 1 : 0) + "M";
+        if (v >= 1e3) return Math.round(v / 1e3) + "k";
+        return String(Math.round(v));
+      }
+
+      var stageBar = el("stageBar");
+      var legacyBadge = document.createElement("div");
+      legacyBadge.className = "hz-stage legacy"; legacyBadge.id = "stgL";
+      legacyBadge.innerHTML = '<span class="nm">LEGACY</span><span class="dt">1960 → 2022</span>';
+      stageBar.appendChild(legacyBadge);
+      STAGES.forEach(function (s, i) {
+        var d = document.createElement("div");
+        d.className = "hz-stage" + (i === 3 ? " asi-b" : ""); d.id = "stg" + i;
+        d.innerHTML = '<span class="nm">' + s.html + '</span><span class="dt" id="stgdt' + i + '">—</span>';
+        stageBar.appendChild(d);
+      });
+
+      var capsBox = el("capsBox");
+      CAPS.forEach(function (c, i) {
+        var d = document.createElement("div");
+        d.className = "cap-chip"; d.id = "cap" + i;
+        d.innerHTML = '<div class="fillbar" id="capf' + i + '"></div><span class="cap-nm">' + c[0] + '</span><span class="cap-lv" id="capl' + i + '">—</span>';
+        capsBox.appendChild(d);
+      });
+
+      var WAFFLE_N = 364;
+      var waffle = el("waffle");
+      for (var wi = 0; wi < WAFFLE_N; wi++) waffle.appendChild(document.createElement("i"));
+      var lockedCap = document.createElement("div");
+      lockedCap.className = "locked-cap"; lockedCap.id = "lockedCap";
+      waffle.appendChild(lockedCap);
+      var cells = waffle.querySelectorAll("i");
+
+      function buildGenBand() {
+        var band = el("genBand");
+        band.innerHTML = "";
+        GENS.forEach(function (gn, i) {
+          var a = Math.max(ym(gn.a, 1), trackStart());
+          var b = Math.min(ym(gn.b, 12), trackEnd());
+          if (b <= a) return;
+          var seg = document.createElement("div");
+          seg.className = "gen-seg"; seg.id = "gen" + i;
+          seg.style.left = (posOf(a) * 100) + "%";
+          seg.style.width = ((posOf(b) - posOf(a)) * 100) + "%";
+          seg.innerHTML = "<span>" + gn.s + "</span>";
+          band.appendChild(seg);
+        });
+      }
+
+      var track = el("track");
+      function buildMarkers() {
+        track.querySelectorAll(".hz-marker, .era-band, .agi-band").forEach(function (m) { m.remove(); });
+        var pct = function (t) { return (posOf(t) * 100).toFixed(3) + "%"; };
+
+        var eras = [
+          { a: T1960, b: TGOLD, cls: "era-early", lbl: "pioneers" },
+          { a: TGOLD, b: T2005, cls: "era-gold", lbl: "the golden age" },
+          { a: T2005, b: T2022, cls: "era-plat", lbl: "platforms" },
+          { a: T2022, b: trackEnd(), cls: "era-ai", lbl: "the AI era" }
+        ];
+        eras.forEach(function (e) {
+          var d = document.createElement("div");
+          d.className = "era-band " + e.cls;
+          d.style.left = pct(e.a);
+          d.style.width = ((posOf(e.b) - posOf(e.a)) * 100) + "%";
+          d.innerHTML = '<span class="era-lbl">' + e.lbl + "</span>";
+          track.appendChild(d);
+        });
+
+        var agiBand = document.createElement("div");
+        agiBand.className = "agi-band";
+        agiBand.style.left = pct(AGI_A);
+        agiBand.style.width = ((posOf(AGI_B) - posOf(AGI_A)) * 100) + "%";
+        track.appendChild(agiBand);
+
+        var mk = function (t, cls, txt) {
+          var m = document.createElement("div");
+          m.className = "hz-marker " + cls; m.style.left = pct(t);
+          m.innerHTML = '<div class="tick"></div><div class="cap">' + txt + "</div>";
+          track.appendChild(m);
+        };
+
+        var miles = [ym(2026, 6), scen.asi];
+        var yearTicks = [1960, 1970, 1980, 1990, 2000, 2010, 2020];
+        for (var y = 2024; y <= 2023 + Math.ceil(trackEnd() / 12); y += 6) yearTicks.push(y);
+        yearTicks.forEach(function (y2) {
+          var t = ym(y2, 1);
+          if (t < trackStart() || t > trackEnd()) return;
+          mk(t, "", miles.some(function (m2) { return Math.abs(m2 - t) < 18; }) ? "" : String(y2));
+        });
+
+        mk((AGI_A + AGI_B) / 2, "milestone", 'AGI<span class="cap-dt"> · Feb–Oct 2026</span>');
+        var f2 = fmt(scen.m2), f3 = fmt(scen.asi);
+        mk(scen.m2, "minor", 'AI runs AI research<span class="cap-dt"> · ~' + f2.mon + " " + f2.yr + "</span>");
+        mk(scen.asi, "milestone asi-m", 'ASI<span class="cap-dt"> · ~' + f3.mon + " " + f3.yr + "</span>");
+        mk(TODAY, "today-mark", "TODAY");
+      }
+
+      function renderStats(items) {
+        el("statsBox").innerHTML = items.map(function (s) {
+          return '<div class="hz-stat"><div class="s-lbl">' + s.lbl + '</div><div class="s-val' +
+            (s.neg ? " neg" : "") + (s.txt ? " txt" : "") + '">' + s.val + '</div><div class="s-sub">' + s.sub + "</div></div>";
+        }).join("");
+      }
+
+      function render() {
+        var t = viewT;
+        var g = gOf(t);
+        var st = stageOf(t);
+        var era = eraOf(t);
+        var legacy = st === -1;
+
+        var f = fmt(t);
+        var vd = el("viewDate");
+        vd.innerHTML = f.mon.toUpperCase() + ' <span class="yr">' + f.yr + "</span>";
+        vd.className = "hz-viewdate" + (legacy ? " past" : "");
+        var dm = Math.round(t - TODAY);
+        var off = el("viewOffset");
+        if (Math.abs(dm) < 1) { off.textContent = "· today ·"; off.className = "hz-offset today"; }
+        else {
+          var ay = Math.floor(Math.abs(dm) / 12), am = Math.abs(dm) % 12;
+          var span = (ay ? ay + "y " : "") + am + "m";
+          off.textContent = dm > 0 ? span + " ahead of today" : span + " behind today";
+          off.className = "hz-offset";
+        }
+
+        legacyBadge.className = "hz-stage legacy" + (legacy ? " active" : " passed");
+        var f3 = fmt(scen.asi);
+        var dts = ["Nov 2022 →", "[Feb–Oct 2026]", "from Oct 2026", "~" + f3.mon + " " + f3.yr];
+        STAGES.forEach(function (s, i) {
+          el("stg" + i).className = "hz-stage" + (i === 3 ? " asi-b" : "") + (i === st ? " active" : (st > i ? " passed" : ""));
+          el("stgdt" + i).textContent = dts[i];
+        });
+
+        var meaning = el("stageMeaning");
+        meaning.textContent = legacy ? MEANING[era] : MEANING[["ai","agi","plus","asi"][st]];
+        meaning.className = "hz-meaning" + (legacy ? " past" : st === 3 ? " ultra" : "");
+
+        var cl = el("countLbl"), cn = el("countNum"), cs = el("countSub");
+        cn.className = "num";
+        if (TODAY < AGI_A) { cl.innerHTML = "to " + AGIW; cn.textContent = big((AGI_A - TODAY) * 30.44) + " days"; }
+        else if (TODAY < AGI_B) {
+          cl.innerHTML = "to " + AGIW + PLUS;
+          cn.textContent = Math.round((AGI_B - TODAY) * 30.44).toLocaleString("en-US") + " days";
+        } else if (TODAY < scen.asi) {
+          cl.innerHTML = "to " + ASIW;
+          cn.className = "num ultra";
+          cn.textContent = Math.round((scen.asi - TODAY) * 30.44).toLocaleString("en-US") + " days";
+        } else { cl.textContent = "threshold"; cn.textContent = "crossed"; }
+        cs.textContent = scen.label.toLowerCase() + " scenario";
+
+        var pp0 = posOf(t);
+        el("cursor").style.left = (pp0 * 100) + "%";
+        el("cursor").className = "hz-cursor" + (legacy ? " past" : "");
+
+        var y = yearOf(t);
+        var genIdx = -1;
+        GENS.forEach(function (gn, i) { if (y >= gn.a && y <= gn.b) genIdx = i; });
+        GENS.forEach(function (gn, i) { var s = el("gen" + i); if (s) s.className = "gen-seg" + (i === genIdx ? " on" : ""); });
+        var gc = el("genCap");
+        if (genIdx >= 0) {
+          var gn = GENS[genIdx];
+          var nowY = now.getFullYear();
+          var a1 = Math.max(0, nowY - gn.b), a2 = nowY - gn.a;
+          gc.innerHTML = "Born now: <b>" + gn.n + "</b> (" + gn.a + "–" + gn.b + ") — " + gn.d +
+            '. <span class="age">In ' + nowY + " they are " + a1 + "–" + a2 + " years old.</span>";
+        } else {
+          gc.innerHTML = y < 1946
+            ? "Born now: the engineers of this story — the generation that built the mainframes."
+            : "Born now: a generation without a name yet. They will pick their own.";
+        }
+
+        if (legacy) {
+          el("capsWrap").style.display = "none";
+          el("machineWrap").style.display = "block";
+          var ep = EPOCHS[0];
+          for (var ei = EPOCHS.length - 1; ei >= 0; ei--) { if (t >= EPOCHS[ei].from) { ep = EPOCHS[ei]; break; } }
+          el("machineYear").textContent = "c. " + fmt(Math.max(ep.from, t)).yr;
+          var mediaSvgs = ep.media.map(function (k) { return ICONS[k] || ""; }).join("");
+          el("machineBox").className = "machine " + era;
+          el("machineBox").innerHTML =
+            '<div class="m-icon">' + (ICONS[ep.icon] || "") + "</div>" +
+            "<div><div class='m-name'>" + ep.name + "</div>" +
+            "<div class='m-row'><b>RAM</b>" + ep.ramTxt + "</div>" +
+            "<div class='m-row'><b>CPU</b>" + ep.cpu + "</div>" +
+            "<div class='m-row'><b>Storage</b>" + ep.store + "</div>" +
+            "<div class='m-row'><b>Silicon</b>" + ep.chip + "</div>" +
+            "<div class='m-row'><b>Playing</b>" + ep.game + "</div>" +
+            (mediaSvgs ? '<div class="m-media">' + mediaSvgs + "</div>" : "") +
+            "</div>";
+
+          el("statsLabel").innerHTML = '<span class="hl">The state of things</span> · ' + fmt(t).yr;
+          var netu = y < 1990 ? null : interpYears(NETUSERS, y);
+          renderStats([
+            { lbl: "Transistors per chip", val: big(interpYears(TRANS, y)), sub: "state of the art" },
+            { lbl: "People online", val: netu ? big(netu) : "0", sub: netu ? "worldwide" : "the internet is not here yet" },
+            { lbl: "Media of the day", val: ep.mediaTxt, sub: "how bits traveled", txt: true },
+            { lbl: "The game", val: ep.game, sub: "what everyone played", txt: true }
+          ]);
+
+          var fl = el("fleetLine");
+          fl.className = "fleet-line past";
+          fl.innerHTML = "<b>" + ep.name + "</b> — " + ep.ramTxt + " of RAM at " + ep.cpu + ".";
+          var lo = Math.log(2048), hi = Math.log(64 * 1073741824);
+          var fill = Math.min(1, Math.max(0.02, (Math.log(ep.ram) - lo) / (hi - lo)));
+          var nOn = Math.max(4, Math.round(fill * WAFFLE_N));
+          waffle.className = "waffle " + (era === "gold" ? "gold" : era === "early" ? "early" : "plat");
+          cells.forEach(function (c, i) { c.className = i < nOn ? (i >= nOn - 8 ? "on hot" : "on") : ""; });
+          lockedCap.style.display = "none";
+          el("taskHorizon").style.display = "none";
+        } else {
+          el("capsWrap").style.display = "block";
+          el("machineWrap").style.display = "none";
+          waffle.className = "waffle";
+
+          CAPS.forEach(function (c, i) {
+            var pp = Math.min(1, Math.max(0, (g - c[1]) / (c[2] - c[1])));
+            el("capf" + i).style.width = (pp * 100) + "%";
+            el("cap" + i).className = "cap-chip" + (pp >= 1 ? " maxed" : "");
+            var lv = pp >= 1 ? "superhuman" : pp <= 0 ? "dormant" : pp < 0.35 ? "emerging" : pp < 0.7 ? "competent" : "expert-level";
+            el("capl" + i).textContent = lv + (pp > 0 && pp < 1 ? " · " + Math.round(pp * 100) + "%" : "");
+          });
+
+          el("statsLabel").textContent = "The economics · projected";
+          renderStats(AISTATS.map(function (s) {
+            var v = interp(s.anchors, g, s.linear);
+            return {
+              lbl: s.lbl,
+              val: s.linear ? (v > 0 ? "+" : "−") + Math.abs(Math.round(v)) + "%" : (s.money ? money(v) : flop(v)),
+              sub: s.unit, neg: s.linear && v < 0
+            };
+          }));
+
+          var fl2 = el("fleetLine");
+          fl2.className = "fleet-line";
+          if (g < 1) {
+            var hours = 4 * Math.pow(2, (t - ym(2026, 7)) / 7);
+            var hTxt = hours < 1.5 ? Math.round(hours * 60) + " minutes"
+                     : hours < 60 ? (hours < 10 ? hours.toFixed(1) : Math.round(hours)) + " hours"
+                     : Math.round(hours / 8) + " working days";
+            fl2.innerHTML = "Agents can run unassisted for tasks of ~<b>" + hTxt + "</b> of expert work — the horizon doubles every ~7 months.";
+            cells.forEach(function (c) { c.className = ""; });
+            lockedCap.style.display = "flex";
+            lockedCap.textContent = "fleet begins at AGIplus · Oct 2026";
+            el("taskHorizon").style.display = "block";
+            el("thFill").style.width = Math.min(100, g * 100) + "%";
+            el("thCap").textContent = "progress toward the far edge of the AGI window · " + Math.round(g * 100) + "%";
+          } else {
+            var copies = interp([2e3, 1.5e4, 4e5, 2e6], g);
+            var speed = interp([1, 6, 45, 110], g);
+            var ck = copies >= 1e6 ? (copies / 1e6).toFixed(1).replace(/\.0$/, "") + "M" : Math.round(copies / 1e3) + "k";
+            var stName = st >= 3 ? ASIW : AGIW + PLUS;
+            fl2.innerHTML = "<b>" + ck + "</b> " + stName + "-level copies thinking at <em>" + Math.round(speed) + "×</em> human speed.";
+            if (st >= 3) waffle.className = "waffle ultra";
+            var lo2 = Math.log(1e4), hi2 = Math.log(2.2e6);
+            var fill2 = Math.min(1, Math.max(0.03, (Math.log(copies) - lo2) / (hi2 - lo2)));
+            var nOn2 = Math.round(fill2 * WAFFLE_N);
+            cells.forEach(function (c, i) { c.className = i < nOn2 ? (i >= nOn2 - 12 ? "on hot" : "on") : ""; });
+            lockedCap.style.display = "none";
+            el("taskHorizon").style.display = "none";
+          }
+        }
+
+        var toT = function (v) { return typeof v === "number" ? (v > 1800 && v < 3000 ? ym(v, 1) : v) : tOfG(v.g); };
+        var ex = [], em = [], fi = [];
+        TECH.forEach(function (it) {
+          var a = toT(it[1]), b = toT(it[2]);
+          if (t >= b) ex.push([it[0], b]);
+          else if (t >= a) em.push([it[0], b]);
+          else fi.push([it[0], a]);
+        });
+        ex.sort(function (x, y2) { return y2[1] - x[1]; });
+        em.sort(function (x, y2) { return x[1] - y2[1]; });
+        fi.sort(function (x, y2) { return x[1] - y2[1]; });
+        var fillList = function (id, arr, cap) {
+          el(id).innerHTML = arr.length
+            ? arr.slice(0, cap).map(function (x) { return "<li>" + x[0] + "</li>"; }).join("")
+            : '<li class="none">— nothing here —</li>';
+        };
+        fillList("techExists", ex, 7);
+        fillList("techEmerging", em, 7);
+        fillList("techFiction", fi, 7);
+      }
+
+      function setView(t) { viewT = Math.min(trackEnd(), Math.max(trackStart(), t)); render(); }
+
+      el("backY").addEventListener("click", function () { setView(viewT - 12); });
+      el("backM").addEventListener("click", function () { setView(viewT - 1); });
+      el("fwdM").addEventListener("click", function () { setView(viewT + 1); });
+      el("fwdY").addEventListener("click", function () { setView(viewT + 12); });
+      el("todayBtn").addEventListener("click", function () { stopPlay(); setView(TODAY); });
+      el("legacyBtn").addEventListener("click", function () { stopPlay(); setView(ym(1985, 6)); });
+
+      function stopPlay() {
+        playing = false; clearInterval(playTimer);
+        el("playBtn").classList.remove("on");
+        el("playBtn").textContent = "▶ play";
+      }
+      el("playBtn").addEventListener("click", function () {
+        if (playing) { stopPlay(); return; }
+        playing = true;
+        el("playBtn").classList.add("on");
+        el("playBtn").textContent = "◼ stop";
+        if (viewT >= trackEnd() - 1) viewT = trackStart();
+        playTimer = setInterval(function () {
+          if (viewT >= trackEnd()) { stopPlay(); return; }
+          setView(viewT + (viewT < T2022 ? 4 : 1));
+        }, 130);
+      });
+
+      var outer = el("trackOuter");
+      var dragging = false;
+      function scrubTo(clientX) {
+        var r = track.getBoundingClientRect();
+        stopPlay();
+        setView(tOfPos((clientX - r.left) / r.width));
+      }
+      outer.addEventListener("pointerdown", function (e) { dragging = true; outer.setPointerCapture(e.pointerId); scrubTo(e.clientX); });
+      outer.addEventListener("pointermove", function (e) { if (dragging) scrubTo(e.clientX); });
+      outer.addEventListener("pointerup", function () { dragging = false; });
+      outer.addEventListener("pointercancel", function () { dragging = false; });
+
+      document.addEventListener("keydown", function (e) {
+        var tg = e.target;
+        if (tg && (tg.tagName === "INPUT" || tg.tagName === "TEXTAREA" || tg.tagName === "SELECT")) return;
+        var panel = document.getElementById("horizon");
+        if (!panel || !panel.classList.contains("on")) return;
+        if (e.key === "ArrowRight") setView(viewT + (e.shiftKey ? 12 : 1));
+        else if (e.key === "ArrowLeft") setView(viewT - (e.shiftKey ? 12 : 1));
+        else if (e.key === "Home") setView(TODAY);
+      });
+
+      document.getElementById("scenarioBox").querySelectorAll("button").forEach(function (b) {
+        if (b.dataset.sc === scenKey) {
+          var prev = document.getElementById("scenarioBox").querySelector(".on");
+          if (prev) prev.classList.remove("on");
+          b.classList.add("on");
+        }
+        b.addEventListener("click", function () {
+          scenKey = b.dataset.sc; scen = SCENARIOS[scenKey];
+          document.getElementById("scenarioBox").querySelectorAll("button").forEach(function (x) { x.classList.toggle("on", x === b); });
+          buildMarkers(); buildGenBand();
+          setView(viewT);
+        });
+      });
+
+      // daily creep for long-lived tabs: move TODAY forward in place
+      setInterval(function () {
+        var n = new Date();
+        var t2 = ym(n.getFullYear(), n.getMonth() + 1) + (n.getDate() - 1) / 30.44;
+        if (Math.abs(t2 - TODAY) > 0.02) {
+          var wasToday = Math.abs(viewT - TODAY) < 0.5;
+          TODAY = t2;
+          buildMarkers(); buildGenBand();
+          if (wasToday) viewT = TODAY;
+          render();
+        }
+      }, 60 * 60 * 1000);
+
+
+      // ── bilingual instrument (v3.3) ──
+      var HZDE = {"Mainframes, punch cards and the first machines that fit on a desk. Software came in kilobytes, and you waited your turn at the terminal.": "Großrechner, Lochkarten und die ersten Maschinen, die auf einen Schreibtisch passten. Software kam in Kilobyte, und man wartete am Terminal, bis man dran war.", "The golden age. Machines you could understand down to the last chip, games that loaded from tape, and every second Christmas a computer twice as fast.": "Das goldene Zeitalter. Maschinen, die man bis auf den letzten Chip verstehen konnte, Spiele, die vom Band luden, und jedes zweite Weihnachten ein Computer, doppelt so schnell.", "Computing moved into pockets and clouds. The machine slipped out of your hands, and the feed arrived.": "Das Rechnen zog in Hosentaschen und Clouds. Die Maschine glitt aus der Hand, und der Feed kam.", "Systems that reason and act — still on a human leash, still under human tempo. Their task horizon doubles roughly every seven months.": "Systeme, die schließen und handeln, noch an menschlicher Leine, noch im menschlichen Tempo. Ihr Aufgabenhorizont verdoppelt sich etwa alle sieben Monate.", "The fuzzy crossing. By the definitions of Agüera y Arcas, Norvig, Cowen and Mollick, general-purpose intelligence is already underfoot: jagged at the edges, and here.": "Der unscharfe Übergang. Nach den Definitionen von Agüera y Arcas, Norvig, Cowen und Mollick ist universell einsetzbare Intelligenz bereits im Gange: an den Rändern gezackt, und da.", "Past the best individual humans in a growing share of domains. AI research increasingly runs on AI, and the pace stops being negotiable.": "Vorbei an den besten einzelnen Menschen in einem wachsenden Anteil der Bereiche. KI-Forschung läuft zunehmend auf KI, und das Tempo ist nicht mehr verhandelbar.", "Beyond the combined expertise of humanity. Whatever treaty and oversight exist at this point are the ones we get to keep.": "Jenseits der gebündelten Expertise der Menschheit. Welcher Vertrag und welche Aufsicht an diesem Punkt bestehen, sind die, die wir behalten dürfen.", "pioneers": "Pioniere", "the golden age": "das goldene Zeitalter", "platforms": "Plattformen", "the AI era": "die KI-Ära", "TODAY": "HEUTE", "AI runs AI research": "KI betreibt KI-Forschung", "The machine": "Die Maschine", "The economics · projected": "Die Ökonomie · projiziert", "The state of things": "Der Stand der Dinge", "AI capabilities · vs. best human experts": "KI-Fähigkeiten · gegenüber den besten menschlichen Experten", "Coding": "Programmieren", "Forecasting": "Prognose", "Persuasion": "Überzeugungskraft", "Robotics": "Robotik", "Bio design": "Biodesign", "Frontier-lab revenue": "Umsatz der Spitzenlabore", "AI datacenter capex": "Rechenzentrums-Investitionen", "Largest training run": "Größter Trainingslauf", "Public approval": "Öffentliche Zustimmung", "/yr": "/Jahr", "net sentiment": "Netto-Stimmung", "Transistors per chip": "Transistoren pro Chip", "People online": "Menschen online", "Media of the day": "Medium der Zeit", "The game": "Das Spiel", "state of the art": "Stand der Technik", "worldwide": "weltweit", "the internet is not here yet": "das Internet gibt es noch nicht", "how bits traveled": "wie die Bits reisten", "what everyone played": "was alle spielten", "Storage": "Speicher", "Silicon": "Chip", "Playing": "Gespielt", "In the world": "In der Welt", "Arriving": "Kommt gerade", "Still fiction": "Noch Fiktion", "— nothing here —": "— nichts hier —", "« year": "« Jahr", "‹ month": "‹ Monat", "Today": "Heute", "month ›": "Monat ›", "year »": "Jahr »", "▶ play": "▶ los", "◼ stop": "◼ stopp", "Fast": "schnell", "Median": "mittel", "Slow": "langsam", "median scenario": "mittleres Szenario", "fast scenario": "schnelles Szenario", "slow scenario": "langsames Szenario", "fleet begins at AGIplus · Oct 2026": "Flotte beginnt bei AGIplus · Okt 2026", "Agents can run unassisted for tasks of ~": "Agenten können unbeaufsichtigt Aufgaben von rund ", " of expert work — the horizon doubles every ~7 months.": " Facharbeit erledigen — der Horizont verdoppelt sich etwa alle 7 Monate.", " AGIplus-level copies thinking at ": " Kopien auf AGIplus-Niveau denken mit ", " ASI-level copies thinking at ": " Kopien auf ASI-Niveau denken mit ", " human speed.": " Menschentempo.", "Born now: the engineers of this story — the generation that built the mainframes.": "Heute geboren: die Ingenieure dieser Geschichte, die Generation, die die Großrechner baute.", "Born now: a generation without a name yet. They will pick their own.": "Heute geboren: eine Generation noch ohne Namen. Sie wird sich ihren eigenen suchen.", "Born now: ": "Heute geboren: ", "The transistor": "Der Transistor", "Room-sized mainframes": "Zimmergroße Großrechner", "Video games": "Videospiele", "Pocket calculators": "Taschenrechner", "The home computer": "Der Heimcomputer", "Datasette & floppy disk": "Datasette & Diskette", "Graphical interfaces": "Grafische Oberflächen", "The World Wide Web": "Das World Wide Web", "3D graphics cards": "3D-Grafikkarten", "Broadband at home": "Breitband zu Hause", "Social feeds": "Soziale Feeds", "Streaming instead of discs": "Streaming statt Discs", "Voice assistants": "Sprachassistenten", "Reasoning chat models": "Schlussfolgernde Chat-Modelle", "AI coding assistants": "KI-Programmierassistenten", "Real-time voice translation": "Echtzeit-Sprachübersetzung", "Reliable everyday agents": "Verlässliche Alltags-Agenten", "Superhuman coding": "Übermenschliches Programmieren", "Autonomous AI research": "Autonome KI-Forschung", "AI-designed gene therapies": "KI-entworfene Gentherapien", "Humanoid robots at scale": "Humanoide Roboter in Masse", "Fully automated R&D labs": "Vollautomatische Forschungslabore", "Self-expanding factories": "Sich selbst erweiternde Fabriken", "Nanoscale manufacturing": "Fertigung im Nanomaßstab", "4 KB (magnetic core)": "4 KB (Magnetkernspeicher)", "128 MB (in your pocket)": "128 MB (in Deiner Tasche)", "punch cards & tape reels": "Lochkarten & Bandspulen", "magnetic tape": "Magnetband", "cassette tape": "Kassette", "Datasette & 5.25″ floppy": "Datasette & 5,25″-Diskette", "3.5″ floppy": "3,5″-Diskette", "floppy + 40 MB hard disk": "Diskette + 40-MB-Festplatte", "CD-ROM arrives": "CD-ROM kommt", "USB sticks & DVD": "USB-Sticks & DVD", "flash memory & the cloud": "Flash-Speicher & die Cloud", "SSDs arrive": "SSDs kommen", "SSD & cloud saves": "SSD & Cloud-Speicherstände", "discrete transistors": "diskrete Transistoren", "Intel 4004 arrives (2,300 transistors)": "Intel 4004 kommt (2.300 Transistoren)", "MOS 6510 + SID sound": "MOS 6510 + SID-Sound", "Intel 386 · VGA graphics": "Intel 386 · VGA-Grafik", "3dfx Voodoo — 3D arrives": "3dfx Voodoo — 3D kommt", "GeForce 256 — the first “GPU”": "GeForce 256 — die erste „GPU“", "first consumer dual-core": "erster Dual-Core für Verbraucher", "RTX 2080 — ray tracing": "RTX 2080 — Raytracing", "punch cards & reels": "Lochkarten & Spulen", "teletypes & tape": "Fernschreiber & Band", "audio cassettes": "Audiokassetten", "Datasette · 5.25″ floppy": "Datasette · 5,25″-Diskette", "floppies, everywhere": "Disketten, überall", "CDs everywhere": "CDs überall", "apps arrive": "Apps kommen", "streaming starts": "Streaming beginnt", "streaming & feeds": "Streaming & Feeds", "everything streams": "alles streamt", "cloud everything": "alles Cloud"};
+      var GENDESC = [["postwar kids — TV arrived in their living rooms, the Moon landing in their teens", "Nachkriegskinder, der Fernseher kam ins Wohnzimmer, die Mondlandung in ihre Jugend"], ["the latchkey kids — analog childhood, digital adulthood, a C64 under the bedroom desk", "die Schlüsselkinder, analoge Kindheit, digitales Erwachsensein, ein C64 unter dem Schreibtisch"], ["grew up alongside the internet and remember both sides of the dial-up modem", "wuchsen mit dem Internet auf und erinnern sich an beide Seiten des Einwählmodems"], ["never knew a world without the internet; smartphones arrived in primary school", "kannten nie eine Welt ohne Internet; Smartphones kamen in der Grundschule"], ["raised on touchscreens — talking to machines is normal to them", "mit Touchscreens großgeworden, mit Maschinen zu reden ist für sie normal"], ["may share the world with AGI from their first day of school", "teilen die Welt womöglich vom ersten Schultag an mit AGI"]];
+      function hzWord(s){
+        if (Object.prototype.hasOwnProperty.call(HZDE, s)) return HZDE[s];
+        var o = s;
+        o = o.replace(/\bMar\b/g,"Mär").replace(/\bMay\b/g,"Mai").replace(/\bOct\b/g,"Okt").replace(/\bDec\b/g,"Dez");
+        o = o.replace(/\bMAR\b/g,"MÄR").replace(/\bMAY\b/g,"MAI").replace(/\bOCT\b/g,"OKT").replace(/\bDEC\b/g,"DEZ");
+        o = o.replace(/ ahead of today/g," voraus").replace(/ behind today/g," zurück").replace(/· today ·/g,"· heute ·");
+        o = o.replace(/(\d+)y /g,"$1 J ").replace(/(\d+)m\b/g,"$1 M");
+        o = o.replace(/ days\b/g," Tage");
+        o = o.replace(/^to $/,"bis ").replace(/^threshold$/,"Schwelle").replace(/^crossed$/,"überschritten");
+        o = o.replace(/^c\. /,"um ");
+        o = o.replace(/ of RAM at /," RAM bei ");
+        o = o.replace(/ hours\b/g," Stunden").replace(/ minutes\b/g," Minuten").replace(/ working days\b/g," Arbeitstage");
+        o = o.replace(/superhuman/g,"übermenschlich").replace(/expert-level/g,"Expertenniveau").replace(/competent/g,"kompetent").replace(/emerging/g,"entstehend").replace(/dormant/g,"ruhend");
+        o = o.replace(/US\$(\d+(?:\.\d+)?)(tn|bn|m)\b/g, function(_,n,u){ return "US$"+n.replace(".",",")+" "+({tn:"Bio.",bn:"Mrd.",m:"Mio."}[u]); });
+        o = o.replace(/\b(\d+(?:\.\d+)?)(bn|M|k)\b/g, function(_,n,u){ return n.replace(".",",")+" "+({bn:"Mrd.",M:"Mio.",k:"Tsd."}[u]); });
+        o = o.replace(/progress toward the far edge of the AGI window · /,"Fortschritt zum fernen Rand des AGI-Fensters · ");
+        for (var gi=0; gi<GENDESC.length; gi++){ o = o.split(GENDESC[gi][0]).join(GENDESC[gi][1]); }
+        o = o.replace(/^In (\d{4}) they are /,"$1 sind sie ").replace(/ years old\./," Jahre alt.");
+        return o;
+      }
+      function hzTranslate(){
+        var root = document.querySelector(".horizon");
+        if (!root) return;
+        var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
+        var n, jobs = [];
+        while ((n = w.nextNode())){
+          if (n.parentNode && n.parentNode.closest && n.parentNode.closest("[data-i18n]")) continue;
+          var v = n.nodeValue;
+          if (!v || !/\S/.test(v)) continue;
+          jobs.push(n);
+        }
+        jobs.forEach(function(node){ var t = hzWord(node.nodeValue); if (t !== node.nodeValue) node.nodeValue = t; });
+      }
+      window.__cfHorizonRender = function(){ render(); };
+      var __render_en = render;
+      render = function(){ __render_en(); if (window.CFLANG === "de") hzTranslate(); };
+
+      buildMarkers();
+      buildGenBand();
+      setView(viewT);
+    })();
+
+  </script>
+  <script>
+  (function(){
+    var cv=document.getElementById('arepoStorm'); if(!cv) return;
+    var ctx=cv.getContext('2d'); if(!ctx) return;
+    var fn=document.getElementById('arepoFullname');
+    var reduce=false; try{reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
+    var DPR=Math.min(2, window.devicePixelRatio||1);
+    var WORDS=['SATOR','AREPO','TENET','OPERA','ROTAS'];
+    var dots=[], free=[], W=0, H=0, raf=0, t0=0, ASSEMBLE=2.2, HOLD=1.0, DISPERSE=2.6, tB=ASSEMBLE+HOLD;
+    function easeOut(x){ return 1-Math.pow(1-x,3); }
+    function makeTargets(){
+      var off=document.createElement('canvas'); off.width=W; off.height=H;
+      var o=off.getContext('2d'); if(!o) return [];
+      o.fillStyle='#000'; o.fillRect(0,0,W,H);
+      o.fillStyle='#fff'; o.textAlign='center'; o.textBaseline='middle';
+      var cell=Math.min(H*0.88/5, W*0.7/5);
+      var fs=Math.floor(cell*0.92);
+      o.font='900 '+fs+'px "IBM Plex Sans", Arial, sans-serif';
+      var gx0=W/2-cell*2.5, gy0=H/2-cell*2.5;
+      for(var r=0;r<5;r++){ for(var c=0;c<5;c++){
+        o.fillText(WORDS[r].charAt(c), gx0+cell*(c+0.5), gy0+cell*(r+0.5)+fs*0.02);
+      }}
+      var d; try{ d=o.getImageData(0,0,W,H).data; }catch(e){ return []; }
+      var pts=[], step=Math.max(2, Math.round(cell/18)), jit=step*0.22;
+      for(var y=0;y<H;y+=step){ for(var x=0;x<W;x+=step){
+        if(d[(y*W+x)*4]>128){ var row=Math.floor((y-gy0)/cell);
+          pts.push([x+(Math.random()-0.5)*jit, y+(Math.random()-0.5)*jit, row===1]); }
+      }}
+      return pts;
+    }
+    function scatter(){
+      for(var i=0;i<dots.length;i++){ dots[i].x=Math.random()*W; dots[i].y=Math.random()*H; }
+    }
+    // Sample the name at the SAME absolute px grid as SATOR (identical density),
+    // auto-sizing the font so its point count fits the available particle budget.
+    function makeName(step, budget){
+      var L=['ARCHITECTURE FOR REGISTERED','ENDORSEMENT OF PICTORIAL ORIGINALS'];
+      function sample(fs){
+        var off=document.createElement('canvas'); off.width=W; off.height=H;
+        var o=off.getContext('2d'); if(!o) return {pts:[],fs:fs};
+        o.fillStyle='#000'; o.fillRect(0,0,W,H); o.fillStyle='#fff'; o.textAlign='center'; o.textBaseline='middle';
+        o.font='900 '+fs+'px "IBM Plex Sans", Arial, sans-serif';
+        var wmax=Math.max(o.measureText(L[0]).width,o.measureText(L[1]).width);
+        if(wmax>W*0.9){ fs=Math.floor(fs*W*0.9/wmax); o.font='900 '+fs+'px "IBM Plex Sans", Arial, sans-serif'; }
+        var cy=H*0.66, lh=fs*1.28;
+        o.fillText(L[0],W/2,cy-lh/2); o.fillText(L[1],W/2,cy+lh/2);
+        var d; try{ d=o.getImageData(0,0,W,H).data; }catch(e){ return {pts:[],fs:fs}; }
+        var pts=[];
+        for(var y=0;y<H;y+=step){ for(var x=0;x<W;x+=step){ if(d[(y*W+x)*4]>128) pts.push([x,y]); } }
+        return {pts:pts, fs:fs};
+      }
+      var r=sample(Math.floor(H*0.14));
+      if(r.pts.length>budget){ r=sample(Math.max(12, Math.floor(r.fs*Math.sqrt(budget/r.pts.length)*0.97))); }
+      return r.pts;
+    }
+    function build(){
+      W=cv.clientWidth||0; H=cv.clientHeight||0; if(!W||!H) return;
+      cv.width=Math.floor(W*DPR); cv.height=Math.floor(H*DPR); ctx.setTransform(DPR,0,0,DPR,0,0);
+      var pts=makeTargets(); dots=[];
+      var BLUE=['#A8BCC7','#C6D7E0','#BFD2DC'], AMBER=['#F6B067','#FFC58A','#F2A45C'], BLUEB=['#CBDBE6','#DCEAF1','#BCD0DB'];
+      var rad=Math.max(0.8, (Math.min(H*0.88/5, W*0.7/5)/18)*0.5);
+      var nonHi=[];
+      for(var i=0;i<pts.length;i++){ var q=pts[i];
+        var ang=Math.atan2(q[1]-H/2, q[0]-W/2);
+        var dd={tx:q[0], ty:q[1], hi:q[2], x:Math.random()*W, y:Math.random()*H,
+          ph:Math.random()*6.283, sp:0.5+Math.random()*1.1,
+          r:(q[2]?rad*1.15:rad)*(0.85+Math.random()*0.3),
+          col:(q[2]?AMBER:BLUE)[(Math.random()*3)|0],
+          br:0.82+Math.random()*0.18, former:false, nt:null,
+          vx:Math.cos(ang)*(0.15+Math.random()*0.28)+(Math.random()-0.5)*0.3,
+          vy:Math.sin(ang)*(0.12+Math.random()*0.22)+(Math.random()-0.5)*0.25-0.04};
+        dots.push(dd); if(!q[2]) nonHi.push(dd); }
+      // a subset of the blue particles reassembles into the written-out name
+      // (same px density + dot size as AREPO -> crisp, not captcha-like)
+      var satStep=Math.max(2,Math.round((Math.min(H*0.88/5, W*0.7/5))/18));
+      var nm=makeName(satStep, Math.floor(nonHi.length*0.78));
+      var cap=Math.floor(nonHi.length*0.82), i2, j2, t2;
+      for(i2=nm.length-1;i2>0;i2--){ j2=(Math.random()*(i2+1))|0; t2=nm[i2]; nm[i2]=nm[j2]; nm[j2]=t2; }
+      if(nm.length>cap) nm=nm.slice(0,cap);
+      var idx=[]; for(i2=0;i2<nonHi.length;i2++) idx.push(i2);
+      for(i2=idx.length-1;i2>0;i2--){ j2=(Math.random()*(i2+1))|0; t2=idx[i2]; idx[i2]=idx[j2]; idx[j2]=t2; }
+      for(var k=0;k<nm.length;k++){ var fd=nonHi[idx[k]]; fd.former=true; fd.nt=nm[k]; fd.col=BLUEB[(Math.random()*3)|0]; }
+      free=[]; var NF=Math.round(W/18);
+      for(var j=0;j<NF;j++){ free.push({x:Math.random()*W, y:Math.random()*H,
+        vx:(Math.random()-0.5)*0.28, vy:(Math.random()-0.5)*0.18, ph:Math.random()*6.283,
+        r:0.8+Math.random()*1.3}); }
+    }
+    function frame(now){
+      if(!t0) t0=now; var ts=(now-t0)/1000;
+      var pA=reduce?1:easeOut(Math.min(1, ts/ASSEMBLE));
+      ctx.clearRect(0,0,W,H);
+      // crisp letters (source-over); AREPO holds, others fade as they disperse
+      ctx.globalCompositeOperation='source-over';
+      var w=16*(1-pA);
+      for(var i=0;i<dots.length;i++){ var d=dots[i];
+        if(d.hi){ var sh=(0.045+0.17*pA); d.x+=(d.tx-d.x)*sh; d.y+=(d.ty-d.y)*sh; }
+        else { var rel=reduce?1:Math.max(0,Math.min(1,(ts-tB)/DISPERSE));
+          if(d.former){ var e=(rel<0.5?2*rel*rel:1-Math.pow(-2*rel+2,2)/2);
+            var gx=d.tx*(1-e)+d.nt[0]*e, gy=d.ty*(1-e)+d.nt[1]*e;
+            d.x+=(gx-d.x)*(0.14+0.06*pA); d.y+=(gy-d.y)*(0.14+0.06*pA); }
+          else { var st=(0.045+0.17*pA)*(1-rel); d.x+=(d.tx-d.x)*st; d.y+=(d.ty-d.y)*st;
+            if(rel>0){ d.x+=d.vx*rel; d.y+=d.vy*rel;
+              if(d.x<-3)d.x+=W+6; if(d.x>W+3)d.x-=W+6; if(d.y<-3)d.y+=H+6; if(d.y>H+3)d.y-=H+6; } } }
+        d.px=d.x+Math.sin(ts*d.sp+d.ph)*w; d.py=d.y+Math.cos(ts*d.sp*0.85+d.ph)*w;
+        var relc=d.hi?0:(reduce?1:Math.max(0,Math.min(1,(ts-tB)/DISPERSE)));
+        var a;
+        if(d.hi) a=d.br*(0.25+0.75*pA)*(0.9+0.1*Math.sin(ts*2+d.ph));
+        else if(d.former) a=d.br*(0.25+0.75*pA);
+        else a=d.br*(0.25+0.75*pA)*(1-relc);
+        if(a>0.02){ ctx.globalAlpha=Math.min(0.98,a); ctx.fillStyle=d.col;
+          ctx.beginPath(); ctx.arc(d.px,d.py,d.r,0,6.283); ctx.fill(); }
+      }
+      // ambient blue sparks + dispersed (non-forming) blue particles (additive glow)
+      ctx.globalCompositeOperation='lighter';
+      for(var j=0;j<free.length;j++){ var f=free[j];
+        f.x+=f.vx; f.y+=f.vy;
+        if(f.x<-2)f.x+=W+4; if(f.x>W+2)f.x-=W+4; if(f.y<-2)f.y+=H+4; if(f.y>H+2)f.y-=H+4;
+        ctx.globalAlpha=0.05+0.10*(0.5+0.5*Math.sin(ts*3+f.ph));
+        ctx.fillStyle='#BFD2DC'; ctx.beginPath(); ctx.arc(f.x,f.y,f.r,0,6.283); ctx.fill();
+      }
+      for(var k=0;k<dots.length;k++){ var e2=dots[k]; if(e2.hi||e2.former) continue;
+        var rl=reduce?1:Math.max(0,Math.min(1,(ts-tB)/DISPERSE)); if(rl<=0) continue;
+        ctx.globalAlpha=rl*(0.08+0.2*(0.5+0.5*Math.sin(ts*3.2+e2.ph)));
+        ctx.fillStyle=e2.col; ctx.beginPath(); ctx.arc(e2.px,e2.py,e2.r*1.7,0,6.283); ctx.fill();
+      }
+      ctx.globalCompositeOperation='source-over'; ctx.globalAlpha=1;
+      raf=requestAnimationFrame(frame);
+    }
+    function scrollIntoBand(){
+      var band=cv.parentNode; if(!band) return;
+      var hdr=document.querySelector('header'), bar=document.querySelector('.tabsbar');
+      var off=(hdr?hdr.offsetHeight:64)+(bar?bar.offsetHeight:48)+14;
+      var y=band.getBoundingClientRect().top+window.pageYOffset-off;
+      try{ window.scrollTo({top:Math.max(0,y), behavior: reduce?'auto':'smooth'}); }
+      catch(e){ window.scrollTo(0,Math.max(0,y)); }
+    }
+    function start(){ if(raf) return; scatter(); if(fn) fn.classList.remove('show'); t0=0; scrollIntoBand(); raf=requestAnimationFrame(frame); }
+    function stop(){ if(raf){ cancelAnimationFrame(raf); raf=0; } }
+    function vis(){ var pn=document.getElementById('arepo');
+      if(pn && pn.classList.contains('on')){ if(!W||!dots.length) build(); start(); } else stop(); }
+    window.addEventListener('resize', function(){ build(); });
+    document.addEventListener('click', function(){ setTimeout(vis,40); });
+    window.addEventListener('hashchange', function(){ setTimeout(vis,40); });
+    setTimeout(function(){ build(); vis(); }, 80);
+  })();
+  </script>
+  <script>
+  (function(){
+    var I18N = {"nav.horizon": "Horizon", "nav.principle": "Prinzip", "nav.mechanism": "Mechanismus", "nav.origin": "Ursprung", "nav.forum": "Forum", "nav.arepo": "AREPO", "nav.cta": "Mitmachen", "tab.horizon": "<b>00</b>Horizon", "tab.principle": "<b>01</b>Das Prinzip", "tab.mechanism": "<b>02</b>Der Mechanismus", "tab.origin": "<b>03</b>Wer &amp; Warum", "tab.contact": "<b>04</b>Position beziehen", "tab.forum": "<b>05</b>Das Forum", "tab.arepo": "<b>06</b>AREPO", "ticker.track": "<span class=\"brk\"><b>● GENF HAT GETAGT</b> &nbsp; Erste Sitzung des Global Dialogue endet; das Wissenschaftspanel sagt, die Sicherheit an der Spitze <em>lässt sich nicht garantieren.</em> Als Nächstes: New York, Mai 2027.</span><span><b>Dekret, 2. Juni:</b> Washington nimmt sich 30 Tage Vorabzugang. <em>Die Öffentlichkeit wartet weiter.</em></span><span>The right to run. <em>The duty to restrain.</em></span><span>Offene Gewichte halten den Abstand zur Spitze bei Monaten. <b>Das Recht zu betreiben, ausgeübt.</b></span><span><b>00 · Horizon</b> — achtzig Jahre auf einer Linie, unten. <em>Er bewegt sich mit dem Kalender.</em></span><span><b>AGI</b><em>plus</em> — die Selbstregulierung endet, das Vertragsrecht beginnt.</span><span>If you don&apos;t run it, <em>you cannot control it.</em></span><span class=\"brk\"><b>● GENF HAT GETAGT</b> &nbsp; Erste Sitzung des Global Dialogue endet; das Wissenschaftspanel sagt, die Sicherheit an der Spitze <em>lässt sich nicht garantieren.</em> Als Nächstes: New York, Mai 2027.</span><span><b>Dekret, 2. Juni:</b> Washington nimmt sich 30 Tage Vorabzugang. <em>Die Öffentlichkeit wartet weiter.</em></span><span>The right to run. <em>The duty to restrain.</em></span><span>Offene Gewichte halten den Abstand zur Spitze bei Monaten. <b>Das Recht zu betreiben, ausgeübt.</b></span><span><b>00 · Horizon</b> — achtzig Jahre auf einer Linie, unten. <em>Er bewegt sich mit dem Kalender.</em></span><span><b>AGI</b><em>plus</em> — die Selbstregulierung endet, das Vertragsrecht beginnt.</span><span>If you don&apos;t run it, <em>you cannot control it.</em></span>", "hero.eyebrow": "Rechenhoheit · v36.0 · Juli 2026", "hero.lede": "Zwei rechtliche Pflichten: eine <b>untere</b> Grenze und eine <b>obere</b>. Lokale KI für die Bürgerin; ein bindender Vertrag für die Spitze.", "hero.btnPrimary": "Das Argument lesen →", "hero.btnGhost": "Position beziehen", "disp.label": "<span class=\"live-dot\"></span>Depesche · 13. Juli 2026", "disp.head": "Der Tisch steht. Jetzt kommt der Text.", "disp.body1": "Am 6. und 7. Juli hielt der <b>UN Global Dialogue on AI Governance</b> seine erste Sitzung in Genf: jeder Mitgliedstaat in einem Raum, eröffnet vom Generalsekretär und der Präsidentin der Vollversammlung. Guterres brachte vier Prioritäten zu Protokoll: gemeinsame Sicherheitsstandards, menschenrechtliche rote Linien, den Aufbau von Kapazitäten in Entwicklungsländern und Transparenz bei den Umweltfolgen. Autonome Waffen nannte er moralisch verwerflich.", "disp.body2": "Das schärfere Signal kam von den Wissenschaftlern. Das unabhängige Panel des Dialogs, vierzig Fachleute unter dem Vorsitz von <b>Yoshua Bengio</b> und <b>Maria Ressa</b>, legte seinen ersten Bericht Tage vor der Sitzung vor: die Wissenschaft <b>„kann nicht garantieren“</b>, dass KI an der Spitze katastrophalen Schaden vermeidet. Das ist die offizielle Beratungssprache genau des Gremiums, um dessen Rat jeder Staat gebeten hat, und sie bindet niemanden. Die zweite Sitzung tagt im Mai 2027 in New York: zehn Monate, in denen die Spitze im Wettbewerbstempo weiterliefert.", "disp.kicker": "Ein Vertrag braucht einen Tisch, bevor er einen Text braucht. Den Tisch gibt es jetzt. Der Horizont unten zählt, was die Spitze tut, während um den Text gerungen wird.", "disp.src": "UN Global Dialogue on AI Governance, Genf, 6.–7. Juli 2026 · Independent International Scientific Panel on AI, erster Bericht, 1. Juli 2026 · Öffentliche Berichterstattung, Juli 2026.", "head.horizon": "<span class=\"sec-num\">00 — Horizon</span><h2>Wohin das führt. Und woher wir kamen.</h2><p class=\"kicker\">Achtzig Jahre auf einer Linie. Vor uns: KI, <span style=\"color:var(--burnt-bright)\">AGI</span>, <span style=\"color:var(--burnt-bright)\">AGI</span><span style=\"color:var(--lightblue)\">plus</span>, <span style=\"color:var(--ultra-bright)\">ASI</span> — datiert von den Leuten, die beruflich Prognosen stellen. Hinter uns: die Maschinen, die uns großgezogen haben. Das Instrument bewegt sich mit dem Kalender; komm morgen wieder, und es ist von allein ein Stück vorgerückt. Zieh die Linie, wohin Du willst. Rückwärts ist die freundliche Richtung.</p>", "head.principle": "<span class=\"sec-num\">01 — Das Prinzip</span><h2>Zwei Schwellen. Eine Architektur.</h2><p class=\"kicker\">KI ist zu folgenreich, um in den Händen einiger weniger nicht rechenschaftspflichtiger Akteure zu bleiben, weder am Punkt des Zugangs noch am Punkt des Risikos.</p>", "head.mechanism": "<span class=\"sec-num\">02 — Der Mechanismus</span><h2>Zwei Pflichten. Eine Architektur.</h2><p class=\"kicker\">Die Schwellenpflicht sichert die untere Grenze: das Recht der Bürgerin auf eine Maschine, die sie wirklich kontrolliert. Die Vertragspflicht sichert die obere: das Recht der Gattung auf eine Stimme in Entscheidungen, die in ihrem Namen getroffen werden. Jede Pflicht für sich ist symbolisch. Zusammen sind sie eine Architektur.</p>", "head.origin": "<span class=\"sec-num\">03 — Wer &amp; Warum</span><h2>Warum ich Compute Freedom gebaut habe.</h2>", "head.contact": "<span class=\"sec-num\">04 — Position beziehen</span><h2>KI-Governance geschieht mit Dir oder ohne Dich.</h2><p class=\"kicker\">Diskutiere sie öffentlich, fordere sie heraus, teile sie, verbessere sie, überall dort, wo politische Gespräche tatsächlich stattfinden. Nutze das Formular für Zusammenarbeit, Interviews, politische Arbeit, Forschungsbeiträge oder ernste Einwände, die nicht in einem Kommentarstrang untergehen sollen.</p>", "head.forum": "<span class=\"sec-num\">05 — Das Forum</span><h2>Das Argument liegt offen. Nimm es auseinander.</h2><p class=\"kicker\">Ernsthafte Einwände machen das Argument besser. Poste sie hier, offen, wo sie gelesen, beantwortet und aufbewahrt werden können.</p>", "prin.card1tag": "Untere Grenze · Die Bürgerin", "prin.card1h3": "Die Schwellenpflicht", "prin.card1p": "Sobald KI eine definierte Fähigkeitsschwelle überschreitet, sollten Entwickler gesetzlich verpflichtet sein, eine Version anzubieten, die auf privater Hardware läuft, ohne Cloud-Abhängigkeit, ohne laufende Zugangsgebühren, ohne Überwachung. Das sichert das Recht der Bürgerin auf eine Maschine, die ihr antwortet.", "prin.card2tag": "Obere Grenze · Die Gattung", "prin.card2h3": "Die Vertragspflicht", "prin.card2p": "Sobald die Entwicklung an der Spitze in <span class=\"term-burnt\">AGI</span>, <span class=\"term-burnt\">AGI</span><span class=\"term-blue\">plus</span> und <span class=\"term-ultra\">ASI</span> übergeht, hat kein einzelnes Unternehmen und kein einzelner Staat das demokratische Mandat, allein weiterzugehen. Entscheidungen von Belang für die Gattung brauchen die Legitimation durch die Gattung, festgeschrieben in einem bindenden internationalen Vertrag, mit überprüfbaren Grenzen, Inspektionen auf IAEA-Niveau und gesetzlich verankerten Stopp-Mechanismen.", "prin.pull": "Open Source ist nicht dasselbe wie <em>Rechenhoheit.</em>", "prin.body1": "Modellgewichte freizugeben, die nur im großen Maßstab auf Hyperscaler-Infrastruktur funktionieren, ist eine förmliche Geste ohne funktionale Substanz. Der Code mag sichtbar sein; die Fähigkeit bleibt unerreichbar. Wer die Inferenz-Infrastruktur kontrolliert, kontrolliert das Wissen. Wenn dieses Wissen zur Grundlage von Medizin, Bildung, Recht und Regierung wird, ist seine Konzentration in drei bis fünf privaten Konzernen kein Marktergebnis, das wir stillschweigend hinnehmen sollten.", "prin.body2": "<strong>Das Muster ist alt. Nur der Maßstab ist neu.</strong>", "mech.sub1": "<span class=\"mini\">Untere Grenze</span>Die Schwellenpflicht", "mech.p1": "Die übliche Antwort auf Sorgen über KI-Konzentration ist eine Sprache der Offenheit: Aufsätze, Benchmarks, Model Cards, APIs und gelegentliche Gewichtsfreigaben. Doch diese Antwort verwechselt Sichtbarkeit mit Zugang und Zugang mit Hoheit.", "mech.p2": "Selbst wo Modellgewichte freigegeben werden, bleiben die fähigsten Systeme praktisch abhängig von Infrastruktur, die Hunderttausende oder Millionen Dollar kostet. Forscher können Teile des Stacks prüfen. Bürger könnten ihn theoretisch auditieren. Aber sie können Spitzenfähigkeit nicht eigenständig betreiben. Der Anschein von Offenheit bleibt; die Substanz der Kontrolle nicht.", "mech.p3": "Compute Freedom schlägt einen konkreten Mechanismus vor: Sobald ein KI-System eine definierte Fähigkeitsschwelle überschreitet, sollte sein Entwickler gesetzlich verpflichtet sein, eine komprimierte, lokal lauffähige Version anzubieten: auf Verbraucher-Hardware, offline-fähig, ohne verpflichtende Cloud-Anmeldung.", "mech.pull1": "Die Pflicht ist das Prinzip. <em>Die Schwelle ist die Verhandlung.</em>", "mech.p4": "Die genaue Fähigkeitsschwelle bleibt hier bewusst offen. Sie zu definieren ist eine technische und politische Frage, die in die öffentliche Beratung gehört, mit Beiträgen von Ingenieuren, Ethikern, Politikern und betroffenen Gemeinschaften. Wir laden dazu ein, diese Verhandlung zu beginnen.", "mech.spec1a": "<b>Spitzenmodelle lassen sich heute komprimieren</b>, sodass sie auf Verbraucher-Hardware mit mäßigem Fähigkeitsverlust laufen. Die technische Hürde ist nicht grundsätzlich.", "mech.spec1b": "<b>Der ökonomische Anreiz, lokale Nutzung zu verhindern, ist strukturell:</b> Cloud-Inferenz ist das Erlösmodell.", "mech.spec1c": "<b>Kein rechtlicher Rahmen erzwingt derzeit die Offenlegung</b>, ob Komprimierung machbar ist.", "mech.spec1d": "<b>Die Öffentlichkeit hat keinen Mechanismus, um</b> die Behauptungen der Industrie darüber zu prüfen, was möglich ist und was nicht.", "mech.p5": "Die pharmazeutische Parallele ist lehrreich. Arzneimittelentwickler müssen Zusammensetzungen offenlegen, sich der Zulassungsprüfung stellen und, nach einer Frist, Wirkstoffe für Generika öffnen. Wir akzeptieren, dass die Öffentlichkeit ein berechtigtes Interesse daran hat, lebenswichtiges Wissen nicht dauerhaft in privater Infrastruktur eingeschlossen zu sehen. <strong>KI wird zu lebenswichtigem Wissen. Das Argument ist dasselbe.</strong>", "mech.p6": "Dieses Argument lässt die kommerzielle KI-Entwicklung unangetastet. Was es hinzufügt, ist ein struktureller Boden darunter: eine Mindestbedingung an Rechenhoheit, die unabhängige Prüfung, akademische Forschung und demokratische Rechenschaft möglich hält.", "mech.sub2": "<span class=\"mini\">Obere Grenze</span>Die Vertragspflicht", "mech.p7": "Die untere Schwelle schützt die Bürgerin. Die obere Schwelle schützt die Gattung, und dazu haben wir zu lange geschwiegen.", "mech.p8": "Während Spitzensysteme sich der allgemeinen menschlichen Leistungsfähigkeit und darüber hinaus nähern, <span class=\"term-burnt\">AGI</span>, <span class=\"term-burnt\">AGI</span><span class=\"term-blue\">plus</span> und <span class=\"term-ultra\">ASI</span>, wird ihre Entwicklung zu einer Sache von Belang jenseits jedes einzelnen Staates und jedes einzelnen Konzerns. Die derzeitige Bahn hat weder ein demokratisches Mandat noch einen bindenden Vertrag. Stargate, Colossus, die Milliarden-Bauprogramme von OpenAI, Google und xAI, alle abhängig vom faktischen NVIDIA-Monopol auf Spitzen-Trainingssilizium, laufen im Wettbewerbstempo, rechenschaftspflichtig gegenüber Aktionären statt Bürgern.", "mech.p9": "Die physische Signatur dieses Rennens ist nicht mehr subtil. Wenn ein KI-Unternehmen ankündigt, es brauche <span class=\"term-burnt\">zehn neue Kernreaktoren</span>, um sein nächstes Modell zu trainieren, schuldet ein Verfassungsstaat seinen Bürgern vor jeder Bewunderung eine Frage: <strong>mit welcher Befugnis?</strong> Dass diese Frage kaum gestellt wurde, ist ein Versagen des heutigen politischen Denkens.", "mech.sub3": "<span class=\"mini\">Öffentliches Protokoll</span>Das Versagen der Selbstregulierung", "mech.p10": "Anthropic weigerte sich, Schutzvorkehrungen zu entfernen, die Claude vor dem Einsatz für autonome Waffenzielsteuerung oder für die Massenüberwachung im Inland bewahren. Das Pentagon reagierte, indem es das Unternehmen als <span class=\"term-burnt\">Lieferketten-Risiko</span> einstufte. OpenAI, Google und xAI sind unter weniger strengen Vereinbarungen in geheime Verteidigungseinsätze gegangen. Ohne Vertragsrecht werden freiwillige Sicherheitszusagen unter Druck zu Verhandlungsmasse.", "mech.rec1s": "Öffentliches Protokoll · Vereinte Nationen", "mech.rec1c": "Die erste Sitzung des UN Global Dialogue tagt in Genf; sein Wissenschaftspanel berichtet Tage zuvor, dass die Sicherheit an der Spitze nicht garantiert werden kann.", "mech.rec1w": "6.–7. Juli 2026", "mech.rec2s": "Öffentliches Protokoll · Weißes Haus", "mech.rec2c": "Ein Dekret gibt der US-Regierung 30 Tage Vorabzugang zu erfassten Spitzenmodellen vor der Freigabe.", "mech.rec2w": "2. Juni 2026", "mech.rec3s": "Öffentliches Protokoll", "mech.rec3c": "Das Pentagon stuft Anthropic wegen der Waffen-Schutzvorkehrungen als „Lieferketten-Risiko“ ein.", "mech.rec3w": "März 2026", "mech.rec4s": "Öffentliches Protokoll", "mech.rec4c": "OpenAI und xAI unterzeichnen weitreichende Verteidigungseinsätze, während das Rechenrennen sich beschleunigt.", "mech.rec4w": "Februar 2026", "mech.rec5s": "Öffentliches Protokoll", "mech.rec5c": "Der Spitzen-KI-Ausbau löst Zusagen für mehrere neue Kernreaktoren aus.", "mech.rec5w": "2025–2026", "mech.rec6s": "Öffentliche Erklärung · Center for AI Safety", "mech.rec6c": "Hinton, Bengio, Altman, Hassabis: KI-Risiko auf einer Stufe mit Pandemien und Atomkrieg.", "mech.rec6w": "Mai 2023", "mech.recnote": "Sinngemäße Zusammenfassungen öffentlicher Berichterstattung. Belege über den Kontaktkanal auf Anfrage.", "mech.treatyline": "Wir haben solche Verträge schon einmal geschlossen.", "mech.tr1": "Der Atomwaffensperrvertrag", "mech.tr2": "Die IAEA", "mech.tr3": "Das Biowaffenübereinkommen", "mech.tr4": "Das Montreal-Protokoll", "mech.p11": "Keiner war utopisch, als er vorgeschlagen wurde; alle funktionieren heute: unvollkommen, überwacht, real. Die Technologien, die sie regeln, sind nicht dualer oder global folgenreicher als KI an der Spitze. Die institutionelle Infrastruktur besteht. Nur der <span class=\"term-burnt\">Wille</span> fehlt.", "mech.p12": "Der Fall ist nicht allein unserer. Die Erklärung des Center for AI Safety von 2023, die das KI-Risiko auf dieselbe Achse wie Pandemien und Atomkrieg setzte, unterzeichneten <strong>Geoffrey Hinton</strong>, <strong>Yoshua Bengio</strong>, <strong>Sam Altman</strong> und <strong>Demis Hassabis</strong>. Zu den Unterzeichnern zählen genau die Führungskräfte, die derzeit die Spitze bauen. Von ihnen kommt die Warnung als <strong>ein Geständnis</strong>. Sie hat keine bindende Beschränkung ihres eigenen Verhaltens hervorgebracht, weil keine von ihnen verlangt wurde.", "mech.pull2": "20 € werden 200 €, 2.000 €, <em>oder in Deiner Preisklasse schlicht nicht verfügbar.</em>", "mech.p13": "Das Preismodell verschiebt sich allen unter den Füßen. Pauschale Abos weichen der abgerechneten Inferenz. Wird der Zugang zu Intelligenz zu einem getakteten Versorgungsgut, wird Verständnis zur Funktion des Budgets. Diese Schwellen sind eine Frage von Monaten. <strong>Wer jetzt nicht handelt, hat später keinen Hebel.</strong>", "mech.sub4": "<span class=\"mini\">Was die Vertragspflicht verlangt</span>Ein Mandat der Gattung", "mech.spec2a": "<b>Ein bindendes internationales Abkommen</b>, das die Fähigkeits- und Infrastrukturschwellen definiert, jenseits derer KI-Entwicklung eine multilaterale Genehmigung braucht.", "mech.spec2b": "<b>Überprüfbare Rechen- und Energiegrenzen</b> an der Spitze, überwacht unter einem Inspektionsregime, das dem der IAEA an Ernst gleichkommt.", "mech.spec2c": "<b>Im Vertragsrecht verankerte Stopp-Mechanismen</b> statt konzernaler Selbstbeschränkung, ausgelöst durch nachgewiesene Fähigkeit oder nachgewiesenes Risiko.", "mech.spec2d": "<b>Die Einbeziehung jedes spitzenfähigen Staates,</b> ausdrücklich einschließlich Chinas, dessen erklärte Bereitschaft zum internationalen Dialog über KI-Sicherheit substanzieller war, als der westliche Reflex zugibt.", "mech.spec2e": "<b>Öffentliche, bürgerzugängliche Berichterstattung</b> über die Entwicklung an der Spitze, die die Undurchsichtigkeit der konzernalen Selbsteinschätzung aufbricht, die derzeit als Governance durchgeht.", "mech.pull3": "Die Bürgerin unten. Die Gattung oben. <em>Der Konzern antwortet keiner von beiden.</em>", "orig.p1": "Ich baue Compute Freedom nicht als persönliche Plattform. Ich baue es, weil ich dieses Muster schon einmal gesehen habe. In der Wissenschaft kann Information öffentlich sein, während das Verständnis konzentriert bleibt. Daten werden geteilt. Aufsätze sind zugänglich. Methoden werden beschrieben. Doch die eigentliche Macht liegt in der Infrastruktur, die Information in Wissen verwandelt. <strong>Die Daten waren offen. Das Verständnis nicht.</strong>", "orig.p2": "Künstliche Intelligenz reproduziert jetzt dieselbe Struktur im zivilisatorischen Maßstab. Die Sprache der Offenheit bleibt, doch die Substanz der Kontrolle wandert in <span class=\"term-burnt\">zentralisierte Rechenleistung, zentralisierte Inferenz und zentralisierte Erlaubnis.</span>", "orig.p3": "Compute Freedom besteht, um diese Ordnung herauszufordern. Es sagt: Die Kontrolle über grundlegende Intelligenz darf nicht das Privileg einiger Firmen bleiben, auch nicht das <span class=\"term-blue\">zufällige Nebenprodukt</span> ihrer Geschäftsmodelle.", "orig.bioWho": "Der Initiator", "orig.bioP": "Ein translationaler Wissenschaftler und Professor für Translationale Genomik und Gentherapie in der Kinderheilkunde, mit einem Doktortitel in Biologie, einem früheren Starting Grant des Europäischen Forschungsrats, Veröffentlichungen in Zeitschriften wie Nature Biotechnology und dem Journal of Clinical Investigation und internationaler Anerkennung, darunter der Maurizio-Vignola-Preis.", "orig.pull": "Wird Intelligenz zur Infrastruktur, <em>kann ihre Steuerung nicht privat bleiben.</em>", "cont.pull": "Lesen. Teilen. <em>Melde Dich.</em>", "cont.lblSal": "Anrede", "cont.lblTitle": "Titel", "cont.lblName": "Name", "cont.lblEmail": "E-Mail", "cont.lblRole": "Hintergrund", "cont.lblMsg": "Nachricht", "cont.selSal": "<option value=\"\">—</option><option>Herr</option><option>Frau</option><option>Divers</option>", "cont.selTitle": "<option value=\"\">—</option><option>Dr.</option><option>Prof.</option><option>Prof. Dr.</option>", "cont.selRole": "<option value=\"\">— Auswählen —</option><option>Forschung / Wissenschaft</option><option>Politik / Regulierung</option><option>Technik / Entwicklung</option><option>Journalismus / Autorenschaft</option><option>Zivilgesellschaft / Aktivismus</option><option>Wirtschaft / Unternehmen</option><option>Studierende</option><option>Interessierte Bürgerin</option><option>Sonstiges</option>", "cont.submit": "Senden →", "cont.note": "Läuft über eine Proton-Mailbox via Formspree. Datenschutzfreundliche Statistik: nur aggregierte Seitenaufrufe. Keine Cookies. Kein persönliches Profiling. Keine Werbe-Tracker.", "forum.link": "Das ganze Forum auf GitHub öffnen →", "forum.note": "Die Kommentare laufen über GitHub Discussions via giscus. Zum Posten braucht es ein kostenloses GitHub-Konto; Lesen steht allen offen. Keine Tracker außer GitHub selbst.", "foot.about": "Über mich", "foot.impressum": "Impressum", "foot.privacy": "Datenschutz", "foot.copy": "© MMXXVI · Michael S. D. Kormann · Alle Rechte vorbehalten · #ComputeFreedom", "arepo.tagline": "KI wird die Welt mit Bildern überfluten. Aber Deine Unterschrift kann sie nicht fälschen.", "arepo.lede": "Gleiches Prinzip, ein anderes Problem: Wenn jeder jedes Bild erzeugen kann, wie beweist Du, dass ein Bild von Dir ist?", "arepo.pitch": "Mit AREPO bürgst Du für ein Bild. Du unterschreibst es, jeder kann die Unterschrift prüfen, und hält sie, dann kommt das Bild von Dir.", "arepo.status": "<b>In Arbeit.</b> Ein kurzer Film erklärt die Idee, das Werkzeug kommt danach.", "arepo.cta": "Schreib mir →", "hz.note": "<b>Wie das zu lesen ist.</b> Das AGI-Band <b>[Feb–Okt 2026]</b> folgt dem Lager, das sagt, universell einsetzbare KI sei bereits im Gange: <a href=\"https://www.noemamag.com/artificial-general-intelligence-is-already-here/\" target=\"_blank\" rel=\"noopener\">Agüera y Arcas &amp; Norvig</a> nannten die heutigen Modelle schon 2023 allgemeine Intelligenz, Tyler Cowen nannte o3 im April 2025 AGI, und Ethan Mollick beschreibt das Vorhandene als <a href=\"https://www.oneusefulthing.org/p/on-jagged-agi-o3-gemini-25-and-everything\" target=\"_blank\" rel=\"noopener\">jagged AGI</a>. Umfrage-Mediane setzen den Übergang noch Jahre später an, und die Breite des Bandes ist dieser Dissens. Die ASI-Daten stammen aus der <a href=\"https://www.metaculus.com/questions/5121/\" target=\"_blank\" rel=\"noopener\">Metaculus-Community-Prognose</a>, dem <a href=\"https://blog.aifutures.org/p/clarifying-how-our-ai-timelines-forecasts\" target=\"_blank\" rel=\"noopener\">AI Futures Project</a> und der <a href=\"https://forecastingresearch.substack.com/p/leap-wave-8-ai-timelines\" target=\"_blank\" rel=\"noopener\">LEAP-Expertenumfrage</a> (alle 2026). Die Vergangenheit auf dieser Linie ist echte Hardware, die man einmal kaufen konnte. Die Zukunft zwischen den Schwellen ist Szenario-Interpolation im Geist von <a href=\"https://ai-2027.com\" target=\"_blank\" rel=\"noopener\">ai-2027.com</a>, so skaliert, dass die heutige Spalte den heute veröffentlichten Zahlen entspricht. Die Fehlerbalken weiten sich von heute aus in beide Richtungen.", "mech.rec1": "<span class=\"src\">Öffentliches Protokoll · Vereinte Nationen</span><span class=\"claim\">Die erste Sitzung des UN Global Dialogue tagt in Genf; sein Wissenschaftspanel berichtet Tage zuvor, dass die Sicherheit an der Spitze nicht garantiert werden kann.</span><span class=\"when\">6.–7. Juli 2026</span>", "mech.rec2": "<span class=\"src\">Öffentliches Protokoll · Weißes Haus</span><span class=\"claim\">Ein Dekret gibt der US-Regierung 30 Tage Vorabzugang zu erfassten Spitzenmodellen vor der Freigabe.</span><span class=\"when\">2. Juni 2026</span>", "mech.rec3": "<span class=\"src\">Öffentliches Protokoll</span><span class=\"claim\">Das Pentagon stuft Anthropic wegen der Waffen-Schutzvorkehrungen als „Lieferketten-Risiko“ ein.</span><span class=\"when\">März 2026</span>", "mech.rec4": "<span class=\"src\">Öffentliches Protokoll</span><span class=\"claim\">OpenAI und xAI unterzeichnen weitreichende Verteidigungseinsätze, während das Rechenrennen sich beschleunigt.</span><span class=\"when\">Februar 2026</span>", "mech.rec5": "<span class=\"src\">Öffentliches Protokoll</span><span class=\"claim\">Der Spitzen-KI-Ausbau löst Zusagen für mehrere neue Kernreaktoren aus.</span><span class=\"when\">2025–2026</span>", "mech.rec6": "<span class=\"src\">Öffentliche Erklärung · Center for AI Safety</span><span class=\"claim\">Hinton, Bengio, Altman, Hassabis: KI-Risiko auf einer Stufe mit Pandemien und Atomkrieg.</span><span class=\"when\">Mai 2023</span>"};
+    function apply(lang){
+      window.CFLANG = lang;
+      document.documentElement.lang = lang;
+      try{ localStorage.setItem('cf-lang', lang); }catch(e){}
+      document.querySelectorAll('[data-i18n]').forEach(function(el){
+        var k = el.getAttribute('data-i18n');
+        if (el.__en == null) el.__en = el.innerHTML;
+        el.innerHTML = (lang === 'de' && I18N[k] != null) ? I18N[k] : el.__en;
+      });
+      document.querySelectorAll('[data-de-ph]').forEach(function(el){
+        if (el.__enph == null) el.__enph = el.getAttribute('placeholder') || '';
+        el.setAttribute('placeholder', lang === 'de' ? el.getAttribute('data-de-ph') : el.__enph);
+      });
+      var b = document.getElementById('langToggle');
+      if (b) b.textContent = (lang === 'de') ? 'EN' : 'DE';
+      if (window.__cfHorizonRender) window.__cfHorizonRender();
+    }
+    window.__cfApplyLang = apply;
+    window.__cfI18nHas = function(k){ return I18N[k] != null; };
+    var b = document.getElementById('langToggle');
+    if (b) b.addEventListener('click', function(){ apply(window.CFLANG === 'de' ? 'en' : 'de'); });
+    apply(window.CFLANG || 'en');
+  })();
   </script>
 </body>
 </html>
