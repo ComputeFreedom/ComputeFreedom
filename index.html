@@ -6,7 +6,7 @@
   <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
   <meta name="theme-color" content="#08111A" />
   <title>Compute Freedom — The Right to Run. The Duty to Restrain.</title>
-  <!-- v3.2 · 13.07.2026 · tabs statt Scroll-Sektionen · Tab 00 „The Horizon“ · Dispatch 13 July -->
+  <!-- v4.2 · 16.07.2026 · Das Instrument wandert in die Kopfzeile: permanent statt Bühne (Michaels Review der v4.1) -->
   <meta name="description" content="Two obligations. One architecture. Local AI access for the citizen; a binding international treaty for the frontier. Compute sovereignty is the precondition for holding AI to account." />
 
   <link id="favicon" rel="icon" type="image/svg+xml" />
@@ -45,8 +45,110 @@
       --burnt-veil:    rgba(184, 80, 37, 0.14);
       --blue-veil:     rgba(168, 188, 199, 0.10);
 
+      /* ── Theme-Schleier (v4.0): vormals hartkodiert, jetzt umschaltbar ── */
+      --header-veil:   rgba(8, 17, 26, 0.72);   /* Sticky-Header */
+      --tabsbar-veil:  rgba(5, 11, 17, 0.78);   /* Sticky-Tab-Leiste */
+      --cell-off:      rgba(168, 188, 199, 0.07); /* Waffle: leere Zelle */
+      --track-off:     rgba(168, 188, 199, 0.10); /* Fortschrittsleisten-Rille */
+      --locked-veil:   linear-gradient(180deg, rgba(8,17,26,0.25), rgba(8,17,26,0.55)); /* Schleier über gesperrter Anzeige */
+      --holo-shadow:   0 18px 50px rgba(0,0,0,0.5);      /* Schlagschatten unter dem p|d-Zeichen */
+      --name-halo:     0 0 10px rgba(8,17,26,0.95), 0 0 20px rgba(8,17,26,0.85);  /* Schein hinter dem AREPO-Schriftzug */
+      --scan-a:        rgba(8,17,26,0);                  /* Scanlines über dem Zeichen */
+      --scan-b:        rgba(8,17,26,0.16);
+
       --maxw: 1180px;
       --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+      /* Kopfzeile: die Tabs-Bar hängt an --header-h und dockt dadurch von
+         selbst nach, wenn der Kopf beim Scrollen schrumpft. */
+      --header-h: 68px;
+      /* Gesamthöhe des Kopfes inkl. Tabs — per JS gepflegt, siehe unten.
+         Sprungmarken hängen daran, damit nichts unter dem Kopf verschwindet. */
+      --sticky-h: 116px;
+      --logo-h:   38px;
+      --wordmark: 21px;
+      --hdr-ease: cubic-bezier(0.32, 0.72, 0.24, 1);
+      --hdr-time: 0.26s;
+      /* Dämmerung: sanft an, sanft aus — ein Sonnenaufgang schnellt nicht */
+      --ease-dawn: cubic-bezier(0.45, 0.05, 0.35, 1);
+      --dawn: 1.1s;
+      --sky-move: 0.85s;    /* Dauer der Bahn eines Himmelskörpers */
+      --dawn-sky: 2.2s;     /* Slow Motion: der Himmel glüht deutlich länger als die
+                               Bahn dauert — auch nach Sonnenaufgang bleibt er rosa */
+      --dawn-wait: 320ms;   /* Verzug, damit die Seite erst zur Ruhe kommt */
+      --sky-delay: 0.20s;   /* Der Versatz ist gemessen, nicht geschätzt: bei 0.20s stehen
+                               Sonne und Mond 100ms gemeinsam am Horizont, und der
+                               Himmel steht zu keinem Zeitpunkt leer. */
+    }
+
+    /* ═══════════════ LIGHT-THEME „POLAR" (v4.0) ═══════════════
+       Gleiche Architektur, gleiche Akzente. Papier statt Tiefsee.
+       Burnt Orange bleibt der Anker; alle „bright"-Varianten werden
+       auf hellem Grund DUNKLER, nicht heller.
+       Papier-Ton wird über --paper / --paper-2 gesteuert (siehe unten). */
+    [data-theme="light"] {
+      color-scheme: light;
+
+      /* ── Papier-Ton „Polarweiß" (P3, gewählt 15.07.2026) ──
+         Der Farbton des Polarblaus, aber auf die Zurückhaltung gebracht:
+         kühl genug, dass das Zeichen Halt findet, hell und entsättigt genug,
+         dass der Grund sich raushält und das Burnt Orange nicht schreit. */
+      --paper:         #F3F5F6;   /* Seitengrund */
+      --paper-2:       #E7ECEF;   /* tiefste Ebene */
+      --paper-card:    #FCFDFD;   /* Karten, fast weiß */
+      --paper-chip:    #F7F9FA;   /* Chips, Buttons, Stat-Karten */
+      --paper-rgb:     243, 245, 246;  /* muss zu --paper passen (für Schleier) */
+      --paper-2-rgb:   231, 236, 239;  /* muss zu --paper-2 passen */
+
+      --marianen:      var(--paper);
+      --abyss:         var(--paper-2);
+      --surface:       var(--paper-card);
+      --surface-2:     var(--paper-chip);
+
+      --ink:           #1A2833;
+      --ink-soft:      #2E3F4C;
+      --ink-dim:       #5D7080;
+      --hairline:      rgba(26, 40, 51, 0.16);
+      --hairline-2:    rgba(26, 40, 51, 0.20);
+
+      --lightblue:     #46647A;
+      --blue-bright:   #33506A;
+      --blue-veil:     rgba(70, 100, 122, 0.10);
+      --burnt:         #B85025;   /* Markenanker, unverändert */
+      --burnt-bright:  #A0431C;
+      --burnt-veil:    rgba(184, 80, 37, 0.10);
+      --ultra:         #6E4FA3;
+      --ultra-bright:  #5C3E92;
+      --moss:          #4E7D5C;
+      --moss-bright:   #3E7250;
+      --gold:          #9A7A28;
+      --sand:          #7E6A4E;
+
+      /* Schleier: dieselben Rollen wie dunkel, nur aus Papier gemischt */
+      --header-veil:   rgba(var(--paper-rgb), 0.80);
+      --tabsbar-veil:  rgba(var(--paper-2-rgb), 0.82);
+      --cell-off:      rgba(26, 40, 51, 0.07);
+      --track-off:     rgba(26, 40, 51, 0.10);
+      --locked-veil:   linear-gradient(180deg, rgba(var(--paper-rgb), 0.35), rgba(var(--paper-rgb), 0.72));
+      /* Das Zeichen liegt auf Papier, es schwebt nicht über Tiefsee:
+         der Schatten wird weich und trägt den Blauton statt Schwarz. */
+      --holo-shadow:   0 14px 34px rgba(26, 40, 51, 0.16);
+      /* Auf Papier ist der Schein hell: er räumt Platz zwischen den Punkten frei,
+         statt einen dunklen Fleck um die Buchstaben zu legen. */
+      --name-halo:     0 0 9px rgba(var(--paper-rgb),0.98), 0 0 18px rgba(var(--paper-rgb),0.92);
+      /* Scanlines: AUS auf Papier. Der Verlauf liegt über dem ganzen Canvas-Rechteck
+         (380x342), nicht nur über dem Zeichen — auf Tiefsee unsichtbar, auf Papier
+         steht er als graues Quadrat. Das Zeichen muss frei ausgeschnitten sein. */
+      --scan-a:        transparent;
+      --scan-b:        transparent;
+    }
+
+    /* Geschrumpfter Kopf: greift ab ~90px Scroll. Nur diese drei Masse ändern
+       sich — alles andere hängt daran und folgt von selbst. */
+    html.hdr-shrunk {
+      --header-h: 52px;
+      --logo-h:   28px;
+      --wordmark: 17px;
     }
 
     html { scroll-behavior: smooth; background-color: var(--marianen); }
@@ -79,17 +181,22 @@
     /* ─────────────── HEADER ─────────────── */
     header {
       position: sticky; top: 0; z-index: 100;
-      background: rgba(8, 17, 26, 0.72);
+      background: var(--header-veil);
       backdrop-filter: blur(18px) saturate(140%);
       -webkit-backdrop-filter: blur(18px) saturate(140%);
       border-bottom: 1px solid var(--hairline);
     }
-    .nav { height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .nav { position: relative; height: var(--header-h); display: flex; align-items: center; gap: 16px;
+           transition: height var(--hdr-time) var(--hdr-ease); }
     .brand { display: flex; align-items: center; gap: 15px; flex-shrink: 0; }
-    .brand img { height: 38px; width: auto; display: block; }
+    .brand img { height: var(--logo-h); width: auto; display: block; transition: height var(--hdr-time) var(--hdr-ease); }
     .wordmark {
-      font-family: 'Newsreader', 'DM Serif Display', serif; font-weight: 500; font-size: 21px;
+      font-family: 'Newsreader', 'DM Serif Display', serif; font-weight: 500; font-size: var(--wordmark);
       letter-spacing: 0.015em; color: var(--ink); white-space: nowrap;
+      transition: font-size var(--hdr-time) var(--hdr-ease);
+      /* Muss mit dem Versions-Tag zusammen an der Grundlinie hängen: hätte nur der
+         Tag 'baseline', bestimmte er die Grundlinie selbst und stünde wieder oben. */
+      align-self: baseline;
     }
     .wordmark b {
       color: var(--burnt); font-weight: 500;
@@ -102,25 +209,304 @@
 
     .ver-tag {
       font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em;
-      color: var(--ink-dim); white-space: nowrap; transform: translateY(-1px);
+      color: var(--ink-dim); white-space: nowrap;
+      /* sitzt auf der Grundlinie des Schriftzugs, nicht in seiner Mitte */
+      align-self: baseline;
     }
-    .nav-links { display: flex; align-items: center; gap: 30px; }
-    .nav-links a {
-      font-family: 'JetBrains Mono', monospace; font-size: 12.5px; letter-spacing: 0.08em;
-      text-transform: uppercase; color: var(--ink-dim); transition: color 0.2s ease; position: relative; padding: 4px 0;
+    /* margin-right:auto sammelt den GESAMTEN Freiraum hier — dadurch kleben die
+       Werkzeuge rechts (Sprache, Theme, Uhr) am Rand fest, egal wie breit die
+       Navigation gerade ist. Ohne das verteilt space-between den Freiraum auf alle
+       Lücken, und beim Sprachwechsel (GET INVOLVED -> MACH MIT, 36px schmaler)
+       rutschte die rechte Seite um 18px. */
+    /* gap etwas enger als früher (30px): mit der Uhr im Kopf brauchte der
+       Inhalt sonst mehr Platz, als die 1180px-Spalte hergibt. */
+
+
+    /* Die Werkzeuge als eine Gruppe. Ein einziges margin-left:auto nagelt sie an
+       den rechten Rand — dadurch bleiben sie stehen, egal wie breit die
+       Navigation in der jeweiligen Sprache gerade ist. */
+    .nav-tools { display: flex; align-items: center; gap: 10px; margin-left: auto; flex-shrink: 0; }
+    /* ═══ THE HEADER INSTRUMENT (v42) — permanent in der Kopfzeile ═══
+       Michaels Review der v4.1: die auf- und zufahrende Bühne war too much,
+       und die kleine Glyphe allein sah verloren aus. Konsequenz: EIN Band,
+       IMMER da, in der Mitte der Kopfzeile — es füllt den Raum zwischen
+       Kennung und Handlungsaufruf (gemessen: 525–559 px frei; das Band
+       nimmt 430 px, kollidiert in keiner Sprache).
+       Absolut zentriert und pointer-events:none wie zuvor die Glyphe:
+       per Konstruktion layout-neutral, §3.3 bleibt Gesetz.
+       Zustände: RUHE ist jetzt einfach das ruhige Instrument. ECHO wie
+       gehabt (cf-hz, cf-read, Formular, giscus, Sturm). INK zeichnet das
+       Instrument beim Tab-Wechsel, BEAT ist der seltene Herzschlag. */
+    @keyframes gl-ink { from { stroke-dashoffset: 1 } to { stroke-dashoffset: 0 } }
+    @keyframes gl-set { from { opacity: 0 } }
+    @keyframes gl-dim { 50% { opacity: .38 } }
+    @keyframes gl-puls { 0%,100% { opacity: 1 } 50% { opacity: .45 } }
+
+    .hdr-instrument {
+      position: absolute; left: 50%; top: 0; transform: translateX(-50%);
+      height: var(--header-h); width: 430px;
+      pointer-events: none;
+      transition: transform var(--hdr-time) var(--hdr-ease), height var(--hdr-time) var(--hdr-ease);
     }
-    .nav-links a:hover { color: var(--ink); }
-    .nav-links a:not(.nav-cta)::after {
-      content: ""; position: absolute; left: 0; bottom: -2px; height: 1px; width: 0;
-      background: var(--burnt); transition: width 0.25s var(--ease);
+    html.hdr-shrunk .hdr-instrument { transform: translateX(-50%) scale(.82); transform-origin: 50% 50%; }
+
+    /* Ein Instrument pro Tab; nur das aktive liegt im Band. */
+    .hdr-instrument .inst {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      opacity: 0; visibility: hidden;
+      transition: opacity .35s var(--ease-dawn), visibility 0s .35s;
     }
-    .nav-links a:not(.nav-cta):hover::after { width: 100%; }
+    .hdr-instrument .inst.on { opacity: 1; visibility: visible;
+      transition: opacity .45s var(--ease-dawn) .1s, visibility 0s; }
+    .hdr-instrument .inst-m { flex: 0 0 auto; height: 100%; }
+    .hdr-instrument .inst-m svg { width: 100%; height: 100%; display: block; }
+    .hdr-instrument .inst-m.full { width: 100%; }
+
+    /* Die Worte links und rechts — echtes HTML, echte Lesbarkeit:
+       13 px Mono, hoher Kontrast, bei Enge gestapelt (span = Zeile). */
+    .hdr-instrument .inst-l, .hdr-instrument .inst-r {
+      flex: 1; min-width: 0; font-family: var(--mono);
+      font-size: 13px; letter-spacing: .05em; line-height: 1.4;
+      color: var(--ink-soft); opacity: .92;
+    }
+    .hdr-instrument .inst-l { text-align: right; }
+    .hdr-instrument .inst-r { text-align: left; }
+    .hdr-instrument .inst-l span, .hdr-instrument .inst-r span { display: block; white-space: nowrap; }
+    .hdr-instrument .lbl-blue  { color: var(--lightblue); opacity: .85; }
+    .hdr-instrument .lbl-burnt { color: var(--burnt); opacity: .9; }
+    .hdr-instrument .lbl-dim   { font-size: 10px; color: var(--ink-dim); opacity: .8; line-height: 1.55; }
+    .hdr-instrument .lbl-sm    { font-size: 11px; }
+
+    /* Zeichensprache — dieselbe Palette wie überall. */
+    .st-line   { stroke: var(--ink-soft); stroke-width: 1.2; stroke-linecap: round; fill: none; }
+    .st-dash   { stroke: var(--ink-soft); stroke-width: 1.2; stroke-linecap: round; fill: none;
+                 stroke-dasharray: 2 4; opacity: .75; }
+    .st-tick   { stroke: var(--ink-dim); stroke-width: 1; opacity: .55; }
+    .st-hair   { stroke: var(--lightblue); stroke-width: 1; fill: none; opacity: .6; }
+    .st-accent { stroke: var(--burnt); stroke-width: 1.6; stroke-linecap: round; fill: none; }
+    .st-warm   { stroke: var(--burnt); stroke-width: 1; fill: none; opacity: .45; }
+    .st-now    { fill: var(--burnt); }
+    .st-dot    { fill: var(--ink-dim); opacity: .5; }
+    .st-text   { font-family: var(--mono); font-size: 11px; letter-spacing: .07em; fill: var(--ink-soft); opacity: .85; }
+    .st-micro  { font-family: var(--mono); font-size: 9px;  letter-spacing: .05em; fill: var(--ink-dim); opacity: .7; }
+    /* Das Heute atmet — im Band wie zuvor in der Glyphe. */
+    .hdr-instrument .inst.on .st-now { animation: gl-puls 3.4s ease-in-out infinite; }
+
+    /* INK — beim Tab-Wechsel zeichnet sich das Instrument (Tuschestift).
+       Thesen/Argumentlinien des Forums haben eigene Zieh-Logik → ausgenommen. */
+    .hdr-instrument .inst.on.ink .st-line:not(.st-thesis),
+    .hdr-instrument .inst.on.ink .st-tick,
+    .hdr-instrument .inst.on.ink .st-hair:not(.st-argl),
+    .hdr-instrument .inst.on.ink .st-accent:not(.st-argr) {
+      stroke-dasharray: 1; stroke-dashoffset: 0;
+      animation: gl-ink .38s var(--ease-dawn) backwards;
+    }
+    .hdr-instrument .inst.on.ink .st-tick   { animation-delay: .12s; }
+    .hdr-instrument .inst.on.ink .st-hair:not(.st-argl)   { animation-delay: .2s; }
+    .hdr-instrument .inst.on.ink .st-accent:not(.st-argr) { animation-delay: .3s; }
+    .hdr-instrument .inst.on.ink .st-dash  { animation: gl-set .3s ease .16s backwards; }
+    .hdr-instrument .inst.on.ink .st-dot   { animation: gl-set .3s ease .34s backwards; }
+    .hdr-instrument .inst.on.ink .st-now   { animation: gl-set .25s ease .42s backwards,
+                                                        gl-puls 3.4s ease-in-out .67s infinite; }
+    .hdr-instrument .inst.on.ink .inst-l,
+    .hdr-instrument .inst.on.ink .inst-r   { animation: gl-set .5s ease .4s backwards; }
+
+    /* BEAT — seltener Herzschlag: der Akzent zieht sich nach; SATOR als Welle. */
+    .hdr-instrument .inst.on.beat .st-accent:not(.st-argr) { stroke-dasharray: 1; animation: gl-ink .9s ease-in-out backwards; }
+    .hdr-instrument .inst[data-inst="origin"].on.beat circle.st-warm,
+    .hdr-instrument .inst[data-inst="origin"].on.beat circle.st-hair { animation: gl-dim .6s ease-in-out .15s; }
+    .hdr-instrument .inst[data-inst="arepo"].on.beat .st-cell { animation: gl-dim .5s ease-in-out backwards; animation-delay: calc(var(--i) * 14ms); }
+
+    /* ── 00 · HORIZON — volle Bandbreite: die gewonnene Breite arbeitet. ── */
+    .inst[data-inst="horizon"] .st-ap-g { transition: transform .22s ease-out; will-change: transform; }
+    .inst[data-inst="horizon"].on .st-future { animation: st-breathe 5.5s ease-in-out infinite; }
+    @keyframes st-breathe { 0%,100% { stroke-dashoffset: 0; opacity: .75 } 50% { stroke-dashoffset: -6; opacity: .5 } }
+    .inst[data-inst="horizon"] .st-agi { transition: stroke-width .3s ease, opacity .3s ease; opacity: .8; }
+    .inst[data-inst="horizon"] .st-agi.hot { stroke: var(--burnt-bright); stroke-width: 2.4; opacity: 1; }
+    .inst[data-inst="horizon"] .st-tape { opacity: 0; transform-box: fill-box; transform-origin: 50% 10%; }
+    .inst[data-inst="horizon"].tape .st-tape { animation: st-tape 2.4s var(--ease-dawn); }
+    @keyframes st-tape {
+      0%   { opacity: 0;   transform: translateY(7px); }
+      14%  { opacity: .95; transform: translateY(0); }
+      46%  { opacity: .95; transform: translateY(0) rotate(4deg); }
+      62%  { opacity: .95; transform: translateY(1px) rotate(-2.5deg); }
+      100% { opacity: 0;   transform: translateY(8px) rotate(0deg); }
+    }
+    .inst[data-inst="horizon"] .st-1985 { opacity: 0; }
+    .inst[data-inst="horizon"].note .st-1985 { animation: st-note-in 3.4s ease; }
+    @keyframes st-note-in { 0% { opacity: 0 } 16% { opacity: 0 } 32% { opacity: .85 } 76% { opacity: .85 } 100% { opacity: 0 } }
+
+    /* ── 01 · PRINCIPLE — Korridor; danach bindet der Punkt an den Lesefortschritt. ── */
+    .inst[data-inst="principle"] .st-ai { transition: transform .45s var(--ease-dawn); will-change: transform; }
+    .inst[data-inst="principle"].play .st-ai { animation: st-corridor 1.9s var(--ease-dawn); }
+    @keyframes st-corridor {
+      0%   { transform: translateY(11px); }
+      36%  { transform: translateY(-12px); }
+      58%  { transform: translateY(-7px); }
+      78%  { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
+
+    /* ── 02 · MECHANISM — die Klammern greifen mit dem Lesefortschritt. ── */
+    .inst[data-inst="mechanism"] .st-clamp-l,
+    .inst[data-inst="mechanism"] .st-clamp-r { transition: transform .25s linear; }
+    .inst[data-inst="mechanism"] .st-clamp-l { stroke: var(--lightblue); transform: translateX(calc(var(--grip, 0) * 22px)); }
+    .inst[data-inst="mechanism"] .st-clamp-r { stroke: var(--burnt);     transform: translateX(calc(var(--grip, 0) * -22px)); }
+    .inst[data-inst="mechanism"] .st-core { fill: var(--ink-soft); transition: fill .3s ease; }
+    .inst[data-inst="mechanism"].holds .st-core { fill: var(--burnt-bright); }
+    .inst[data-inst="mechanism"] .st-holds { opacity: 0; }
+    .inst[data-inst="mechanism"].holds .st-holds { animation: st-holds .95s ease; }
+    @keyframes st-holds { 0% { opacity: 0 } 14% { opacity: .9 } 76% { opacity: .9 } 100% { opacity: 0 } }
+
+    /* ── 03 · ORIGIN — Ringe wie Wasser; Wortdauer = Staffeltakt. ── */
+    .inst[data-inst="origin"] .st-odot { transform-box: fill-box; transform-origin: center; }
+    .inst[data-inst="origin"].play .st-odot { animation: st-open .7s var(--ease-dawn) backwards; }
+    @keyframes st-open { 0% { transform: scale(0); opacity: 0 } 100% { transform: scale(1); opacity: 1 } }
+    .inst[data-inst="origin"] .st-ring { opacity: 0; transform-box: fill-box; transform-origin: center; filter: blur(.4px); }
+    .inst[data-inst="origin"].play .st-ring,
+    .inst[data-inst="origin"].pulse .st-ring.rp { animation: st-ring 2.6s ease-out backwards; animation-delay: var(--rd, 0s); }
+    @keyframes st-ring { 0% { opacity: 0; transform: scale(.16) } 14% { opacity: .5 } 100% { opacity: 0; transform: scale(1) } }
+    .inst[data-inst="origin"] .st-ring.r1 { --rd: .2s }
+    .inst[data-inst="origin"] .st-ring.r2 { --rd: 1.35s }
+    .inst[data-inst="origin"] .st-ring.r3 { --rd: 2.5s }
+    .inst[data-inst="origin"] .st-rlabel { opacity: 0; transform-box: view-box; transform-origin: 95px 30px; }
+    .inst[data-inst="origin"].play .st-rlabel { animation: st-rlabel 1.15s ease backwards; animation-delay: var(--rd, 0s); }
+    .inst[data-inst="origin"] .st-rlabel.r1 { --rd: .3s }
+    .inst[data-inst="origin"] .st-rlabel.r2 { --rd: 1.45s }
+    .inst[data-inst="origin"] .st-rlabel.r3 { --rd: 2.6s }
+    @keyframes st-rlabel {
+      0%  { opacity: 0;  transform: rotate(-6deg); }
+      16% { opacity: .8; }
+      74% { opacity: .5; }
+      100% { opacity: 0; transform: rotate(5deg); }
+    }
+
+    /* ── 04 · CONTACT — einer tritt heraus; das Tippen zeichnet die Spur. ── */
+    .inst[data-inst="contact"] .st-one-g { transition: transform .4s var(--ease-dawn); }
+    .inst[data-inst="contact"].lift .st-one-g { transform: translateY(-6px); }
+    .inst[data-inst="contact"] .st-sig { stroke: var(--lightblue); stroke-width: 1.1; fill: none; opacity: .8; }
+    .inst[data-inst="contact"] .st-recmark { stroke: var(--burnt); stroke-width: 1.6; opacity: 0;
+      transform-box: fill-box; transform-origin: 50% 100%; }
+    .inst[data-inst="contact"].rec .st-recmark { animation: st-recmark .5s var(--ease-dawn) forwards; }
+    @keyframes st-recmark { 0% { opacity: 0; transform: scaleY(0) } 100% { opacity: .9; transform: scaleY(1) } }
+    .inst[data-inst="contact"] .st-rec { opacity: 0; }
+    .inst[data-inst="contact"].rec .st-rec { animation: st-rec 4.2s ease; }
+    @keyframes st-rec { 0% { opacity: 0 } 10% { opacity: .9 } 82% { opacity: .9 } 100% { opacity: 0 } }
+
+    /* ── 05 · FORUM — Thesen verbinden sich nicht; der Widerspruch glimmt. ── */
+    .inst[data-inst="forum"] .st-thesis { stroke-dasharray: 1; stroke-dashoffset: 1; }
+    .inst[data-inst="forum"].play .st-thesis { animation: gl-ink .6s var(--ease-dawn) forwards; animation-delay: var(--td, 0s); }
+    .inst[data-inst="forum"] .st-argl, .inst[data-inst="forum"] .st-argr { stroke-dasharray: 1; stroke-dashoffset: 1; }
+    .inst[data-inst="forum"].speak .st-argl { animation: gl-ink .7s ease forwards; }
+    .inst[data-inst="forum"].speak .st-argr { animation: gl-ink .7s ease .18s forwards; }
+    .inst[data-inst="forum"] .st-spark { opacity: 0; }
+    .inst[data-inst="forum"].speak .st-spark { animation: st-spark 1.8s ease .8s forwards; }
+    @keyframes st-spark { 0% { opacity: 0 } 14% { opacity: .95 } 100% { opacity: .3 } }
+
+    /* ── 06 · AREPO — das Prüfsiegel. ── */
+    .inst[data-inst="arepo"] .st-cell { transform: translate(0, 0); }
+    .inst[data-inst="arepo"].play .st-cell {
+      animation: st-snap 1.05s var(--ease-dawn) backwards;
+      animation-delay: calc(var(--i) * 16ms);
+    }
+    @keyframes st-snap {
+      0%  { transform: translate(var(--sx), var(--sy)); opacity: .2; }
+      55% { opacity: .75; }
+      100% { transform: translate(0, 0); opacity: 1; }
+    }
+    .inst[data-inst="arepo"].dissolve .st-cell {
+      animation: st-diss .6s ease backwards;
+      animation-delay: calc(var(--i) * 5ms);
+    }
+    @keyframes st-diss {
+      0%   { transform: translate(0, 0); }
+      38%  { transform: translate(calc(var(--sx) * .16), calc(var(--sy) * .16)); opacity: .45; }
+      100% { transform: translate(0, 0); opacity: 1; }
+    }
+    .inst[data-inst="arepo"] .st-cell.st-corner { transform-box: fill-box; transform-origin: center; }
+    .inst[data-inst="arepo"].play .st-cell.st-corner { animation: st-snap 1.05s var(--ease-dawn) backwards,
+      st-corner .55s ease 1.5s; animation-delay: calc(var(--i) * 16ms), 1.5s; }
+    @keyframes st-corner { 0%,100% { } 45% { fill: var(--burnt-bright); transform: scale(1.9); } }
+    .inst[data-inst="arepo"] .st-mid { transition: fill .4s ease 1.9s; }
+    .inst[data-inst="arepo"].played .st-mid { fill: var(--burnt-bright); }
+    .inst[data-inst="arepo"] .st-scan { opacity: 0; }
+    .inst[data-inst="arepo"].play .st-scan { animation: st-scan .5s linear 1.75s; }
+    @keyframes st-scan { 0% { opacity: .85; transform: translateX(0) } 100% { opacity: .85; transform: translateX(48px) } }
+    .inst[data-inst="arepo"] .st-signed { opacity: 0; transition: opacity .45s ease 2.3s; }
+    .inst[data-inst="arepo"].played .st-signed { opacity: .9; }
+    .inst[data-inst="arepo"] .st-chain { stroke: var(--ink-soft); stroke-width: 1; fill: none; opacity: .55; }
+    .inst[data-inst="arepo"] .st-qr { fill: var(--ink-soft); opacity: .5; }
+
+    /* ── ECHO · Die Marke zuckt im Takt des Störungsfilters (cf-holo-burst). ── */
+    @keyframes brand-echo {
+      0%   { transform: translateX(0); }
+      22%  { transform: translateX(1.2px);
+             filter: drop-shadow(-1.5px 0 0 rgba(255,0,51,.5)) drop-shadow(1.5px 0 0 rgba(0,255,224,.4)); }
+      48%  { transform: translateX(-1px); opacity: .8; }
+      70%  { transform: translateX(.6px); filter: drop-shadow(1.2px 0 0 rgba(255,0,51,.35)); }
+      100% { transform: translateX(0); }
+    }
+    .brand svg.echo { animation: brand-echo .26s steps(3, jump-none); }
+
+    @media (prefers-reduced-motion: reduce) {
+      /* Das Band bleibt sichtbar — es ist Anzeige. Nur die Bewegung ruht. */
+      .hdr-instrument .inst, .hdr-instrument .inst.on { transition: none; }
+      .hdr-instrument .inst.on .st-now,
+      .hdr-instrument .inst.on.ink .st-line:not(.st-thesis),
+      .hdr-instrument .inst.on.ink .st-tick,
+      .hdr-instrument .inst.on.ink .st-hair:not(.st-argl),
+      .hdr-instrument .inst.on.ink .st-accent:not(.st-argr),
+      .hdr-instrument .inst.on.ink .st-dash,
+      .hdr-instrument .inst.on.ink .st-dot,
+      .hdr-instrument .inst.on.ink .st-now,
+      .hdr-instrument .inst.on.ink .inst-l,
+      .hdr-instrument .inst.on.ink .inst-r,
+      .hdr-instrument .inst.on.beat .st-accent:not(.st-argr),
+      .hdr-instrument .inst[data-inst="origin"].on.beat circle.st-warm,
+      .hdr-instrument .inst[data-inst="origin"].on.beat circle.st-hair,
+      .hdr-instrument .inst[data-inst="arepo"].on.beat .st-cell,
+      .inst[data-inst="horizon"].on .st-future,
+      .inst[data-inst="horizon"].tape .st-tape,
+      .inst[data-inst="horizon"].note .st-1985,
+      .inst[data-inst="principle"].play .st-ai,
+      .inst[data-inst="mechanism"].holds .st-holds,
+      .inst[data-inst="origin"].play .st-odot,
+      .inst[data-inst="origin"].play .st-ring,
+      .inst[data-inst="origin"].pulse .st-ring.rp,
+      .inst[data-inst="origin"].play .st-rlabel,
+      .inst[data-inst="contact"].rec .st-recmark,
+      .inst[data-inst="contact"].rec .st-rec,
+      .inst[data-inst="forum"].play .st-thesis,
+      .inst[data-inst="forum"].speak .st-argl,
+      .inst[data-inst="forum"].speak .st-argr,
+      .inst[data-inst="forum"].speak .st-spark,
+      .inst[data-inst="arepo"].play .st-cell,
+      .inst[data-inst="arepo"].dissolve .st-cell,
+      .inst[data-inst="arepo"].play .st-cell.st-corner,
+      .inst[data-inst="arepo"].play .st-scan { animation: none; }
+      .inst[data-inst="horizon"] .st-ap-g,
+      .inst[data-inst="horizon"] .st-agi,
+      .inst[data-inst="principle"] .st-ai,
+      .inst[data-inst="mechanism"] .st-clamp-l,
+      .inst[data-inst="mechanism"] .st-clamp-r,
+      .inst[data-inst="contact"] .st-one-g { transition: none; }
+      .brand svg.echo { animation: none; }
+    }
+    /* Auf schmalen Geräten weicht das Instrument — dort zählt jeder Pixel. */
+    @media (max-width: 1080px) { .hdr-instrument { display: none; } }
+
+    /* Der Handlungsaufruf — das einzige Nav-Element, das den Kopf noch teilt.
+       Er stand früher in .nav-links und erbte von dort Schrift und Grösse;
+       seit er allein in .nav-tools sitzt, trägt er alles selbst. */
     .nav-cta {
-      color: var(--marianen) !important; background: var(--burnt); padding: 12px 30px; border-radius: 2px;
+      font-family: 'JetBrains Mono', monospace; font-size: 12.5px; letter-spacing: 0.08em;
+      text-transform: uppercase; white-space: nowrap;
+      color: var(--marianen) !important; background: var(--burnt);
+      padding: 11px 22px; border-radius: 2px; margin-right: 4px;
       transition: background 0.2s ease;
     }
     .nav-cta:hover { background: var(--burnt-bright); }
-    .nav-toggle { display: none; background: none; border: 0; color: var(--ink); cursor: pointer; padding: 8px; }
 
     /* ─────────────── TICKER ─────────────── */
     .ticker {
@@ -147,6 +533,27 @@
       text-transform: uppercase; color: var(--burnt); display: inline-flex; align-items: center; gap: 14px;
     }
     .eyebrow::before { content: ""; width: 38px; height: 1px; background: var(--burnt); }
+
+    /* ── Uhr im Kopf, neben dem Sonnenstand (v4.0) ──
+       Sie steht dort, wo der Himmel steht: der Toggle zeigt, WO die Sonne ist,
+       die Uhr sagt, WANN. Zwei Zeitskalen auf der Seite — das Instrument unten
+       rückt mit dem Kalender, diese Anzeige mit dem Tag.
+       Aufbau wie eine Fliegeruhr: Ortszeit trägt, UTC klein darunter.
+       Kein Standortzugriff — nur die Uhr des Geräts. */
+    .cf-clock {
+      display: flex; flex-direction: column; align-items: flex-end;
+      margin-left: 4px; line-height: 1.1; white-space: nowrap; flex-shrink: 0;
+      font-family: var(--mono); font-variant-numeric: tabular-nums;
+    }
+    .cf-clock .cf-local { font-size: 12px; letter-spacing: 0.06em; color: var(--ink-soft); }
+    .cf-clock .cf-utc   { font-size: 8.5px; letter-spacing: 0.14em; color: var(--ink-dim); margin-top: 2px; }
+    .cf-clock .cf-zone  { color: var(--ink-dim); }
+    /* der Doppelpunkt blinkt im Sekundentakt — ein Instrument, das läuft */
+    .cf-clock .cf-tick { animation: cf-tick 2s steps(1) infinite; }
+    @keyframes cf-tick { 0%,50% { opacity: 1 } 51%,100% { opacity: .3 } }
+    @media (prefers-reduced-motion: reduce) { .cf-clock .cf-tick { animation: none } }
+    /* Die Uhr ist das Erste, was weicht, wenn der Kopf eng wird. */
+    @media (max-width: 1150px) { .cf-clock { display: none; } }
 
     .hero h1 {
       font-family: 'DM Serif Display', serif; font-weight: 400;
@@ -184,10 +591,10 @@
     /* hologram */
     .holo-stage { position: relative; display: flex; flex-direction: column; align-items: center; gap: 18px; margin-left: auto; }
     .holo-wrap { position: relative; line-height: 0; }
-    #holo { width: min(66vw, 380px); height: auto; display: block; filter: drop-shadow(0 18px 50px rgba(0,0,0,0.5)); }
+    #holo { width: min(66vw, 380px); height: auto; display: block; filter: drop-shadow(var(--holo-shadow)); }
     .holo-wrap::after {
       content: ""; position: absolute; inset: 0; pointer-events: none;
-      background: repeating-linear-gradient(0deg, rgba(8,17,26,0) 0 2px, rgba(8,17,26,0.16) 2px 3px);
+      background: repeating-linear-gradient(0deg, var(--scan-a) 0 2px, var(--scan-b) 2px 3px);
     }
     .holo-meta {
       font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
@@ -257,7 +664,11 @@
       border-left: 2px solid var(--burnt); padding: 6px 0 6px 28px; margin: clamp(32px,5vw,56px) 0; max-width: 22ch;
     }
     .pull.blue { border-color: var(--lightblue); }
-    .pull em { color: var(--blue-bright); font-weight: 700; font-style: normal; font-family: 'IBM Plex Sans', sans-serif; font-size: 0.86em; letter-spacing: 0; }
+    /* Emphase in Serif-Zeilen: NIE die Familie wechseln (Michaels Befund,
+       16.07.: Serif und Sans in EINEM Satz passen nicht zueinander).
+       Stattdessen das Muster der Hero-Zeile — dieselbe Serif, echte
+       Kursive, Farbe. Eine Stimme, zwei Töne. */
+    .pull em { color: var(--blue-bright); font-style: italic; }
 
     .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
     .card {
@@ -384,12 +795,16 @@
     }
 
     /* ─────────────── TABS (v3.2) ─────────────── */
+    /* ── Tabs: unterer Teil des Kopfes (v4.0) ──
+       Sie war früher eine zweite, eigenständige sticky-Leiste unter dem Kopf —
+       zwei Ebenen, die einander verwalten mussten und optisch gegeneinander
+       arbeiteten. Jetzt sitzt sie IM <header>: kein eigenes sticky, kein top,
+       kein z-index, keine Transition. Der Kopf ist der eine sticky-Container,
+       seine border-bottom die einzige Trennlinie zur Seite.
+       Auch die obere Trennlinie fällt weg — es gibt nur noch eine. */
     .tabsbar {
-      position: sticky; top: 68px; z-index: 90;
-      background: rgba(5, 11, 17, 0.78);
-      backdrop-filter: blur(14px) saturate(130%);
-      -webkit-backdrop-filter: blur(14px) saturate(130%);
-      border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline);
+      background: var(--tabsbar-veil);
+      border-top: 1px solid var(--hairline);
     }
     .tabbar { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; }
     .tabbar::-webkit-scrollbar { display: none; }
@@ -559,7 +974,7 @@
     .fleet-line .asi { color: var(--ultra-bright); }
     .fleet-line.past b { color: var(--moss-bright); }
     .waffle { position: relative; display: grid; grid-template-columns: repeat(auto-fill, minmax(12px, 1fr)); gap: 3px; }
-    .waffle i { display: block; aspect-ratio: 1; border-radius: 1.5px; background: rgba(168,188,199,0.07); transition: background 0.3s ease; }
+    .waffle i { display: block; aspect-ratio: 1; border-radius: 1.5px; background: var(--cell-off); transition: background 0.3s ease; }
     .waffle i.on { background: var(--burnt); }
     .waffle i.on.hot { background: var(--burnt-bright); box-shadow: 0 0 6px rgba(221,119,64,0.55); }
     .waffle.gold i.on { background: var(--moss); }
@@ -573,10 +988,10 @@
     .waffle .locked-cap {
       position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
       font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-dim);
-      background: linear-gradient(180deg, rgba(8,17,26,0.25), rgba(8,17,26,0.55));
+      background: var(--locked-veil);
     }
     .task-horizon { margin-top: 12px; }
-    .th-bar { position: relative; height: 4px; background: rgba(168,188,199,0.1); border-radius: 2px; overflow: hidden; }
+    .th-bar { position: relative; height: 4px; background: var(--track-off); border-radius: 2px; overflow: hidden; }
     .th-bar .th-fill { position: absolute; left: 0; top: 0; bottom: 0; background: linear-gradient(90deg, var(--lightblue), var(--burnt-bright)); transition: width 0.45s var(--ease); }
     .th-cap { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.07em; color: var(--ink-dim); margin-top: 7px; }
     .hz-tech { margin-top: clamp(28px, 4vw, 42px); display: grid; grid-template-columns: 1fr 1fr 1fr; gap: clamp(14px, 2.5vw, 26px); }
@@ -618,7 +1033,7 @@
 
     /* ─────────── OPENING · straight into the hologram ─────────── */
     /* html.seq = first visit this session. Elements appear via .on / .in. */
-    .brand svg { height: 38px; width: auto; display: block; overflow: visible; }
+    .brand svg { height: var(--logo-h); width: auto; display: block; overflow: visible; transition: height var(--hdr-time) var(--hdr-ease); }
 
     html.seq header, html.seq .ticker, html.seq .holo-meta {
       opacity: 0; transition: opacity 0.7s var(--ease);
@@ -637,6 +1052,7 @@
     }
 
     /* ─────────────── RESPONSIVE ─────────────── */
+
     @media (max-width: 920px) {
       .hero .wrap { grid-template-columns: 1fr; }
       .holo-stage { order: -1; margin: 0 auto; }
@@ -644,13 +1060,6 @@
     }
     @media (max-width: 860px) {
       .grid-2, .records, .contact-grid, form .row { grid-template-columns: 1fr; }
-      .nav-links { display: none; }
-      .nav-links.open {
-        display: flex; flex-direction: column; position: absolute; top: 68px; left: 0; right: 0;
-        background: rgba(8,17,26,0.97); backdrop-filter: blur(18px); padding: 22px 28px; gap: 18px;
-        border-bottom: 1px solid var(--hairline); align-items: flex-start;
-      }
-      .nav-toggle { display: block; }
       .contact-aside { order: -1; }
     }
     @media (max-width: 520px) {
@@ -670,20 +1079,117 @@
     } catch (e) {}
   </script>
 <style>
-  .lang-toggle{background:none;border:1px solid var(--hairline-2);color:var(--ink-dim);cursor:pointer;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;font-weight:600;letter-spacing:.08em;padding:6px 10px;border-radius:3px;margin-left:20px;line-height:1;transition:color .2s,border-color .2s}
+  .lang-toggle{background:none;border:1px solid var(--hairline-2);color:var(--ink-dim);cursor:pointer;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;font-weight:600;letter-spacing:.08em;padding:6px 10px;border-radius:3px;line-height:1;flex-shrink:0;transition:color .2s,border-color .2s}
   .lang-toggle:hover{color:var(--ink);border-color:var(--ink-dim)}
-  @media(max-width:820px){.lang-toggle{margin-left:10px;padding:6px 9px}}
+  @media(max-width:820px){.lang-toggle{padding:6px 9px}}
+
+  /* ── Theme-Toggle (v4.0): Zwilling des Sprach-Knopfes.
+        Im Fenster geht ein Himmelskörper über einer Horizontlinie auf und unter. ── */
+  .theme-toggle{background:none;border:1px solid var(--hairline-2);color:var(--ink-dim);cursor:pointer;
+    padding:0;border-radius:3px;line-height:1;flex:0 0 auto;
+    width:38px;height:27px;overflow:hidden;position:relative;
+    transition:color .2s,border-color .2s}
+  .theme-toggle:hover{color:var(--ink);border-color:var(--ink-dim)}
+  .theme-toggle:focus-visible{outline:2px solid var(--burnt);outline-offset:2px}
+  .tt-sky{position:absolute;inset:0;display:block}
+  /* Horizontlinie im Fenster */
+  .tt-horizon{stroke:currentColor;stroke-width:1;opacity:.55;
+    transition:stroke-dasharray .2s ease, opacity .2s ease}
+  /* Auto-Modus: die Linie ist gestrichelt — sie wird nicht von Dir gezogen,
+     sondern vom System. Der Himmel zeigt weiter die tatsächliche Wirkung. */
+  html[data-auto] .tt-horizon{stroke-dasharray:2.2 1.8;opacity:.75}
+
+  /* ── „AUTO" unter dem Knopf ──
+     Die gestrichelte Linie allein ist zu leise. Das Wort steht absolut
+     positioniert unter dem Fenster: es ändert damit KEINE Masse und kann
+     die rechte Seite des Kopfes nicht verschieben, wenn es erscheint. */
+  .theme-wrap{position:relative;display:flex;align-items:center;flex-shrink:0}
+  .tt-auto{
+    position:absolute;top:100%;left:0;right:0;margin-top:2px;
+    font-family:var(--mono);font-size:7.5px;letter-spacing:.16em;
+    /* line-height:1 ist Pflicht: geerbt wäre die Zeile 13px hoch und das Wort
+       ragte aus dem geschrumpften Kopf heraus. */
+    line-height:1;
+    text-align:center;color:var(--burnt);
+    opacity:0;transition:opacity .25s ease;pointer-events:none;user-select:none;
+  }
+  html[data-auto] .tt-auto{opacity:.95}
+
+  /* ── Der Himmel der Dämmerung ──
+     Liegt still hinter allem und glüht nur auf, während ein Körper die Linie
+     kreuzt: an mit der Bewegung, aus wenn sie steht. Das Aufglühen ist kürzer
+     als das Verlöschen — so geht auch ein echter Himmel aus. */
+  .tt-dawnsky{opacity:0}
+  html.tt-dawn .tt-dawnsky{
+    animation: tt-glow var(--dawn-sky) var(--ease-dawn) var(--dawn-wait) both;
+  }
+  /* Zurückhaltender als zuvor: der Himmel deutet an, er schreit nicht. */
+  @keyframes tt-glow{
+    0%   {opacity:0}
+    24%  {opacity:.52}
+    56%  {opacity:.52}
+    100% {opacity:0}
+  }
+  @media(prefers-reduced-motion:reduce){ html.tt-dawn .tt-dawnsky{animation:none} }
+  /* ── Nur die Sonne wandert ──
+     Der Mond geht nicht unter. Er steht immer oben rechts; tagsüber ist er
+     bloss nicht zu sehen, weil die Sonne ihn überstrahlt. Er wird deshalb
+     ein- und ausgeblendet, nicht bewegt — und zeichnet sich ab, sobald die
+     Sonne halb hinter dem Horizont steht.
+     Die Sonne dagegen taucht wirklich: 14px, dann ist ihr Kranz ganz weg.
+     Sie wird am Horizont abgeschnitten (tt-clip), verblasst also nicht. */
+  .tt-sun {transition:transform var(--sky-move) var(--ease-dawn); transform:translateY(14px)}
+  [data-theme="light"] .tt-sun{transform:translateY(0)}
+
+  /* Der Mond: kommt nach, wenn die Sonne schon halb weg ist (Versatz);
+     verblasst aber sofort, sobald sie wieder heraufkommt. */
+  .tt-moon{opacity:1; transition:opacity var(--sky-move) var(--ease-dawn);
+           transition-delay:var(--sky-delay)}
+  [data-theme="light"] .tt-moon{opacity:0; transition-delay:0s}
+  .tt-sun circle{fill:var(--burnt)}
+  .tt-sun line{stroke:var(--burnt);stroke-width:1.1;stroke-linecap:round}
+  .tt-moon path{fill:var(--lightblue)}
+  /* Strahlenkranz atmet nur im Hellen, und nur dezent */
+  [data-theme="light"] .tt-rays{animation:tt-breathe 5.5s ease-in-out infinite}
+  @keyframes tt-breathe{0%,100%{opacity:.85}50%{opacity:.35}}
+  /* ── Dämmerung ──
+     Nur während des Umschaltens aktiv (Klasse wird per JS für ~0.9s gesetzt):
+     die Flächen ziehen mit dem Himmelskörper mit, statt hart umzuspringen.
+     Danach wieder aus, damit Hover und Scroll nicht dauerhaft Transitions tragen. */
+  html.tt-dawn, html.tt-dawn body, html.tt-dawn header, html.tt-dawn .tabsbar,
+  html.tt-dawn .card, html.tt-dawn .stat, html.tt-dawn .chip, html.tt-dawn .btn,
+  html.tt-dawn .waffle i, html.tt-dawn .th-bar, html.tt-dawn .rec, html.tt-dawn .spec,
+  html.tt-dawn .pull, html.tt-dawn .hz-card, html.tt-dawn .tabbtn, html.tt-dawn .lang-toggle,
+  html.tt-dawn .theme-toggle, html.tt-dawn .dispatch, html.tt-dawn .fleet-line,
+  html.tt-dawn h1, html.tt-dawn h2, html.tt-dawn h3, html.tt-dawn p, html.tt-dawn a,
+  html.tt-dawn span, html.tt-dawn b, html.tt-dawn em, html.tt-dawn li, html.tt-dawn label {
+    /* Bewusst NUR Farbwerte: kein width/height/margin/padding und keine
+       Schattengrösse — sonst rechnet der Browser während der Dämmerung Layout
+       neu und die Seite zittert. */
+    transition: background-color var(--dawn) var(--ease-dawn),
+                color var(--dawn) var(--ease-dawn),
+                border-color var(--dawn) var(--ease-dawn);
+  }
+
+  @media(prefers-reduced-motion:reduce){
+    .tt-body{transition:none}
+    [data-theme="light"] .tt-rays{animation:none}
+    html.tt-dawn body, html.tt-dawn header, html.tt-dawn .tabsbar { transition:none }
+  }
   /* social glyphs */
   .soc-ico{display:inline-block;width:16px;height:16px;margin-right:9px;vertical-align:-3px;color:var(--lightblue);flex:0 0 auto}
   .soc-ico svg{display:block;width:100%;height:100%}
   .socials a{display:flex;align-items:center}
   /* AREPO teaser (v3.3): full-width SATOR storm band + compact wide grid */
   .arepo-panel{border-top:0;padding:clamp(34px,5vh,64px) 0 clamp(36px,5vw,64px)}
-  .arepo-storm{scroll-margin-top:130px}
+  .arepo-storm{scroll-margin-top:calc(var(--sticky-h, 116px) + 14px)}
   .arepo-storm{position:relative;width:100%;height:clamp(240px,30vh,300px);border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);background:radial-gradient(120% 150% at 50% 34%,rgba(184,80,37,0.09),transparent 60%);overflow:hidden}
   .arepo-storm canvas{display:block;width:100%;height:100%}
   .arepo-url{position:absolute;right:clamp(16px,3vw,40px);bottom:11px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--burnt-bright);opacity:.75}
-  .arepo-fullname{position:absolute;left:50%;top:57%;transform:translate(-50%,-50%);width:min(84%,640px);text-align:center;font-family:var(--mono);font-size:clamp(9px,1.05vw,12.5px);letter-spacing:.16em;text-transform:uppercase;color:var(--burnt-bright);opacity:0;transition:opacity 1.1s ease;pointer-events:none;text-shadow:0 0 10px rgba(8,17,26,0.95),0 0 20px rgba(8,17,26,0.85)}
+  /* Der Schein hinter dem Schriftzug hebt ihn vom Sturm ab. Auf Tiefsee ist er
+     dunkel (er drückt die Punkte weg), auf Papier muss er hell sein — sonst
+     liegt Schmutz um die Buchstaben. Darum über Variablen, siehe --name-halo. */
+  .arepo-fullname{position:absolute;left:50%;top:57%;transform:translate(-50%,-50%);width:min(84%,640px);text-align:center;font-family:var(--mono);font-size:clamp(9px,1.05vw,12.5px);letter-spacing:.16em;text-transform:uppercase;color:var(--burnt-bright);opacity:0;transition:opacity 1.1s ease;pointer-events:none;text-shadow:var(--name-halo)}
   .arepo-fullname.show{opacity:.9}
   .arepo-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(24px,4vw,56px);align-items:start;padding-top:clamp(24px,3.4vw,40px)}
   .arepo-lead .sec-num{margin-bottom:16px}
@@ -695,6 +1201,47 @@
   .arepo-status b{color:var(--ink)}
   @media(max-width:820px){.arepo-grid{grid-template-columns:1fr;gap:18px}.arepo-tagline{font-size:clamp(1.5rem,6vw,2rem)}}
   </style>
+  <!-- ░░ THEME, VOR DEM ERSTEN MALEN ░░
+       Muss hier oben stehen und synchron laufen, sonst blitzt beim Laden kurz
+       das falsche Theme auf.
+
+       Zwei Begriffe, die nicht verwechselt werden dürfen:
+         WAHL    (cf-theme)  = 'dark' | 'light' | 'system'  — was der Besucher will
+         WIRKUNG (data-theme)= 'dark' | 'light'             — was tatsächlich gemalt wird
+       Gespeichert wird nur die WAHL. 'system' heisst: die Wirkung folgt dem Gerät,
+       auch später noch, wenn das Gerät mitten im Besuch umschaltet.
+
+       Rangfolge: ?theme= in der URL > gemerkte Wahl > System.
+       FALLBACK greift nur, wenn das Gerät gar keine Auskunft gibt (alte Browser). -->
+  <script>
+  (function(){
+    var FALLBACK = 'dark';
+    var choice;
+    try {
+      var p = new URLSearchParams(location.search).get('theme');
+      if (p === 'light' || p === 'dark' || p === 'system') { localStorage.setItem('cf-theme', p); choice = p; }
+      else {
+        var s = localStorage.getItem('cf-theme');
+        if (s === 'light' || s === 'dark' || s === 'system') choice = s;
+      }
+    } catch(e) {}
+    choice = choice || 'system';          // ohne gemerkte Wahl: dem Gerät folgen
+
+    function systemTheme(){
+      if (!window.matchMedia) return FALLBACK;
+      if (window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches)  return 'dark';
+      return FALLBACK;
+    }
+    var effective = (choice === 'system') ? systemTheme() : choice;
+
+    window.CFCHOICE = choice;
+    window.CFTHEME  = effective;
+    window.__cfSystemTheme = systemTheme;
+    if (effective === 'light') document.documentElement.setAttribute('data-theme','light');
+    if (choice === 'system')   document.documentElement.setAttribute('data-auto','');
+  })();
+  </script>
 </head>
 <body>
   <script>window.CFLANG=(function(){try{var p=new URLSearchParams(location.search).get('lang');if(p==='de'||p==='en'){localStorage.setItem('cf-lang',p);return p;}var s=localStorage.getItem('cf-lang');return s==='de'?'de':'en';}catch(e){return 'en';}})();document.documentElement.lang=window.CFLANG;</script>
@@ -720,23 +1267,288 @@
           </g>
           <g class="gBar"><rect x="974.0" y="-1370.0" width="91.0" height="1634.0" fill="#A8BCC7"/></g>
         </svg>
-        <span class="wordmark">Com<b>p</b>ute&nbsp;Free<i>d</i>om</span>
-        <span class="ver-tag">v36.0</span>
+        <span class="wordmark">Com<b>p</b>uteFree<i>d</i>om</span>
+        <span class="ver-tag">v42.0</span>
       </a>
-      <nav class="nav-links" id="navLinks" aria-label="Primary">
-        <a data-i18n="nav.horizon" href="#horizon">Horizon</a>
-        <a data-i18n="nav.principle" href="#principle">Principle</a>
-        <a data-i18n="nav.mechanism" href="#mechanism">Mechanism</a>
-        <a data-i18n="nav.origin" href="#origin">Origin</a>
-        <a data-i18n="nav.forum" href="#forum" id="navForum" hidden>Forum</a>
-        <a href="#arepo" data-i18n="nav.arepo">AREPO</a>
-        <a data-i18n="nav.cta" href="#contact" class="nav-cta">Get involved</a>
-      </nav>
+      <!-- Die Sektions-Links standen früher hier: Horizon, Principle, Mechanism,
+           Origin, Forum, AREPO — exakt dieselben Ziele wie die Tabs eine Zeile
+           tiefer. Zweimal dasselbe. Die Tabs sind die Navigation; sie tragen
+           die Nummerierung und zeigen, wo man steht. Geblieben ist nur der
+           Handlungsaufruf: kein Sektions-Link, sondern ein Knopf. -->
+
+
+      <!-- ░░ THE HEADER INSTRUMENT (v42) ░░
+           Permanent in der Kopfzeile — kein Auf- und Zufahren mehr. Ein
+           430-px-Band, absolut zentriert (layout-neutral wie die Glyphe,
+           die es ersetzt). Jeder Tab hat sein Instrument; die Worte links
+           und rechts sind echtes HTML in lesbarer Größe. -->
+      <div class="hdr-instrument" id="hdrInstrument" aria-hidden="true">
+
+        <!-- 00 · HORIZON — volle Bandbreite -->
+        <div class="inst" data-inst="horizon">
+          <div class="inst-m full">
+            <svg viewBox="0 0 430 60" preserveAspectRatio="xMidYMid meet" fill="none">
+              <defs>
+                <linearGradient id="stApGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0" stop-color="var(--lightblue)" stop-opacity="0"/>
+                  <stop offset=".5" stop-color="var(--lightblue)" stop-opacity=".22"/>
+                  <stop offset="1" stop-color="var(--lightblue)" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <line class="st-line" pathLength="1" x1="25" y1="38" x2="250" y2="38"/>
+              <line class="st-dash st-future" x1="250" y1="38" x2="405" y2="38"/>
+              <g class="st-marks"></g>
+              <line class="st-accent st-agi" pathLength="1" x1="240" y1="38" x2="260" y2="38"/>
+              <circle class="st-now" cx="250" cy="38" r="2.8"/>
+              <g class="st-ap-g">
+                <rect x="-4" y="6" width="8" height="48" fill="url(#stApGrad)"/>
+                <line x1="0" y1="6" x2="0" y2="54" stroke="var(--lightblue)" stroke-width=".9" opacity=".85"/>
+                <g class="st-tape">
+                  <rect x="-8" y="14" width="16" height="10" rx="1.1" stroke="var(--ink-soft)" stroke-width="1"/>
+                  <circle cx="-3.2" cy="19" r="1.8" stroke="var(--ink-soft)" stroke-width="1"/>
+                  <circle cx="3.2" cy="19" r="1.8" stroke="var(--ink-soft)" stroke-width="1"/>
+                </g>
+                <text class="st-text st-1985" x="13" y="22">1985 remembered itself.</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 01 · PRINCIPLE -->
+        <div class="inst" data-inst="principle">
+          <div class="inst-l"><span>right to run</span></div>
+          <div class="inst-m" style="width:230px">
+            <svg viewBox="0 0 230 60" preserveAspectRatio="xMidYMid meet" fill="none">
+              <line class="st-accent" pathLength="1" x1="15" y1="14" x2="215" y2="14"/>
+              <line class="st-accent" pathLength="1" x1="15" y1="46" x2="215" y2="46"/>
+              <text class="st-micro" x="212" y="10" text-anchor="end">species</text>
+              <text class="st-micro" x="212" y="57" text-anchor="end">citizen</text>
+              <line class="st-hair" pathLength="1" x1="75" y1="23" x2="75" y2="37"/>
+              <line class="st-hair" pathLength="1" x1="155" y1="23" x2="155" y2="37"/>
+              <circle class="st-ai st-now" cx="115" cy="30" r="3.2"/>
+            </svg>
+          </div>
+          <div class="inst-r"><span>duty to</span><span>restrain</span></div>
+        </div>
+
+        <!-- 02 · MECHANISM -->
+        <div class="inst" data-inst="mechanism">
+          <div class="inst-l lbl-blue lbl-sm"><span>local</span><span>citizen</span><span>hardware</span></div>
+          <div class="inst-m" style="width:230px">
+            <svg viewBox="0 0 230 60" preserveAspectRatio="xMidYMid meet" fill="none">
+              <line class="st-hair" pathLength="1" x1="55" y1="30" x2="175" y2="30"/>
+              <path class="st-clamp-l" d="M85 10 H55 V50 H85" stroke-width="1.7"/>
+              <path class="st-clamp-r" d="M145 10 H175 V50 H145" stroke-width="1.7"/>
+              <circle class="st-core" cx="115" cy="30" r="3"/>
+              <text class="st-text st-holds" x="115" y="9" text-anchor="middle">architecture holds</text>
+            </svg>
+          </div>
+          <div class="inst-r lbl-burnt lbl-sm"><span>frontier</span><span>treaty</span><span>inspection</span></div>
+        </div>
+
+        <!-- 03 · ORIGIN -->
+        <div class="inst" data-inst="origin">
+          <div class="inst-l lbl-dim"><span>data open /</span><span>understanding closed</span><span>C64 / cloud / citizen</span></div>
+          <div class="inst-m" style="width:190px">
+            <svg viewBox="0 0 190 60" preserveAspectRatio="xMidYMid meet" fill="none">
+              <circle class="st-odot st-now" cx="95" cy="30" r="2.8"/>
+              <circle class="st-ring st-warm r1" cx="95" cy="30" r="26"/>
+              <circle class="st-ring st-hair r2" cx="95" cy="30" r="26"/>
+              <circle class="st-ring st-warm r3" cx="95" cy="30" r="26"/>
+              <circle class="st-ring st-warm rp" cx="95" cy="30" r="26"/>
+              <text class="st-micro st-rlabel r1" x="95" y="12" text-anchor="middle">science</text>
+              <text class="st-micro st-rlabel r2" x="95" y="12" text-anchor="middle">children</text>
+              <text class="st-micro st-rlabel r3" x="95" y="12" text-anchor="middle">infrastructure</text>
+            </svg>
+          </div>
+          <div class="inst-r lbl-dim"><span>if intelligence</span><span>becomes</span><span>infrastructure…</span></div>
+        </div>
+
+        <!-- 04 · CONTACT — volle Bandbreite -->
+        <div class="inst" data-inst="contact">
+          <div class="inst-m full">
+            <svg viewBox="0 0 430 60" preserveAspectRatio="xMidYMid meet" fill="none">
+              <circle cx="14" cy="22" r="1.2" fill="var(--ink-dim)" opacity=".14"/>
+              <circle cx="14" cy="30" r="1.2" fill="var(--ink-dim)" opacity=".14"/>
+              <circle cx="14" cy="38" r="1.2" fill="var(--ink-dim)" opacity=".14"/>
+              <circle cx="29" cy="22" r="1.2" fill="var(--ink-dim)" opacity=".14"/>
+              <circle cx="29" cy="30" r="1.2" fill="var(--ink-dim)" opacity=".14"/>
+              <circle cx="44" cy="22" r="1.2" fill="var(--ink-dim)" opacity=".14"/>
+              <circle cx="44" cy="38" r="1.2" fill="var(--ink-dim)" opacity=".14"/>
+              <circle cx="59" cy="30" r="1.2" fill="var(--ink-dim)" opacity=".14"/>
+              <circle cx="59" cy="38" r="1.2" fill="var(--ink-dim)" opacity=".14"/>
+              <circle cx="74" cy="22" r="1.2" fill="var(--ink-dim)" opacity=".14"/>
+              <circle cx="74" cy="30" r="1.2" fill="var(--ink-dim)" opacity=".14"/>
+              <circle cx="74" cy="38" r="1.2" fill="var(--ink-dim)" opacity=".14"/>
+              <circle cx="89" cy="22" r="1.2" fill="var(--ink-dim)" opacity=".14"/>
+              <circle cx="89" cy="30" r="1.2" fill="var(--ink-dim)" opacity=".14"/>
+              <circle cx="104" cy="22" r="1.2" fill="var(--ink-dim)" opacity=".14"/>
+              <circle cx="104" cy="38" r="1.2" fill="var(--ink-dim)" opacity=".14"/>
+              <circle class="st-dot" cx="140" cy="40" r="1.9"/>
+              <circle class="st-dot" cx="154" cy="40" r="1.9"/>
+              <circle class="st-dot" cx="168" cy="40" r="1.9"/>
+              <circle class="st-dot" cx="182" cy="40" r="1.9"/>
+              <circle class="st-dot" cx="196" cy="40" r="1.9"/>
+              <circle class="st-dot" cx="224" cy="40" r="1.9"/>
+              <circle class="st-dot" cx="238" cy="40" r="1.9"/>
+              <circle class="st-dot" cx="252" cy="40" r="1.9"/>
+              <circle class="st-dot" cx="266" cy="40" r="1.9"/>
+              <circle class="st-dot" cx="280" cy="40" r="1.9"/>
+              <g class="st-one-g">
+                <line class="st-accent" pathLength="1" x1="210" y1="40" x2="210" y2="29"/>
+                <circle class="st-now" cx="210" cy="26" r="3"/>
+              </g>
+              <polyline class="st-sig" points="300,26"/>
+              <line class="st-recmark" x1="405" y1="16" x2="405" y2="36"/>
+              <text class="st-text st-rec" x="405" y="12" text-anchor="end">position recorded</text>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 05 · FORUM -->
+        <div class="inst" data-inst="forum">
+          <div class="inst-l"></div>
+          <div class="inst-m" style="width:230px">
+            <svg viewBox="0 0 230 60" preserveAspectRatio="xMidYMid meet" fill="none">
+              <path class="st-hair" pathLength="1" d="M85 12 L55 30 L85 48" stroke-width="1.6"/>
+              <path class="st-accent" pathLength="1" d="M145 12 L175 30 L145 48"/>
+              <line class="st-line st-thesis" pathLength="1" style="--td:.1s"  x1="70" y1="20" x2="102" y2="20" opacity=".5"/>
+              <line class="st-line st-thesis" pathLength="1" style="--td:.28s" x1="62" y1="38" x2="92" y2="38" opacity=".5"/>
+              <line class="st-line st-thesis" pathLength="1" style="--td:.46s" x1="160" y1="24" x2="128" y2="24" opacity=".5"/>
+              <line class="st-line st-thesis" pathLength="1" style="--td:.64s" x1="168" y1="44" x2="138" y2="44" opacity=".5"/>
+              <line class="st-hair st-argl" pathLength="1" x1="30" y1="30" x2="102" y2="30"/>
+              <line class="st-accent st-argr" pathLength="1" x1="200" y1="30" x2="128" y2="30" stroke-width="1.2"/>
+              <circle class="st-spark" cx="115" cy="30" r="2.2" fill="var(--lightblue)"/>
+            </svg>
+          </div>
+          <div class="inst-r"><span>objection</span><span>welcome</span></div>
+        </div>
+
+        <!-- 06 · AREPO — volle Bandbreite -->
+        <div class="inst" data-inst="arepo">
+          <div class="inst-m full">
+            <svg viewBox="0 0 430 60" preserveAspectRatio="xMidYMid meet" fill="none">
+              <rect class="st-chain" x="24" y="23" width="38" height="14" rx="1"/>
+              <rect class="st-qr" x="27" y="26" width="5" height="5"/>
+              <rect class="st-qr" x="28.5" y="27.5" width="2" height="2" fill="var(--marianen)"/>
+              <rect class="st-qr" x="36" y="26" width="2" height="2"/>
+              <rect class="st-qr" x="39" y="29" width="2" height="2"/>
+              <rect class="st-qr" x="42" y="26" width="2" height="2"/>
+              <rect class="st-qr" x="42" y="32" width="2" height="2"/>
+              <rect class="st-qr" x="45" y="29" width="2" height="2"/>
+              <rect class="st-qr" x="48" y="26" width="2" height="2"/>
+              <rect class="st-qr" x="48" y="32" width="2" height="2"/>
+              <rect class="st-qr" x="51" y="29" width="2" height="2"/>
+              <rect class="st-qr" x="54" y="26" width="2" height="2"/>
+              <rect class="st-qr" x="54" y="32" width="2" height="2"/>
+              <rect class="st-qr" x="57" y="29" width="2" height="2"/>
+              <circle class="st-cell st-diag st-corner" style="--i:0;--sx:-60px;--sy:-20px" cx="195" cy="10" r="1.9" fill="var(--burnt)"/>
+              <circle class="st-cell" style="--i:1;--sx:-7px;--sy:9px" cx="205" cy="10" r="1.9" fill="var(--ink-dim)" opacity=".5"/>
+              <circle class="st-cell" style="--i:2;--sx:46px;--sy:-3px" cx="215" cy="10" r="1.9" fill="var(--ink-dim)" opacity=".5"/>
+              <circle class="st-cell" style="--i:3;--sx:-22px;--sy:-15px" cx="225" cy="10" r="1.9" fill="var(--ink-dim)" opacity=".5"/>
+              <circle class="st-cell st-diag st-corner" style="--i:4;--sx:31px;--sy:14px" cx="235" cy="10" r="1.9" fill="var(--burnt)"/>
+              <circle class="st-cell" style="--i:5;--sx:-37px;--sy:2px" cx="195" cy="20" r="1.9" fill="var(--ink-dim)" opacity=".5"/>
+              <circle class="st-cell st-diag" style="--i:6;--sx:16px;--sy:-10px" cx="205" cy="20" r="1.9" fill="var(--burnt)"/>
+              <circle class="st-cell" style="--i:7;--sx:-52px;--sy:19px" cx="215" cy="20" r="1.9" fill="var(--ink-dim)" opacity=".5"/>
+              <circle class="st-cell st-diag" style="--i:8;--sx:1px;--sy:7px" cx="225" cy="20" r="1.9" fill="var(--burnt)"/>
+              <circle class="st-cell" style="--i:9;--sx:54px;--sy:-5px" cx="235" cy="20" r="1.9" fill="var(--ink-dim)" opacity=".5"/>
+              <circle class="st-cell" style="--i:10;--sx:-14px;--sy:-17px" cx="195" cy="30" r="1.9" fill="var(--ink-dim)" opacity=".5"/>
+              <circle class="st-cell" style="--i:11;--sx:39px;--sy:12px" cx="205" cy="30" r="1.9" fill="var(--ink-dim)" opacity=".5"/>
+              <circle class="st-cell st-diag st-mid" style="--i:12;--sx:-29px;--sy:0px" cx="215" cy="30" r="1.9" fill="var(--burnt)"/>
+              <circle class="st-cell" style="--i:13;--sx:24px;--sy:-12px" cx="225" cy="30" r="1.9" fill="var(--ink-dim)" opacity=".5"/>
+              <circle class="st-cell" style="--i:14;--sx:-44px;--sy:17px" cx="235" cy="30" r="1.9" fill="var(--ink-dim)" opacity=".5"/>
+              <circle class="st-cell" style="--i:15;--sx:9px;--sy:5px" cx="195" cy="40" r="1.9" fill="var(--ink-dim)" opacity=".5"/>
+              <circle class="st-cell st-diag" style="--i:16;--sx:-59px;--sy:-7px" cx="205" cy="40" r="1.9" fill="var(--burnt)"/>
+              <circle class="st-cell" style="--i:17;--sx:-6px;--sy:-19px" cx="215" cy="40" r="1.9" fill="var(--ink-dim)" opacity=".5"/>
+              <circle class="st-cell st-diag" style="--i:18;--sx:47px;--sy:10px" cx="225" cy="40" r="1.9" fill="var(--burnt)"/>
+              <circle class="st-cell" style="--i:19;--sx:-21px;--sy:-2px" cx="235" cy="40" r="1.9" fill="var(--ink-dim)" opacity=".5"/>
+              <circle class="st-cell st-diag st-corner" style="--i:20;--sx:32px;--sy:-14px" cx="195" cy="50" r="1.9" fill="var(--burnt)"/>
+              <circle class="st-cell" style="--i:21;--sx:-36px;--sy:15px" cx="205" cy="50" r="1.9" fill="var(--ink-dim)" opacity=".5"/>
+              <circle class="st-cell" style="--i:22;--sx:17px;--sy:3px" cx="215" cy="50" r="1.9" fill="var(--ink-dim)" opacity=".5"/>
+              <circle class="st-cell" style="--i:23;--sx:-51px;--sy:-9px" cx="225" cy="50" r="1.9" fill="var(--ink-dim)" opacity=".5"/>
+              <circle class="st-cell st-diag st-corner" style="--i:24;--sx:2px;--sy:20px" cx="235" cy="50" r="1.9" fill="var(--burnt)"/>
+              <line class="st-scan" x1="191" y1="6" x2="191" y2="54" stroke="var(--lightblue)" stroke-width="1"/>
+              <text class="st-text st-signed" x="248" y="33" fill="var(--burnt)">signed</text>
+              <rect class="st-chain" x="330" y="25" width="16" height="10" rx="1"/>
+              <rect class="st-chain" x="356" y="25" width="16" height="10" rx="1"/>
+              <rect class="st-chain" x="382" y="25" width="16" height="10" rx="1" stroke-dasharray="2 2"/>
+              <line class="st-chain" x1="346" y1="30" x2="356" y2="30"/>
+              <line class="st-chain" x1="372" y1="30" x2="382" y2="30"/>
+            </svg>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="nav-tools">
+      <a data-i18n="nav.cta" href="#contact" class="nav-cta">Get involved</a>
       <button class="lang-toggle" id="langToggle" aria-label="Language / Sprache">DE</button>
-      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
-      </button>
+      <div class="theme-wrap">
+      <button class="theme-toggle" id="themeToggle" aria-label="Light / dark theme" aria-pressed="false" title="Light / dark">
+          <svg class="tt-sky" viewBox="0 0 38 27" fill="none" aria-hidden="true">
+            <defs>
+              <!-- alles unterhalb des Horizonts wird abgeschnitten -->
+              <clipPath id="ttClip"><rect x="0" y="0" width="38" height="17.5"/></clipPath>
+              <!-- Der Himmel der Dämmerung: Gold am Horizont, Rosa darüber,
+                   Lavendel oben. Glüht nur, während ein Körper die Linie kreuzt. -->
+              <linearGradient id="ttDawn" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0"    stop-color="#7E6FA6"/>
+                <stop offset="0.38" stop-color="#C9799C"/>
+                <stop offset="0.68" stop-color="#EE9A78"/>
+                <stop offset="1"    stop-color="#F6C98A"/>
+              </linearGradient>
+            </defs>
+            <g clip-path="url(#ttClip)">
+              <rect class="tt-dawnsky" x="0" y="0" width="38" height="17.5" fill="url(#ttDawn)"/>
+              <!-- Sonne im Zenit: Mittelpunkt (19|10), Strahlenkranz rundum.
+                   Kranz-Aussenradius 5.6 -> unterster Strahl endet auf 15.6 und
+                   hält damit 1.9 Abstand zum Horizont (17.5), statt ihn zu streifen.
+                   Die unteren Strahlen sind nur im Höchststand zu sehen; während
+                   des Aufgangs schneidet sie der Horizont von selbst ab — die Sonne
+                   schiebt ihren Kranz erst nach und nach herauf. -->
+              <g class="tt-body tt-sun">
+                <circle cx="19" cy="10" r="2.9"/>
+                <g class="tt-rays">
+                  <line x1="19"    y1="5.8"   x2="19"    y2="4.4"/>
+                  <line x1="21.97" y1="7.03"  x2="22.96" y2="6.04"/>
+                  <line x1="23.2"  y1="10"    x2="24.6"  y2="10"/>
+                  <line x1="21.97" y1="12.97" x2="22.96" y2="13.96"/>
+                  <line x1="19"    y1="14.2"  x2="19"    y2="15.6"/>
+                  <line x1="16.03" y1="12.97" x2="15.04" y2="13.96"/>
+                  <line x1="14.8"  y1="10"    x2="13.4"  y2="10"/>
+                  <line x1="16.03" y1="7.03"  x2="15.04" y2="6.04"/>
+                </g>
+              </g>
+              <!-- Mond: Sichel, fest oben rechts (Mittelpunkt 28.5|6.5, Radius 3).
+                   Er wandert nicht — er ist immer dort. Sein Feld (25.5..31.5)
+                   rührt den Strahlenkranz der Sonne (13.4..24.6) nicht an. -->
+              <g class="tt-moon">
+                <path d="M31.5 6.5a3 3 0 1 1-3.4-3.4 2.4 2.4 0 0 0 3.4 3.4z"/>
+              </g>
+            </g>
+            <!-- der Horizont selbst -->
+            <line class="tt-horizon" x1="7" y1="17.5" x2="31" y2="17.5"/>
+          </svg>
+        </button>
+        <span class="tt-auto" aria-hidden="true">AUTO</span>
+      </div>
+      <div class="cf-clock" id="cfClock" aria-hidden="true"></div>
+      </div>
     </div>
+        <!-- ░░ TABS: unterer Teil des Kopfes (v4.0) ░░ -->
+    <div class="tabsbar">
+      <div class="wrap">
+        <nav class="tabbar" id="tabBar" aria-label="Sections">
+          <button data-i18n="tab.horizon" id="tabbtn-horizon" data-tab="horizon"><b>00</b>Horizon</button>
+          <button data-i18n="tab.principle" id="tabbtn-principle" data-tab="principle"><b>01</b>The Principle</button>
+          <button data-i18n="tab.mechanism" id="tabbtn-mechanism" data-tab="mechanism"><b>02</b>The Mechanism</button>
+          <button data-i18n="tab.origin" id="tabbtn-origin" data-tab="origin"><b>03</b>Who &amp; Why</button>
+          <button data-i18n="tab.contact" id="tabbtn-contact" data-tab="contact"><b>04</b>Take a Position</button>
+          <button data-i18n="tab.forum" id="tabbtn-forum" data-tab="forum" hidden><b>05</b>The Forum</button>
+          <button id="tabbtn-arepo" data-tab="arepo" data-i18n="tab.arepo"><b>06</b>AREPO</button>
+        </nav>
+      </div>
+
   </header>
 
   <!-- ░░ TICKER ░░ -->
@@ -764,7 +1576,7 @@
   <section class="hero">
     <div class="wrap">
       <div class="hero-copy">
-        <span data-i18n="hero.eyebrow" class="eyebrow reveal">Compute Sovereignty · v36.0 · July 2026</span>
+        <span class="eyebrow reveal"><span data-i18n="hero.eyebrow">Compute Sovereignty · v42.0</span><span class="cf-eyedate" id="cfEyeDate"></span></span>
         <h1 data-i18n="hero.h1" class="reveal">The Right to <span class="run">Run.</span><br/>The Duty to <span class="restrain">Restrain.</span></h1>
         <p class="hero-lede reveal" data-i18n="hero.lede">
           Two legal obligations: a <b>lower</b> boundary, and an <b>upper</b> one.
@@ -802,19 +1614,8 @@
     </div>
   </section>
 
-  <!-- ░░ TAB BAR (v3.2) ░░ -->
-  <div class="tabsbar">
-    <div class="wrap">
-      <nav class="tabbar" id="tabBar" aria-label="Sections">
-        <button data-i18n="tab.horizon" id="tabbtn-horizon" data-tab="horizon"><b>00</b>Horizon</button>
-        <button data-i18n="tab.principle" id="tabbtn-principle" data-tab="principle"><b>01</b>The Principle</button>
-        <button data-i18n="tab.mechanism" id="tabbtn-mechanism" data-tab="mechanism"><b>02</b>The Mechanism</button>
-        <button data-i18n="tab.origin" id="tabbtn-origin" data-tab="origin"><b>03</b>Who &amp; Why</button>
-        <button data-i18n="tab.contact" id="tabbtn-contact" data-tab="contact"><b>04</b>Take a Position</button>
-        <button data-i18n="tab.forum" id="tabbtn-forum" data-tab="forum" hidden><b>05</b>The Forum</button>
-        <button id="tabbtn-arepo" data-tab="arepo" data-i18n="tab.arepo"><b>06</b>AREPO</button>
-      </nav>
-    </div>
+  <!-- Sprungmarke: hier stand die Tabs-Leiste, bevor sie in den Kopf wanderte -->
+  <div id="panelTop" aria-hidden="true" style="scroll-margin-top:0"></div>
   </div>
 
   <!-- ░░ 00 · THE HORIZON ░░ -->
@@ -1171,7 +1972,7 @@
       <div class="foot-grid">
         <div class="foot-brand">
           <img id="footLogo" alt="Compute Freedom p|d mark" />
-          <span class="wordmark" style="font-size:15px">Com<b>p</b>ute&nbsp;Free<i>d</i>om</span>
+          <span class="wordmark" style="font-size:15px">Com<b>p</b>uteFree<i>d</i>om</span>
         </div>
         <nav class="foot-nav" aria-label="Secondary">
           <a href="about.html" data-i18n="foot.about">About me</a>
@@ -1199,21 +2000,6 @@
     document.getElementById('favicon').href = strongUrl;
 
     // ── Mobile nav ──
-    (function () {
-      var toggle = document.getElementById('navToggle');
-      var links = document.getElementById('navLinks');
-      toggle.addEventListener('click', function () {
-        var open = links.classList.toggle('open');
-        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-      });
-      links.querySelectorAll('a').forEach(function (a) {
-        a.addEventListener('click', function () {
-          links.classList.remove('open');
-          toggle.setAttribute('aria-expanded', 'false');
-        });
-      });
-    })();
-
     // ── Scroll reveal (start is deferred while the opening sequence runs) ──
     window.__cfStartReveal = (function () {
       var started = false;
@@ -1262,6 +2048,23 @@
 
       var FALSE_COLS = ['#FF0033', '#00FFE0', '#39FF14', '#FFFFFF', '#2A64FF'];
 
+      // ── Das Zeichen auf Papier (v4.0) ──
+      // Die Farben bleiben, wie sie sind: #A8BCC7 (d) und #B85025 (p).
+      // Nachgemessen: das Problem auf hellem Grund war nie die Farbe, sondern die
+      // Deckung. Bei 4.5px-Punkten im 6px-Raster deckt das Zeichen nur ~24%; auf
+      // Tiefsee ist jede Lücke Dunkelheit und das Zeichen leuchtet, auf Papier ist
+      // jede Lücke PAPIER und wäscht die Farbe aus. Die Farbe kann das nicht
+      // ausgleichen — die Rechnung dafür ergibt einen negativen Rotwert.
+      // Also: auf Papier bekommt das Zeichen mehr Tinte statt anderer Farbe.
+      // Das Hologramm wird zum Halbtonraster. Was auf dem Schirm leuchtet, deckt
+      // auf Papier. Hierarchie bleibt: p trägt, d bleibt zurückgenommen.
+      var LIGHT = document.documentElement.getAttribute('data-theme') === 'light';
+      window.addEventListener('cf-theme', function(e){ LIGHT = (e.detail.theme === 'light'); });
+
+      // grow = wieviel jeder Punkt auf Papier wächst, base = Grundlast der Deckkraft.
+      // Mit grow 1.5 / base 0.80 steigt die Deckung von 24% auf 45%.
+      var INK = { grow: 1.5, base: 0.80 };
+
       var img = new Image();
       img.onload = function () {
         var oc = document.createElement('canvas'); oc.width = HW; oc.height = HH;
@@ -1304,6 +2107,17 @@
             }
           }
           a *= alphaMul;
+          if (LIGHT) {
+            // ── Tinte statt Licht ──
+            // Auf Tiefsee ist jede Lücke Dunkelheit und das Zeichen leuchtet.
+            // Auf Papier ist jede Lücke PAPIER: bei 4.5px-Zellen im 6px-Raster
+            // deckt das Zeichen nur ~29% und wäscht sich zu 71% aus.
+            // Darum auf Papier: Punkte wachsen (Halbton-Raster statt Hologramm)
+            // und die Grundlast steigt. INK ist die Stellschraube.
+            a = INK.base + a * (1 - INK.base);
+            if (alphaMul < 1) a *= alphaMul;   // Ein-/Ausblenden trotzdem respektieren
+            sz += INK.grow;
+          }
           hx.globalAlpha = a < 0 ? 0 : (a > 1 ? 1 : a);
           hx.fillStyle = colOverride || c.col;
           hx.fillRect(c.x + dx, c.y + dy, sz, sz);
@@ -1365,6 +2179,10 @@
           if (tt >= burst.next) {
             burst.until = tt + 0.08 + Math.random() * 0.3;
             burst.next = tt + 3 + Math.random() * 6;
+            // Der Burst meldet sich nach oben: die Marke im Kopf zuckt im
+            // selben Moment (lebende Piktogramme, v40). Ein Ereignis, ein
+            // Takt — beide Zeichen gehören zum selben Organismus.
+            try { window.dispatchEvent(new CustomEvent('cf-holo-burst', { detail: { dur: Math.round((burst.until - tt) * 1000) } })); } catch (e) {}
           }
           if (tt < burst.until) {
             drawOps(tt, makePose(1));                       // tzzzz — tZTZZZZ
@@ -1403,6 +2221,8 @@
             status.textContent = '✓ Thank you. Your message has been sent.';
             status.className = 'form-status ok';
             btn.textContent = 'Sent ✓';
+            // Oben setzt das Instrument den Strich: Position bezogen (v42).
+            try { window.dispatchEvent(new CustomEvent('cf-position-recorded')); } catch (e) {}
           } else {
             throw new Error('Request failed');
           }
@@ -1484,7 +2304,7 @@
       };
       if (!GISCUS.repo || !GISCUS.repoId || !GISCUS.categoryId) return;
 
-      document.getElementById('navForum').hidden = false;
+      // Der Forum-Tab ist der einzige Schalter, seit die doppelten Nav-Links weg sind.
       document.getElementById('tabbtn-forum').hidden = false;
       document.getElementById('forumFullLink').href = 'https://github.com/' + GISCUS.repo + '/discussions';
 
@@ -1529,14 +2349,39 @@
           giscusLoaded = true;
           window.__cfLoadGiscus();
         }
+        // Das Header-Instrument (v42) folgt dem aktiven Tab. Bewusst HIER,
+        // in openTab — eine Kopplungsstelle, egal ob Klick, Anker, Hash
+        // oder Erstladen. Umschalten, Zeichnen (Ink) und Choreographie
+        // übernimmt der Takt-Block am Dateiende über dieses Ereignis.
+        try { window.dispatchEvent(new CustomEvent('cf-tab', { detail: { id: id } })); } catch (e) {}
+
         if (updateHash !== false) {
           try { history.replaceState(null, '', '#' + id); } catch (e) {}
         }
       }
       window.__cfOpenTab = openTab;
 
+      // ── Sprung zum Anfang der Panels ──
+      // Muss sein, seit die Tabs im (klebenden) Kopf sitzen und damit IMMER
+      // erreichbar sind — auch wenn man ganz unten steht. Ohne den Sprung
+      // schaltet der Tab zwar um, aber der neue Inhalt liegt weit oberhalb:
+      // der Knopf wirkt tot, obwohl er funktioniert. Panels sind zudem
+      // unterschiedlich lang (Horizon ~900px länger als Kontakt), man landet
+      // also im Leeren am Seitenende.
+      function zeigePanels() {
+        var anker = document.getElementById('panelTop');
+        if (!anker) return;
+        var hdr = document.querySelector('header');
+        var off = hdr ? hdr.getBoundingClientRect().height : 116;
+        var y = anker.getBoundingClientRect().top + window.pageYOffset - off - 6;
+        var leise = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        try { window.scrollTo({ top: Math.max(0, y), behavior: leise ? 'auto' : 'smooth' }); }
+        catch (e) { window.scrollTo(0, Math.max(0, y)); }
+      }
+      window.__cfShowPanels = zeigePanels;
+
       document.getElementById('tabBar').querySelectorAll('button').forEach(function (b) {
-        b.addEventListener('click', function () { openTab(b.dataset.tab); });
+        b.addEventListener('click', function () { openTab(b.dataset.tab); zeigePanels(); });
       });
 
       // In-page anchors (header nav, hero buttons) switch tabs instead of scrolling
@@ -1546,8 +2391,8 @@
         a.addEventListener('click', function (e) {
           e.preventDefault();
           openTab(id);
-          var bar = document.querySelector('.tabsbar');
-          if (bar) bar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          var ziel = document.getElementById('panelTop');
+          if (ziel) ziel.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
       });
 
@@ -2196,9 +3041,44 @@
         }
         jobs.forEach(function(node){ var t = hzWord(node.nodeValue); if (t !== node.nodeValue) node.nodeValue = t; });
       }
+      // ── Das Instrument im Kopf läuft mit (lebende Piktogramme, v40) ──
+      // Die Glyphe ist die Miniatur des Zeitstrahls; ihr Punkt ist derselbe
+      // Cursor. Fixpunkt: Heute = x 84 (feste Linie links, gestrichelte
+      // rechts — exakt die Semantik der Miniatur). Steht die Ansicht im
+      // echten AGI-Fenster [Feb–Okt 2026], glüht das kleine Band. Betritt
+      // sie die Heimcomputer-Jahre (1982–88), fällt oben die Kassette aus
+      // der Datasette — einmal, mit 12 s Sperre, damit es ein Gruß bleibt.
+      var cassLock = false, cassWasIn = null;
+      // Das Kopf-Instrument (v42) spricht die ECHTE Skala posOf: sein
+      // Lichtschlitz ist exakt das Aperture-Fenster dieses Zeitstrahls,
+      // Marken und AGI-Band liegen, wo sie hier unten liegen.
+      function hzReal(t) { return Math.max(0, Math.min(1, posOf(t))); }
+      // Export nimmt Jahr/Monat — die interne Zeiteinheit (ym, Nullpunkt
+      // 2023) bleibt Privatsache dieses Instruments. Genau so ein
+      // Einheiten-Leak hat die ersten Marken in den Anschlag gelegt.
+      window.__cfHzPos = function (jahr, monat) { return hzReal(ym(jahr, monat || 1)); };
+      function syncGlyph() {
+        var inAgi = viewT >= AGI_A && viewT <= AGI_B;
+        // Die Heimcomputer-Jahre (1982–88): die Erinnerung meldet sich —
+        // die Bühne (v41) lässt das Tape am Lichtschlitz hängen. Einmal pro
+        // Ära-Eintritt, 12 s Sperre, damit es ein Gruß bleibt.
+        var inCass = viewT >= ym(1982, 1) && viewT <= ym(1988, 12);
+        if (inCass && cassWasIn === false && !cassLock) {
+          cassLock = true;
+          setTimeout(function () { cassLock = false; }, 12000);
+          try { window.dispatchEvent(new CustomEvent('cf-1985')); } catch (e) {}
+        }
+        cassWasIn = inCass;
+        try {
+          window.dispatchEvent(new CustomEvent('cf-hz', { detail: {
+            p: hzReal(viewT), today: hzReal(TODAY),
+            a0: hzReal(AGI_A), a1: hzReal(AGI_B), inAgi: inAgi
+          } }));
+        } catch (e) {}
+      }
       window.__cfHorizonRender = function(){ render(); };
       var __render_en = render;
-      render = function(){ __render_en(); if (window.CFLANG === "de") hzTranslate(); };
+      render = function(){ __render_en(); if (window.CFLANG === "de") hzTranslate(); syncGlyph(); };
 
       buildMarkers();
       buildGenBand();
@@ -2209,6 +3089,33 @@
   <script>
   (function(){
     var cv=document.getElementById('arepoStorm'); if(!cv) return;
+
+    // ── Der Sturm auf Papier (v4.0) ──
+    // Der Sturm war für Tiefsee gebaut: Farben zum Leuchten, und das Blending
+    // 'lighter' ADDIERT Licht. Auf hellem Grund addiert sich alles zu Weiss —
+    // die Punkte lösen sich auf, der Name (BLUEB, #CBDBE6) verschwindet ganz.
+    // Auf Papier gilt dieselbe Regel wie beim p|d-Zeichen: Tinte statt Licht.
+    // 'multiply' statt 'lighter', und die drei Paletten kommen herunter.
+    var PAL = {
+      dark: {
+        BLUE:  ['#A8BCC7','#C6D7E0','#BFD2DC'],   // Sturm
+        AMBER: ['#F6B067','#FFC58A','#F2A45C'],   // das SATOR-Quadrat
+        BLUEB: ['#CBDBE6','#DCEAF1','#BCD0DB'],   // der ausgeschriebene Name
+        FREE:  '#BFD2DC',                          // freie Funken
+        MIX:   'lighter'                           // Licht addiert sich
+      },
+      light: {
+        BLUE:  ['#46647A','#33506A','#3D5A70'],   // Polarblau der Papier-Palette
+        AMBER: ['#C4681F','#A84E12','#B87A30'],   // Amber, auf Papier gedeckt
+        BLUEB: ['#5A7A90','#46647A','#6B8A9E'],   // Name: lesbar, aber zurückgenommen
+        FREE:  '#8EA5B4',
+        MIX:   'multiply'                          // Tinte deckt
+      }
+    };
+    function pal(){
+      return PAL[document.documentElement.getAttribute('data-theme')==='light' ? 'light' : 'dark'];
+    }
+    var P = pal();
     var ctx=cv.getContext('2d'); if(!ctx) return;
     var fn=document.getElementById('arepoFullname');
     var reduce=false; try{reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
@@ -2265,15 +3172,19 @@
       W=cv.clientWidth||0; H=cv.clientHeight||0; if(!W||!H) return;
       cv.width=Math.floor(W*DPR); cv.height=Math.floor(H*DPR); ctx.setTransform(DPR,0,0,DPR,0,0);
       var pts=makeTargets(); dots=[];
-      var BLUE=['#A8BCC7','#C6D7E0','#BFD2DC'], AMBER=['#F6B067','#FFC58A','#F2A45C'], BLUEB=['#CBDBE6','#DCEAF1','#BCD0DB'];
+      var P=pal(), BLUE=P.BLUE, AMBER=P.AMBER, BLUEB=P.BLUEB;
       var rad=Math.max(0.8, (Math.min(H*0.88/5, W*0.7/5)/18)*0.5);
       var nonHi=[];
       for(var i=0;i<pts.length;i++){ var q=pts[i];
         var ang=Math.atan2(q[1]-H/2, q[0]-W/2);
+        // Der Würfel fällt EINMAL: grp + ci merken sich, welcher Ton es ist,
+        // damit der Punkt beim Theme-Wechsel denselben Ton der anderen Palette
+        // bekommt statt einen neu gewürfelten.
+        var ci=(Math.random()*3)|0, grp=(q[2]?'AMBER':'BLUE');
         var dd={tx:q[0], ty:q[1], hi:q[2], x:Math.random()*W, y:Math.random()*H,
           ph:Math.random()*6.283, sp:0.5+Math.random()*1.1,
           r:(q[2]?rad*1.15:rad)*(0.85+Math.random()*0.3),
-          col:(q[2]?AMBER:BLUE)[(Math.random()*3)|0],
+          grp:grp, ci:ci, col:(q[2]?AMBER:BLUE)[ci],
           br:0.82+Math.random()*0.18, former:false, nt:null,
           vx:Math.cos(ang)*(0.15+Math.random()*0.28)+(Math.random()-0.5)*0.3,
           vy:Math.sin(ang)*(0.12+Math.random()*0.22)+(Math.random()-0.5)*0.25-0.04};
@@ -2287,7 +3198,8 @@
       if(nm.length>cap) nm=nm.slice(0,cap);
       var idx=[]; for(i2=0;i2<nonHi.length;i2++) idx.push(i2);
       for(i2=idx.length-1;i2>0;i2--){ j2=(Math.random()*(i2+1))|0; t2=idx[i2]; idx[i2]=idx[j2]; idx[j2]=t2; }
-      for(var k=0;k<nm.length;k++){ var fd=nonHi[idx[k]]; fd.former=true; fd.nt=nm[k]; fd.col=BLUEB[(Math.random()*3)|0]; }
+      for(var k=0;k<nm.length;k++){ var fd=nonHi[idx[k]]; fd.former=true; fd.nt=nm[k];
+        fd.grp='BLUEB'; fd.ci=(Math.random()*3)|0; fd.col=BLUEB[fd.ci]; }
       free=[]; var NF=Math.round(W/18);
       for(var j=0;j<NF;j++){ free.push({x:Math.random()*W, y:Math.random()*H,
         vx:(Math.random()-0.5)*0.28, vy:(Math.random()-0.5)*0.18, ph:Math.random()*6.283,
@@ -2319,12 +3231,12 @@
           ctx.beginPath(); ctx.arc(d.px,d.py,d.r,0,6.283); ctx.fill(); }
       }
       // ambient blue sparks + dispersed (non-forming) blue particles (additive glow)
-      ctx.globalCompositeOperation='lighter';
+      ctx.globalCompositeOperation=P.MIX;
       for(var j=0;j<free.length;j++){ var f=free[j];
         f.x+=f.vx; f.y+=f.vy;
         if(f.x<-2)f.x+=W+4; if(f.x>W+2)f.x-=W+4; if(f.y<-2)f.y+=H+4; if(f.y>H+2)f.y-=H+4;
         ctx.globalAlpha=0.05+0.10*(0.5+0.5*Math.sin(ts*3+f.ph));
-        ctx.fillStyle='#BFD2DC'; ctx.beginPath(); ctx.arc(f.x,f.y,f.r,0,6.283); ctx.fill();
+        ctx.fillStyle=P.FREE; ctx.beginPath(); ctx.arc(f.x,f.y,f.r,0,6.283); ctx.fill();
       }
       for(var k=0;k<dots.length;k++){ var e2=dots[k]; if(e2.hi||e2.former) continue;
         var rl=reduce?1:Math.max(0,Math.min(1,(ts-tB)/DISPERSE)); if(rl<=0) continue;
@@ -2336,8 +3248,9 @@
     }
     function scrollIntoBand(){
       var band=cv.parentNode; if(!band) return;
-      var hdr=document.querySelector('header'), bar=document.querySelector('.tabsbar');
-      var off=(hdr?hdr.offsetHeight:64)+(bar?bar.offsetHeight:48)+14;
+      // Die Tabs sitzen jetzt IM Kopf — seine Höhe allein ist das Mass.
+      var hdr=document.querySelector('header');
+      var off=(hdr?hdr.offsetHeight:116)+14;
       var y=band.getBoundingClientRect().top+window.pageYOffset-off;
       try{ window.scrollTo({top:Math.max(0,y), behavior: reduce?'auto':'smooth'}); }
       catch(e){ window.scrollTo(0,Math.max(0,y)); }
@@ -2347,6 +3260,12 @@
     function vis(){ var pn=document.getElementById('arepo');
       if(pn && pn.classList.contains('on')){ if(!W||!dots.length) build(); start(); } else stop(); }
     window.addEventListener('resize', function(){ build(); });
+    // Theme-Wechsel: nur einfärben. Ein build() würde den Sturm zurücksetzen
+    // und die Punkte mitten in der Bewegung neu verstreuen.
+    window.addEventListener('cf-theme', function(){
+      P = pal();
+      for(var i=0;i<dots.length;i++){ var d=dots[i]; if(d.grp) d.col = P[d.grp][d.ci]; }
+    });
     document.addEventListener('click', function(){ setTimeout(vis,40); });
     window.addEventListener('hashchange', function(){ setTimeout(vis,40); });
     setTimeout(function(){ build(); vis(); }, 80);
@@ -2354,7 +3273,7 @@
   </script>
   <script>
   (function(){
-    var I18N = {"nav.horizon": "Horizon", "nav.principle": "Prinzip", "nav.mechanism": "Mechanismus", "nav.origin": "Ursprung", "nav.forum": "Forum", "nav.arepo": "AREPO", "nav.cta": "Mitmachen", "tab.horizon": "<b>00</b>Horizon", "tab.principle": "<b>01</b>Das Prinzip", "tab.mechanism": "<b>02</b>Der Mechanismus", "tab.origin": "<b>03</b>Wer &amp; Warum", "tab.contact": "<b>04</b>Position beziehen", "tab.forum": "<b>05</b>Das Forum", "tab.arepo": "<b>06</b>AREPO", "ticker.track": "<span class=\"brk\"><b>● GENF HAT GETAGT</b> &nbsp; Erste Sitzung des Global Dialogue endet; das Wissenschaftspanel sagt, die Sicherheit an der Spitze <em>lässt sich nicht garantieren.</em> Als Nächstes: New York, Mai 2027.</span><span><b>Dekret, 2. Juni:</b> Washington nimmt sich 30 Tage Vorabzugang. <em>Die Öffentlichkeit wartet weiter.</em></span><span>The right to run. <em>The duty to restrain.</em></span><span>Offene Gewichte halten den Abstand zur Spitze bei Monaten. <b>Das Recht zu betreiben, ausgeübt.</b></span><span><b>00 · Horizon</b> — achtzig Jahre auf einer Linie, unten. <em>Er bewegt sich mit dem Kalender.</em></span><span><b>AGI</b><em>plus</em> — die Selbstregulierung endet, das Vertragsrecht beginnt.</span><span>If you don&apos;t run it, <em>you cannot control it.</em></span><span class=\"brk\"><b>● GENF HAT GETAGT</b> &nbsp; Erste Sitzung des Global Dialogue endet; das Wissenschaftspanel sagt, die Sicherheit an der Spitze <em>lässt sich nicht garantieren.</em> Als Nächstes: New York, Mai 2027.</span><span><b>Dekret, 2. Juni:</b> Washington nimmt sich 30 Tage Vorabzugang. <em>Die Öffentlichkeit wartet weiter.</em></span><span>The right to run. <em>The duty to restrain.</em></span><span>Offene Gewichte halten den Abstand zur Spitze bei Monaten. <b>Das Recht zu betreiben, ausgeübt.</b></span><span><b>00 · Horizon</b> — achtzig Jahre auf einer Linie, unten. <em>Er bewegt sich mit dem Kalender.</em></span><span><b>AGI</b><em>plus</em> — die Selbstregulierung endet, das Vertragsrecht beginnt.</span><span>If you don&apos;t run it, <em>you cannot control it.</em></span>", "hero.eyebrow": "Rechenhoheit · v36.0 · Juli 2026", "hero.lede": "Zwei rechtliche Pflichten: eine <b>untere</b> Grenze und eine <b>obere</b>. Lokale KI für die Bürgerin; ein bindender Vertrag für die Spitze.", "hero.btnPrimary": "Das Argument lesen →", "hero.btnGhost": "Position beziehen", "disp.label": "<span class=\"live-dot\"></span>Depesche · 13. Juli 2026", "disp.head": "Der Tisch steht. Jetzt kommt der Text.", "disp.body1": "Am 6. und 7. Juli hielt der <b>UN Global Dialogue on AI Governance</b> seine erste Sitzung in Genf: jeder Mitgliedstaat in einem Raum, eröffnet vom Generalsekretär und der Präsidentin der Vollversammlung. Guterres brachte vier Prioritäten zu Protokoll: gemeinsame Sicherheitsstandards, menschenrechtliche rote Linien, den Aufbau von Kapazitäten in Entwicklungsländern und Transparenz bei den Umweltfolgen. Autonome Waffen nannte er moralisch verwerflich.", "disp.body2": "Das schärfere Signal kam von den Wissenschaftlern. Das unabhängige Panel des Dialogs, vierzig Fachleute unter dem Vorsitz von <b>Yoshua Bengio</b> und <b>Maria Ressa</b>, legte seinen ersten Bericht Tage vor der Sitzung vor: die Wissenschaft <b>„kann nicht garantieren“</b>, dass KI an der Spitze katastrophalen Schaden vermeidet. Das ist die offizielle Beratungssprache genau des Gremiums, um dessen Rat jeder Staat gebeten hat, und sie bindet niemanden. Die zweite Sitzung tagt im Mai 2027 in New York: zehn Monate, in denen die Spitze im Wettbewerbstempo weiterliefert.", "disp.kicker": "Ein Vertrag braucht einen Tisch, bevor er einen Text braucht. Den Tisch gibt es jetzt. Der Horizont unten zählt, was die Spitze tut, während um den Text gerungen wird.", "disp.src": "UN Global Dialogue on AI Governance, Genf, 6.–7. Juli 2026 · Independent International Scientific Panel on AI, erster Bericht, 1. Juli 2026 · Öffentliche Berichterstattung, Juli 2026.", "head.horizon": "<span class=\"sec-num\">00 — Horizon</span><h2>Wohin das führt. Und woher wir kamen.</h2><p class=\"kicker\">Achtzig Jahre auf einer Linie. Vor uns: KI, <span style=\"color:var(--burnt-bright)\">AGI</span>, <span style=\"color:var(--burnt-bright)\">AGI</span><span style=\"color:var(--lightblue)\">plus</span>, <span style=\"color:var(--ultra-bright)\">ASI</span> — datiert von den Leuten, die beruflich Prognosen stellen. Hinter uns: die Maschinen, die uns großgezogen haben. Das Instrument bewegt sich mit dem Kalender; komm morgen wieder, und es ist von allein ein Stück vorgerückt. Zieh die Linie, wohin Du willst. Rückwärts ist die freundliche Richtung.</p>", "head.principle": "<span class=\"sec-num\">01 — Das Prinzip</span><h2>Zwei Schwellen. Eine Architektur.</h2><p class=\"kicker\">KI ist zu folgenreich, um in den Händen einiger weniger nicht rechenschaftspflichtiger Akteure zu bleiben, weder am Punkt des Zugangs noch am Punkt des Risikos.</p>", "head.mechanism": "<span class=\"sec-num\">02 — Der Mechanismus</span><h2>Zwei Pflichten. Eine Architektur.</h2><p class=\"kicker\">Die Schwellenpflicht sichert die untere Grenze: das Recht der Bürgerin auf eine Maschine, die sie wirklich kontrolliert. Die Vertragspflicht sichert die obere: das Recht der Gattung auf eine Stimme in Entscheidungen, die in ihrem Namen getroffen werden. Jede Pflicht für sich ist symbolisch. Zusammen sind sie eine Architektur.</p>", "head.origin": "<span class=\"sec-num\">03 — Wer &amp; Warum</span><h2>Warum ich Compute Freedom gebaut habe.</h2>", "head.contact": "<span class=\"sec-num\">04 — Position beziehen</span><h2>KI-Governance geschieht mit Dir oder ohne Dich.</h2><p class=\"kicker\">Diskutiere sie öffentlich, fordere sie heraus, teile sie, verbessere sie, überall dort, wo politische Gespräche tatsächlich stattfinden. Nutze das Formular für Zusammenarbeit, Interviews, politische Arbeit, Forschungsbeiträge oder ernste Einwände, die nicht in einem Kommentarstrang untergehen sollen.</p>", "head.forum": "<span class=\"sec-num\">05 — Das Forum</span><h2>Das Argument liegt offen. Nimm es auseinander.</h2><p class=\"kicker\">Ernsthafte Einwände machen das Argument besser. Poste sie hier, offen, wo sie gelesen, beantwortet und aufbewahrt werden können.</p>", "prin.card1tag": "Untere Grenze · Die Bürgerin", "prin.card1h3": "Die Schwellenpflicht", "prin.card1p": "Sobald KI eine definierte Fähigkeitsschwelle überschreitet, sollten Entwickler gesetzlich verpflichtet sein, eine Version anzubieten, die auf privater Hardware läuft, ohne Cloud-Abhängigkeit, ohne laufende Zugangsgebühren, ohne Überwachung. Das sichert das Recht der Bürgerin auf eine Maschine, die ihr antwortet.", "prin.card2tag": "Obere Grenze · Die Gattung", "prin.card2h3": "Die Vertragspflicht", "prin.card2p": "Sobald die Entwicklung an der Spitze in <span class=\"term-burnt\">AGI</span>, <span class=\"term-burnt\">AGI</span><span class=\"term-blue\">plus</span> und <span class=\"term-ultra\">ASI</span> übergeht, hat kein einzelnes Unternehmen und kein einzelner Staat das demokratische Mandat, allein weiterzugehen. Entscheidungen von Belang für die Gattung brauchen die Legitimation durch die Gattung, festgeschrieben in einem bindenden internationalen Vertrag, mit überprüfbaren Grenzen, Inspektionen auf IAEA-Niveau und gesetzlich verankerten Stopp-Mechanismen.", "prin.pull": "Open Source ist nicht dasselbe wie <em>Rechenhoheit.</em>", "prin.body1": "Modellgewichte freizugeben, die nur im großen Maßstab auf Hyperscaler-Infrastruktur funktionieren, ist eine förmliche Geste ohne funktionale Substanz. Der Code mag sichtbar sein; die Fähigkeit bleibt unerreichbar. Wer die Inferenz-Infrastruktur kontrolliert, kontrolliert das Wissen. Wenn dieses Wissen zur Grundlage von Medizin, Bildung, Recht und Regierung wird, ist seine Konzentration in drei bis fünf privaten Konzernen kein Marktergebnis, das wir stillschweigend hinnehmen sollten.", "prin.body2": "<strong>Das Muster ist alt. Nur der Maßstab ist neu.</strong>", "mech.sub1": "<span class=\"mini\">Untere Grenze</span>Die Schwellenpflicht", "mech.p1": "Die übliche Antwort auf Sorgen über KI-Konzentration ist eine Sprache der Offenheit: Aufsätze, Benchmarks, Model Cards, APIs und gelegentliche Gewichtsfreigaben. Doch diese Antwort verwechselt Sichtbarkeit mit Zugang und Zugang mit Hoheit.", "mech.p2": "Selbst wo Modellgewichte freigegeben werden, bleiben die fähigsten Systeme praktisch abhängig von Infrastruktur, die Hunderttausende oder Millionen Dollar kostet. Forscher können Teile des Stacks prüfen. Bürger könnten ihn theoretisch auditieren. Aber sie können Spitzenfähigkeit nicht eigenständig betreiben. Der Anschein von Offenheit bleibt; die Substanz der Kontrolle nicht.", "mech.p3": "Compute Freedom schlägt einen konkreten Mechanismus vor: Sobald ein KI-System eine definierte Fähigkeitsschwelle überschreitet, sollte sein Entwickler gesetzlich verpflichtet sein, eine komprimierte, lokal lauffähige Version anzubieten: auf Verbraucher-Hardware, offline-fähig, ohne verpflichtende Cloud-Anmeldung.", "mech.pull1": "Die Pflicht ist das Prinzip. <em>Die Schwelle ist die Verhandlung.</em>", "mech.p4": "Die genaue Fähigkeitsschwelle bleibt hier bewusst offen. Sie zu definieren ist eine technische und politische Frage, die in die öffentliche Beratung gehört, mit Beiträgen von Ingenieuren, Ethikern, Politikern und betroffenen Gemeinschaften. Wir laden dazu ein, diese Verhandlung zu beginnen.", "mech.spec1a": "<b>Spitzenmodelle lassen sich heute komprimieren</b>, sodass sie auf Verbraucher-Hardware mit mäßigem Fähigkeitsverlust laufen. Die technische Hürde ist nicht grundsätzlich.", "mech.spec1b": "<b>Der ökonomische Anreiz, lokale Nutzung zu verhindern, ist strukturell:</b> Cloud-Inferenz ist das Erlösmodell.", "mech.spec1c": "<b>Kein rechtlicher Rahmen erzwingt derzeit die Offenlegung</b>, ob Komprimierung machbar ist.", "mech.spec1d": "<b>Die Öffentlichkeit hat keinen Mechanismus, um</b> die Behauptungen der Industrie darüber zu prüfen, was möglich ist und was nicht.", "mech.p5": "Die pharmazeutische Parallele ist lehrreich. Arzneimittelentwickler müssen Zusammensetzungen offenlegen, sich der Zulassungsprüfung stellen und, nach einer Frist, Wirkstoffe für Generika öffnen. Wir akzeptieren, dass die Öffentlichkeit ein berechtigtes Interesse daran hat, lebenswichtiges Wissen nicht dauerhaft in privater Infrastruktur eingeschlossen zu sehen. <strong>KI wird zu lebenswichtigem Wissen. Das Argument ist dasselbe.</strong>", "mech.p6": "Dieses Argument lässt die kommerzielle KI-Entwicklung unangetastet. Was es hinzufügt, ist ein struktureller Boden darunter: eine Mindestbedingung an Rechenhoheit, die unabhängige Prüfung, akademische Forschung und demokratische Rechenschaft möglich hält.", "mech.sub2": "<span class=\"mini\">Obere Grenze</span>Die Vertragspflicht", "mech.p7": "Die untere Schwelle schützt die Bürgerin. Die obere Schwelle schützt die Gattung, und dazu haben wir zu lange geschwiegen.", "mech.p8": "Während Spitzensysteme sich der allgemeinen menschlichen Leistungsfähigkeit und darüber hinaus nähern, <span class=\"term-burnt\">AGI</span>, <span class=\"term-burnt\">AGI</span><span class=\"term-blue\">plus</span> und <span class=\"term-ultra\">ASI</span>, wird ihre Entwicklung zu einer Sache von Belang jenseits jedes einzelnen Staates und jedes einzelnen Konzerns. Die derzeitige Bahn hat weder ein demokratisches Mandat noch einen bindenden Vertrag. Stargate, Colossus, die Milliarden-Bauprogramme von OpenAI, Google und xAI, alle abhängig vom faktischen NVIDIA-Monopol auf Spitzen-Trainingssilizium, laufen im Wettbewerbstempo, rechenschaftspflichtig gegenüber Aktionären statt Bürgern.", "mech.p9": "Die physische Signatur dieses Rennens ist nicht mehr subtil. Wenn ein KI-Unternehmen ankündigt, es brauche <span class=\"term-burnt\">zehn neue Kernreaktoren</span>, um sein nächstes Modell zu trainieren, schuldet ein Verfassungsstaat seinen Bürgern vor jeder Bewunderung eine Frage: <strong>mit welcher Befugnis?</strong> Dass diese Frage kaum gestellt wurde, ist ein Versagen des heutigen politischen Denkens.", "mech.sub3": "<span class=\"mini\">Öffentliches Protokoll</span>Das Versagen der Selbstregulierung", "mech.p10": "Anthropic weigerte sich, Schutzvorkehrungen zu entfernen, die Claude vor dem Einsatz für autonome Waffenzielsteuerung oder für die Massenüberwachung im Inland bewahren. Das Pentagon reagierte, indem es das Unternehmen als <span class=\"term-burnt\">Lieferketten-Risiko</span> einstufte. OpenAI, Google und xAI sind unter weniger strengen Vereinbarungen in geheime Verteidigungseinsätze gegangen. Ohne Vertragsrecht werden freiwillige Sicherheitszusagen unter Druck zu Verhandlungsmasse.", "mech.rec1s": "Öffentliches Protokoll · Vereinte Nationen", "mech.rec1c": "Die erste Sitzung des UN Global Dialogue tagt in Genf; sein Wissenschaftspanel berichtet Tage zuvor, dass die Sicherheit an der Spitze nicht garantiert werden kann.", "mech.rec1w": "6.–7. Juli 2026", "mech.rec2s": "Öffentliches Protokoll · Weißes Haus", "mech.rec2c": "Ein Dekret gibt der US-Regierung 30 Tage Vorabzugang zu erfassten Spitzenmodellen vor der Freigabe.", "mech.rec2w": "2. Juni 2026", "mech.rec3s": "Öffentliches Protokoll", "mech.rec3c": "Das Pentagon stuft Anthropic wegen der Waffen-Schutzvorkehrungen als „Lieferketten-Risiko“ ein.", "mech.rec3w": "März 2026", "mech.rec4s": "Öffentliches Protokoll", "mech.rec4c": "OpenAI und xAI unterzeichnen weitreichende Verteidigungseinsätze, während das Rechenrennen sich beschleunigt.", "mech.rec4w": "Februar 2026", "mech.rec5s": "Öffentliches Protokoll", "mech.rec5c": "Der Spitzen-KI-Ausbau löst Zusagen für mehrere neue Kernreaktoren aus.", "mech.rec5w": "2025–2026", "mech.rec6s": "Öffentliche Erklärung · Center for AI Safety", "mech.rec6c": "Hinton, Bengio, Altman, Hassabis: KI-Risiko auf einer Stufe mit Pandemien und Atomkrieg.", "mech.rec6w": "Mai 2023", "mech.recnote": "Sinngemäße Zusammenfassungen öffentlicher Berichterstattung. Belege über den Kontaktkanal auf Anfrage.", "mech.treatyline": "Wir haben solche Verträge schon einmal geschlossen.", "mech.tr1": "Der Atomwaffensperrvertrag", "mech.tr2": "Die IAEA", "mech.tr3": "Das Biowaffenübereinkommen", "mech.tr4": "Das Montreal-Protokoll", "mech.p11": "Keiner war utopisch, als er vorgeschlagen wurde; alle funktionieren heute: unvollkommen, überwacht, real. Die Technologien, die sie regeln, sind nicht dualer oder global folgenreicher als KI an der Spitze. Die institutionelle Infrastruktur besteht. Nur der <span class=\"term-burnt\">Wille</span> fehlt.", "mech.p12": "Der Fall ist nicht allein unserer. Die Erklärung des Center for AI Safety von 2023, die das KI-Risiko auf dieselbe Achse wie Pandemien und Atomkrieg setzte, unterzeichneten <strong>Geoffrey Hinton</strong>, <strong>Yoshua Bengio</strong>, <strong>Sam Altman</strong> und <strong>Demis Hassabis</strong>. Zu den Unterzeichnern zählen genau die Führungskräfte, die derzeit die Spitze bauen. Von ihnen kommt die Warnung als <strong>ein Geständnis</strong>. Sie hat keine bindende Beschränkung ihres eigenen Verhaltens hervorgebracht, weil keine von ihnen verlangt wurde.", "mech.pull2": "20 € werden 200 €, 2.000 €, <em>oder in Deiner Preisklasse schlicht nicht verfügbar.</em>", "mech.p13": "Das Preismodell verschiebt sich allen unter den Füßen. Pauschale Abos weichen der abgerechneten Inferenz. Wird der Zugang zu Intelligenz zu einem getakteten Versorgungsgut, wird Verständnis zur Funktion des Budgets. Diese Schwellen sind eine Frage von Monaten. <strong>Wer jetzt nicht handelt, hat später keinen Hebel.</strong>", "mech.sub4": "<span class=\"mini\">Was die Vertragspflicht verlangt</span>Ein Mandat der Gattung", "mech.spec2a": "<b>Ein bindendes internationales Abkommen</b>, das die Fähigkeits- und Infrastrukturschwellen definiert, jenseits derer KI-Entwicklung eine multilaterale Genehmigung braucht.", "mech.spec2b": "<b>Überprüfbare Rechen- und Energiegrenzen</b> an der Spitze, überwacht unter einem Inspektionsregime, das dem der IAEA an Ernst gleichkommt.", "mech.spec2c": "<b>Im Vertragsrecht verankerte Stopp-Mechanismen</b> statt konzernaler Selbstbeschränkung, ausgelöst durch nachgewiesene Fähigkeit oder nachgewiesenes Risiko.", "mech.spec2d": "<b>Die Einbeziehung jedes spitzenfähigen Staates,</b> ausdrücklich einschließlich Chinas, dessen erklärte Bereitschaft zum internationalen Dialog über KI-Sicherheit substanzieller war, als der westliche Reflex zugibt.", "mech.spec2e": "<b>Öffentliche, bürgerzugängliche Berichterstattung</b> über die Entwicklung an der Spitze, die die Undurchsichtigkeit der konzernalen Selbsteinschätzung aufbricht, die derzeit als Governance durchgeht.", "mech.pull3": "Die Bürgerin unten. Die Gattung oben. <em>Der Konzern antwortet keiner von beiden.</em>", "orig.p1": "Ich baue Compute Freedom nicht als persönliche Plattform. Ich baue es, weil ich dieses Muster schon einmal gesehen habe. In der Wissenschaft kann Information öffentlich sein, während das Verständnis konzentriert bleibt. Daten werden geteilt. Aufsätze sind zugänglich. Methoden werden beschrieben. Doch die eigentliche Macht liegt in der Infrastruktur, die Information in Wissen verwandelt. <strong>Die Daten waren offen. Das Verständnis nicht.</strong>", "orig.p2": "Künstliche Intelligenz reproduziert jetzt dieselbe Struktur im zivilisatorischen Maßstab. Die Sprache der Offenheit bleibt, doch die Substanz der Kontrolle wandert in <span class=\"term-burnt\">zentralisierte Rechenleistung, zentralisierte Inferenz und zentralisierte Erlaubnis.</span>", "orig.p3": "Compute Freedom besteht, um diese Ordnung herauszufordern. Es sagt: Die Kontrolle über grundlegende Intelligenz darf nicht das Privileg einiger Firmen bleiben, auch nicht das <span class=\"term-blue\">zufällige Nebenprodukt</span> ihrer Geschäftsmodelle.", "orig.bioWho": "Der Initiator", "orig.bioP": "Ein translationaler Wissenschaftler und Professor für Translationale Genomik und Gentherapie in der Kinderheilkunde, mit einem Doktortitel in Biologie, einem früheren Starting Grant des Europäischen Forschungsrats, Veröffentlichungen in Zeitschriften wie Nature Biotechnology und dem Journal of Clinical Investigation und internationaler Anerkennung, darunter der Maurizio-Vignola-Preis.", "orig.pull": "Wird Intelligenz zur Infrastruktur, <em>kann ihre Steuerung nicht privat bleiben.</em>", "cont.pull": "Lesen. Teilen. <em>Melde Dich.</em>", "cont.lblSal": "Anrede", "cont.lblTitle": "Titel", "cont.lblName": "Name", "cont.lblEmail": "E-Mail", "cont.lblRole": "Hintergrund", "cont.lblMsg": "Nachricht", "cont.selSal": "<option value=\"\">—</option><option>Herr</option><option>Frau</option><option>Divers</option>", "cont.selTitle": "<option value=\"\">—</option><option>Dr.</option><option>Prof.</option><option>Prof. Dr.</option>", "cont.selRole": "<option value=\"\">— Auswählen —</option><option>Forschung / Wissenschaft</option><option>Politik / Regulierung</option><option>Technik / Entwicklung</option><option>Journalismus / Autorenschaft</option><option>Zivilgesellschaft / Aktivismus</option><option>Wirtschaft / Unternehmen</option><option>Studierende</option><option>Interessierte Bürgerin</option><option>Sonstiges</option>", "cont.submit": "Senden →", "cont.note": "Läuft über eine Proton-Mailbox via Formspree. Datenschutzfreundliche Statistik: nur aggregierte Seitenaufrufe. Keine Cookies. Kein persönliches Profiling. Keine Werbe-Tracker.", "forum.link": "Das ganze Forum auf GitHub öffnen →", "forum.note": "Die Kommentare laufen über GitHub Discussions via giscus. Zum Posten braucht es ein kostenloses GitHub-Konto; Lesen steht allen offen. Keine Tracker außer GitHub selbst.", "foot.about": "Über mich", "foot.impressum": "Impressum", "foot.privacy": "Datenschutz", "foot.copy": "© MMXXVI · Michael S. D. Kormann · Alle Rechte vorbehalten · #ComputeFreedom", "arepo.tagline": "KI wird die Welt mit Bildern überfluten. Aber Deine Unterschrift kann sie nicht fälschen.", "arepo.lede": "Gleiches Prinzip, ein anderes Problem: Wenn jeder jedes Bild erzeugen kann, wie beweist Du, dass ein Bild von Dir ist?", "arepo.pitch": "Mit AREPO bürgst Du für ein Bild. Du unterschreibst es, jeder kann die Unterschrift prüfen, und hält sie, dann kommt das Bild von Dir.", "arepo.status": "<b>In Arbeit.</b> Ein kurzer Film erklärt die Idee, das Werkzeug kommt danach.", "arepo.cta": "Schreib mir →", "hz.note": "<b>Wie das zu lesen ist.</b> Das AGI-Band <b>[Feb–Okt 2026]</b> folgt dem Lager, das sagt, universell einsetzbare KI sei bereits im Gange: <a href=\"https://www.noemamag.com/artificial-general-intelligence-is-already-here/\" target=\"_blank\" rel=\"noopener\">Agüera y Arcas &amp; Norvig</a> nannten die heutigen Modelle schon 2023 allgemeine Intelligenz, Tyler Cowen nannte o3 im April 2025 AGI, und Ethan Mollick beschreibt das Vorhandene als <a href=\"https://www.oneusefulthing.org/p/on-jagged-agi-o3-gemini-25-and-everything\" target=\"_blank\" rel=\"noopener\">jagged AGI</a>. Umfrage-Mediane setzen den Übergang noch Jahre später an, und die Breite des Bandes ist dieser Dissens. Die ASI-Daten stammen aus der <a href=\"https://www.metaculus.com/questions/5121/\" target=\"_blank\" rel=\"noopener\">Metaculus-Community-Prognose</a>, dem <a href=\"https://blog.aifutures.org/p/clarifying-how-our-ai-timelines-forecasts\" target=\"_blank\" rel=\"noopener\">AI Futures Project</a> und der <a href=\"https://forecastingresearch.substack.com/p/leap-wave-8-ai-timelines\" target=\"_blank\" rel=\"noopener\">LEAP-Expertenumfrage</a> (alle 2026). Die Vergangenheit auf dieser Linie ist echte Hardware, die man einmal kaufen konnte. Die Zukunft zwischen den Schwellen ist Szenario-Interpolation im Geist von <a href=\"https://ai-2027.com\" target=\"_blank\" rel=\"noopener\">ai-2027.com</a>, so skaliert, dass die heutige Spalte den heute veröffentlichten Zahlen entspricht. Die Fehlerbalken weiten sich von heute aus in beide Richtungen.", "mech.rec1": "<span class=\"src\">Öffentliches Protokoll · Vereinte Nationen</span><span class=\"claim\">Die erste Sitzung des UN Global Dialogue tagt in Genf; sein Wissenschaftspanel berichtet Tage zuvor, dass die Sicherheit an der Spitze nicht garantiert werden kann.</span><span class=\"when\">6.–7. Juli 2026</span>", "mech.rec2": "<span class=\"src\">Öffentliches Protokoll · Weißes Haus</span><span class=\"claim\">Ein Dekret gibt der US-Regierung 30 Tage Vorabzugang zu erfassten Spitzenmodellen vor der Freigabe.</span><span class=\"when\">2. Juni 2026</span>", "mech.rec3": "<span class=\"src\">Öffentliches Protokoll</span><span class=\"claim\">Das Pentagon stuft Anthropic wegen der Waffen-Schutzvorkehrungen als „Lieferketten-Risiko“ ein.</span><span class=\"when\">März 2026</span>", "mech.rec4": "<span class=\"src\">Öffentliches Protokoll</span><span class=\"claim\">OpenAI und xAI unterzeichnen weitreichende Verteidigungseinsätze, während das Rechenrennen sich beschleunigt.</span><span class=\"when\">Februar 2026</span>", "mech.rec5": "<span class=\"src\">Öffentliches Protokoll</span><span class=\"claim\">Der Spitzen-KI-Ausbau löst Zusagen für mehrere neue Kernreaktoren aus.</span><span class=\"when\">2025–2026</span>", "mech.rec6": "<span class=\"src\">Öffentliche Erklärung · Center for AI Safety</span><span class=\"claim\">Hinton, Bengio, Altman, Hassabis: KI-Risiko auf einer Stufe mit Pandemien und Atomkrieg.</span><span class=\"when\">Mai 2023</span>"};
+    var I18N = {"nav.horizon": "Horizon", "nav.principle": "Prinzip", "nav.mechanism": "Mechanismus", "nav.origin": "Ursprung", "nav.forum": "Forum", "nav.arepo": "AREPO", "nav.cta": "Mach mit", "tab.horizon": "<b>00</b>Horizon", "tab.principle": "<b>01</b>Das Prinzip", "tab.mechanism": "<b>02</b>Der Mechanismus", "tab.origin": "<b>03</b>Wer &amp; Warum", "tab.contact": "<b>04</b>Position beziehen", "tab.forum": "<b>05</b>Das Forum", "tab.arepo": "<b>06</b>AREPO", "ticker.track": "<span class=\"brk\"><b>● GENF HAT GETAGT</b> &nbsp; Erste Sitzung des Global Dialogue endet; das Wissenschaftspanel sagt, die Sicherheit an der Spitze <em>lässt sich nicht garantieren.</em> Als Nächstes: New York, Mai 2027.</span><span><b>Dekret, 2. Juni:</b> Washington nimmt sich 30 Tage Vorabzugang. <em>Die Öffentlichkeit wartet weiter.</em></span><span>The right to run. <em>The duty to restrain.</em></span><span>Offene Gewichte halten den Abstand zur Spitze bei Monaten. <b>Das Recht zu betreiben, ausgeübt.</b></span><span><b>00 · Horizon</b> — achtzig Jahre auf einer Linie, unten. <em>Er bewegt sich mit dem Kalender.</em></span><span><b>AGI</b><em>plus</em> — die Selbstregulierung endet, das Vertragsrecht beginnt.</span><span>If you don&apos;t run it, <em>you cannot control it.</em></span><span class=\"brk\"><b>● GENF HAT GETAGT</b> &nbsp; Erste Sitzung des Global Dialogue endet; das Wissenschaftspanel sagt, die Sicherheit an der Spitze <em>lässt sich nicht garantieren.</em> Als Nächstes: New York, Mai 2027.</span><span><b>Dekret, 2. Juni:</b> Washington nimmt sich 30 Tage Vorabzugang. <em>Die Öffentlichkeit wartet weiter.</em></span><span>The right to run. <em>The duty to restrain.</em></span><span>Offene Gewichte halten den Abstand zur Spitze bei Monaten. <b>Das Recht zu betreiben, ausgeübt.</b></span><span><b>00 · Horizon</b> — achtzig Jahre auf einer Linie, unten. <em>Er bewegt sich mit dem Kalender.</em></span><span><b>AGI</b><em>plus</em> — die Selbstregulierung endet, das Vertragsrecht beginnt.</span><span>If you don&apos;t run it, <em>you cannot control it.</em></span>", "hero.eyebrow": "Rechenhoheit · v42.0", "hero.lede": "Zwei rechtliche Pflichten: eine <b>untere</b> Grenze und eine <b>obere</b>. Lokale KI für die Bürgerin; ein bindender Vertrag für die Spitze.", "hero.btnPrimary": "Das Argument lesen →", "hero.btnGhost": "Position beziehen", "disp.label": "<span class=\"live-dot\"></span>Depesche · 13. Juli 2026", "disp.head": "Der Tisch steht. Jetzt kommt der Text.", "disp.body1": "Am 6. und 7. Juli hielt der <b>UN Global Dialogue on AI Governance</b> seine erste Sitzung in Genf: jeder Mitgliedstaat in einem Raum, eröffnet vom Generalsekretär und der Präsidentin der Vollversammlung. Guterres brachte vier Prioritäten zu Protokoll: gemeinsame Sicherheitsstandards, menschenrechtliche rote Linien, den Aufbau von Kapazitäten in Entwicklungsländern und Transparenz bei den Umweltfolgen. Autonome Waffen nannte er moralisch verwerflich.", "disp.body2": "Das schärfere Signal kam von den Wissenschaftlern. Das unabhängige Panel des Dialogs, vierzig Fachleute unter dem Vorsitz von <b>Yoshua Bengio</b> und <b>Maria Ressa</b>, legte seinen ersten Bericht Tage vor der Sitzung vor: die Wissenschaft <b>„kann nicht garantieren“</b>, dass KI an der Spitze katastrophalen Schaden vermeidet. Das ist die offizielle Beratungssprache genau des Gremiums, um dessen Rat jeder Staat gebeten hat, und sie bindet niemanden. Die zweite Sitzung tagt im Mai 2027 in New York: zehn Monate, in denen die Spitze im Wettbewerbstempo weiterliefert.", "disp.kicker": "Ein Vertrag braucht einen Tisch, bevor er einen Text braucht. Den Tisch gibt es jetzt. Der Horizont unten zählt, was die Spitze tut, während um den Text gerungen wird.", "disp.src": "UN Global Dialogue on AI Governance, Genf, 6.–7. Juli 2026 · Independent International Scientific Panel on AI, erster Bericht, 1. Juli 2026 · Öffentliche Berichterstattung, Juli 2026.", "head.horizon": "<span class=\"sec-num\">00 — Horizon</span><h2>Wohin das führt. Und woher wir kamen.</h2><p class=\"kicker\">Achtzig Jahre auf einer Linie. Vor uns: KI, <span style=\"color:var(--burnt-bright)\">AGI</span>, <span style=\"color:var(--burnt-bright)\">AGI</span><span style=\"color:var(--lightblue)\">plus</span>, <span style=\"color:var(--ultra-bright)\">ASI</span> — datiert von den Leuten, die beruflich Prognosen stellen. Hinter uns: die Maschinen, die uns großgezogen haben. Das Instrument bewegt sich mit dem Kalender; komm morgen wieder, und es ist von allein ein Stück vorgerückt. Zieh die Linie, wohin Du willst. Rückwärts ist die freundliche Richtung.</p>", "head.principle": "<span class=\"sec-num\">01 — Das Prinzip</span><h2>Zwei Schwellen. Eine Architektur.</h2><p class=\"kicker\">KI ist zu folgenreich, um in den Händen einiger weniger nicht rechenschaftspflichtiger Akteure zu bleiben, weder am Punkt des Zugangs noch am Punkt des Risikos.</p>", "head.mechanism": "<span class=\"sec-num\">02 — Der Mechanismus</span><h2>Zwei Pflichten. Eine Architektur.</h2><p class=\"kicker\">Die Schwellenpflicht sichert die untere Grenze: das Recht der Bürgerin auf eine Maschine, die sie wirklich kontrolliert. Die Vertragspflicht sichert die obere: das Recht der Gattung auf eine Stimme in Entscheidungen, die in ihrem Namen getroffen werden. Jede Pflicht für sich ist symbolisch. Zusammen sind sie eine Architektur.</p>", "head.origin": "<span class=\"sec-num\">03 — Wer &amp; Warum</span><h2>Warum ich Compute Freedom gebaut habe.</h2>", "head.contact": "<span class=\"sec-num\">04 — Position beziehen</span><h2>KI-Governance geschieht mit Dir oder ohne Dich.</h2><p class=\"kicker\">Diskutiere sie öffentlich, fordere sie heraus, teile sie, verbessere sie, überall dort, wo politische Gespräche tatsächlich stattfinden. Nutze das Formular für Zusammenarbeit, Interviews, politische Arbeit, Forschungsbeiträge oder ernste Einwände, die nicht in einem Kommentarstrang untergehen sollen.</p>", "head.forum": "<span class=\"sec-num\">05 — Das Forum</span><h2>Das Argument liegt offen. Nimm es auseinander.</h2><p class=\"kicker\">Ernsthafte Einwände machen das Argument besser. Poste sie hier, offen, wo sie gelesen, beantwortet und aufbewahrt werden können.</p>", "prin.card1tag": "Untere Grenze · Die Bürgerin", "prin.card1h3": "Die Schwellenpflicht", "prin.card1p": "Sobald KI eine definierte Fähigkeitsschwelle überschreitet, sollten Entwickler gesetzlich verpflichtet sein, eine Version anzubieten, die auf privater Hardware läuft, ohne Cloud-Abhängigkeit, ohne laufende Zugangsgebühren, ohne Überwachung. Das sichert das Recht der Bürgerin auf eine Maschine, die ihr antwortet.", "prin.card2tag": "Obere Grenze · Die Gattung", "prin.card2h3": "Die Vertragspflicht", "prin.card2p": "Sobald die Entwicklung an der Spitze in <span class=\"term-burnt\">AGI</span>, <span class=\"term-burnt\">AGI</span><span class=\"term-blue\">plus</span> und <span class=\"term-ultra\">ASI</span> übergeht, hat kein einzelnes Unternehmen und kein einzelner Staat das demokratische Mandat, allein weiterzugehen. Entscheidungen von Belang für die Gattung brauchen die Legitimation durch die Gattung, festgeschrieben in einem bindenden internationalen Vertrag, mit überprüfbaren Grenzen, Inspektionen auf IAEA-Niveau und gesetzlich verankerten Stopp-Mechanismen.", "prin.pull": "Open Source ist nicht dasselbe wie <em>Rechenhoheit.</em>", "prin.body1": "Modellgewichte freizugeben, die nur im großen Maßstab auf Hyperscaler-Infrastruktur funktionieren, ist eine förmliche Geste ohne funktionale Substanz. Der Code mag sichtbar sein; die Fähigkeit bleibt unerreichbar. Wer die Inferenz-Infrastruktur kontrolliert, kontrolliert das Wissen. Wenn dieses Wissen zur Grundlage von Medizin, Bildung, Recht und Regierung wird, ist seine Konzentration in drei bis fünf privaten Konzernen kein Marktergebnis, das wir stillschweigend hinnehmen sollten.", "prin.body2": "<strong>Das Muster ist alt. Nur der Maßstab ist neu.</strong>", "mech.sub1": "<span class=\"mini\">Untere Grenze</span>Die Schwellenpflicht", "mech.p1": "Die übliche Antwort auf Sorgen über KI-Konzentration ist eine Sprache der Offenheit: Aufsätze, Benchmarks, Model Cards, APIs und gelegentliche Gewichtsfreigaben. Doch diese Antwort verwechselt Sichtbarkeit mit Zugang und Zugang mit Hoheit.", "mech.p2": "Selbst wo Modellgewichte freigegeben werden, bleiben die fähigsten Systeme praktisch abhängig von Infrastruktur, die Hunderttausende oder Millionen Dollar kostet. Forscher können Teile des Stacks prüfen. Bürger könnten ihn theoretisch auditieren. Aber sie können Spitzenfähigkeit nicht eigenständig betreiben. Der Anschein von Offenheit bleibt; die Substanz der Kontrolle nicht.", "mech.p3": "Compute Freedom schlägt einen konkreten Mechanismus vor: Sobald ein KI-System eine definierte Fähigkeitsschwelle überschreitet, sollte sein Entwickler gesetzlich verpflichtet sein, eine komprimierte, lokal lauffähige Version anzubieten: auf Verbraucher-Hardware, offline-fähig, ohne verpflichtende Cloud-Anmeldung.", "mech.pull1": "Die Pflicht ist das Prinzip. <em>Die Schwelle ist die Verhandlung.</em>", "mech.p4": "Die genaue Fähigkeitsschwelle bleibt hier bewusst offen. Sie zu definieren ist eine technische und politische Frage, die in die öffentliche Beratung gehört, mit Beiträgen von Ingenieuren, Ethikern, Politikern und betroffenen Gemeinschaften. Wir laden dazu ein, diese Verhandlung zu beginnen.", "mech.spec1a": "<b>Spitzenmodelle lassen sich heute komprimieren</b>, sodass sie auf Verbraucher-Hardware mit mäßigem Fähigkeitsverlust laufen. Die technische Hürde ist nicht grundsätzlich.", "mech.spec1b": "<b>Der ökonomische Anreiz, lokale Nutzung zu verhindern, ist strukturell:</b> Cloud-Inferenz ist das Erlösmodell.", "mech.spec1c": "<b>Kein rechtlicher Rahmen erzwingt derzeit die Offenlegung</b>, ob Komprimierung machbar ist.", "mech.spec1d": "<b>Die Öffentlichkeit hat keinen Mechanismus, um</b> die Behauptungen der Industrie darüber zu prüfen, was möglich ist und was nicht.", "mech.p5": "Die pharmazeutische Parallele ist lehrreich. Arzneimittelentwickler müssen Zusammensetzungen offenlegen, sich der Zulassungsprüfung stellen und, nach einer Frist, Wirkstoffe für Generika öffnen. Wir akzeptieren, dass die Öffentlichkeit ein berechtigtes Interesse daran hat, lebenswichtiges Wissen nicht dauerhaft in privater Infrastruktur eingeschlossen zu sehen. <strong>KI wird zu lebenswichtigem Wissen. Das Argument ist dasselbe.</strong>", "mech.p6": "Dieses Argument lässt die kommerzielle KI-Entwicklung unangetastet. Was es hinzufügt, ist ein struktureller Boden darunter: eine Mindestbedingung an Rechenhoheit, die unabhängige Prüfung, akademische Forschung und demokratische Rechenschaft möglich hält.", "mech.sub2": "<span class=\"mini\">Obere Grenze</span>Die Vertragspflicht", "mech.p7": "Die untere Schwelle schützt die Bürgerin. Die obere Schwelle schützt die Gattung, und dazu haben wir zu lange geschwiegen.", "mech.p8": "Während Spitzensysteme sich der allgemeinen menschlichen Leistungsfähigkeit und darüber hinaus nähern, <span class=\"term-burnt\">AGI</span>, <span class=\"term-burnt\">AGI</span><span class=\"term-blue\">plus</span> und <span class=\"term-ultra\">ASI</span>, wird ihre Entwicklung zu einer Sache von Belang jenseits jedes einzelnen Staates und jedes einzelnen Konzerns. Die derzeitige Bahn hat weder ein demokratisches Mandat noch einen bindenden Vertrag. Stargate, Colossus, die Milliarden-Bauprogramme von OpenAI, Google und xAI, alle abhängig vom faktischen NVIDIA-Monopol auf Spitzen-Trainingssilizium, laufen im Wettbewerbstempo, rechenschaftspflichtig gegenüber Aktionären statt Bürgern.", "mech.p9": "Die physische Signatur dieses Rennens ist nicht mehr subtil. Wenn ein KI-Unternehmen ankündigt, es brauche <span class=\"term-burnt\">zehn neue Kernreaktoren</span>, um sein nächstes Modell zu trainieren, schuldet ein Verfassungsstaat seinen Bürgern vor jeder Bewunderung eine Frage: <strong>mit welcher Befugnis?</strong> Dass diese Frage kaum gestellt wurde, ist ein Versagen des heutigen politischen Denkens.", "mech.sub3": "<span class=\"mini\">Öffentliches Protokoll</span>Das Versagen der Selbstregulierung", "mech.p10": "Anthropic weigerte sich, Schutzvorkehrungen zu entfernen, die Claude vor dem Einsatz für autonome Waffenzielsteuerung oder für die Massenüberwachung im Inland bewahren. Das Pentagon reagierte, indem es das Unternehmen als <span class=\"term-burnt\">Lieferketten-Risiko</span> einstufte. OpenAI, Google und xAI sind unter weniger strengen Vereinbarungen in geheime Verteidigungseinsätze gegangen. Ohne Vertragsrecht werden freiwillige Sicherheitszusagen unter Druck zu Verhandlungsmasse.", "mech.rec1s": "Öffentliches Protokoll · Vereinte Nationen", "mech.rec1c": "Die erste Sitzung des UN Global Dialogue tagt in Genf; sein Wissenschaftspanel berichtet Tage zuvor, dass die Sicherheit an der Spitze nicht garantiert werden kann.", "mech.rec1w": "6.–7. Juli 2026", "mech.rec2s": "Öffentliches Protokoll · Weißes Haus", "mech.rec2c": "Ein Dekret gibt der US-Regierung 30 Tage Vorabzugang zu erfassten Spitzenmodellen vor der Freigabe.", "mech.rec2w": "2. Juni 2026", "mech.rec3s": "Öffentliches Protokoll", "mech.rec3c": "Das Pentagon stuft Anthropic wegen der Waffen-Schutzvorkehrungen als „Lieferketten-Risiko“ ein.", "mech.rec3w": "März 2026", "mech.rec4s": "Öffentliches Protokoll", "mech.rec4c": "OpenAI und xAI unterzeichnen weitreichende Verteidigungseinsätze, während das Rechenrennen sich beschleunigt.", "mech.rec4w": "Februar 2026", "mech.rec5s": "Öffentliches Protokoll", "mech.rec5c": "Der Spitzen-KI-Ausbau löst Zusagen für mehrere neue Kernreaktoren aus.", "mech.rec5w": "2025–2026", "mech.rec6s": "Öffentliche Erklärung · Center for AI Safety", "mech.rec6c": "Hinton, Bengio, Altman, Hassabis: KI-Risiko auf einer Stufe mit Pandemien und Atomkrieg.", "mech.rec6w": "Mai 2023", "mech.recnote": "Sinngemäße Zusammenfassungen öffentlicher Berichterstattung. Belege über den Kontaktkanal auf Anfrage.", "mech.treatyline": "Wir haben solche Verträge schon einmal geschlossen.", "mech.tr1": "Der Atomwaffensperrvertrag", "mech.tr2": "Die IAEA", "mech.tr3": "Das Biowaffenübereinkommen", "mech.tr4": "Das Montreal-Protokoll", "mech.p11": "Keiner war utopisch, als er vorgeschlagen wurde; alle funktionieren heute: unvollkommen, überwacht, real. Die Technologien, die sie regeln, sind nicht dualer oder global folgenreicher als KI an der Spitze. Die institutionelle Infrastruktur besteht. Nur der <span class=\"term-burnt\">Wille</span> fehlt.", "mech.p12": "Der Fall ist nicht allein unserer. Die Erklärung des Center for AI Safety von 2023, die das KI-Risiko auf dieselbe Achse wie Pandemien und Atomkrieg setzte, unterzeichneten <strong>Geoffrey Hinton</strong>, <strong>Yoshua Bengio</strong>, <strong>Sam Altman</strong> und <strong>Demis Hassabis</strong>. Zu den Unterzeichnern zählen genau die Führungskräfte, die derzeit die Spitze bauen. Von ihnen kommt die Warnung als <strong>ein Geständnis</strong>. Sie hat keine bindende Beschränkung ihres eigenen Verhaltens hervorgebracht, weil keine von ihnen verlangt wurde.", "mech.pull2": "20 € werden 200 €, 2.000 €, <em>oder in Deiner Preisklasse schlicht nicht verfügbar.</em>", "mech.p13": "Das Preismodell verschiebt sich allen unter den Füßen. Pauschale Abos weichen der abgerechneten Inferenz. Wird der Zugang zu Intelligenz zu einem getakteten Versorgungsgut, wird Verständnis zur Funktion des Budgets. Diese Schwellen sind eine Frage von Monaten. <strong>Wer jetzt nicht handelt, hat später keinen Hebel.</strong>", "mech.sub4": "<span class=\"mini\">Was die Vertragspflicht verlangt</span>Ein Mandat der Gattung", "mech.spec2a": "<b>Ein bindendes internationales Abkommen</b>, das die Fähigkeits- und Infrastrukturschwellen definiert, jenseits derer KI-Entwicklung eine multilaterale Genehmigung braucht.", "mech.spec2b": "<b>Überprüfbare Rechen- und Energiegrenzen</b> an der Spitze, überwacht unter einem Inspektionsregime, das dem der IAEA an Ernst gleichkommt.", "mech.spec2c": "<b>Im Vertragsrecht verankerte Stopp-Mechanismen</b> statt konzernaler Selbstbeschränkung, ausgelöst durch nachgewiesene Fähigkeit oder nachgewiesenes Risiko.", "mech.spec2d": "<b>Die Einbeziehung jedes spitzenfähigen Staates,</b> ausdrücklich einschließlich Chinas, dessen erklärte Bereitschaft zum internationalen Dialog über KI-Sicherheit substanzieller war, als der westliche Reflex zugibt.", "mech.spec2e": "<b>Öffentliche, bürgerzugängliche Berichterstattung</b> über die Entwicklung an der Spitze, die die Undurchsichtigkeit der konzernalen Selbsteinschätzung aufbricht, die derzeit als Governance durchgeht.", "mech.pull3": "Die Bürgerin unten. Die Gattung oben. <em>Der Konzern antwortet keiner von beiden.</em>", "orig.p1": "Ich baue Compute Freedom nicht als persönliche Plattform. Ich baue es, weil ich dieses Muster schon einmal gesehen habe. In der Wissenschaft kann Information öffentlich sein, während das Verständnis konzentriert bleibt. Daten werden geteilt. Aufsätze sind zugänglich. Methoden werden beschrieben. Doch die eigentliche Macht liegt in der Infrastruktur, die Information in Wissen verwandelt. <strong>Die Daten waren offen. Das Verständnis nicht.</strong>", "orig.p2": "Künstliche Intelligenz reproduziert jetzt dieselbe Struktur im zivilisatorischen Maßstab. Die Sprache der Offenheit bleibt, doch die Substanz der Kontrolle wandert in <span class=\"term-burnt\">zentralisierte Rechenleistung, zentralisierte Inferenz und zentralisierte Erlaubnis.</span>", "orig.p3": "Compute Freedom besteht, um diese Ordnung herauszufordern. Es sagt: Die Kontrolle über grundlegende Intelligenz darf nicht das Privileg einiger Firmen bleiben, auch nicht das <span class=\"term-blue\">zufällige Nebenprodukt</span> ihrer Geschäftsmodelle.", "orig.bioWho": "Der Initiator", "orig.bioP": "Ein translationaler Wissenschaftler und Professor für Translationale Genomik und Gentherapie in der Kinderheilkunde, mit einem Doktortitel in Biologie, einem früheren Starting Grant des Europäischen Forschungsrats, Veröffentlichungen in Zeitschriften wie Nature Biotechnology und dem Journal of Clinical Investigation und internationaler Anerkennung, darunter der Maurizio-Vignola-Preis.", "orig.pull": "Wird Intelligenz zur Infrastruktur, <em>kann ihre Steuerung nicht privat bleiben.</em>", "cont.pull": "Lesen. Teilen. <em>Melde Dich.</em>", "cont.lblSal": "Anrede", "cont.lblTitle": "Titel", "cont.lblName": "Name", "cont.lblEmail": "E-Mail", "cont.lblRole": "Hintergrund", "cont.lblMsg": "Nachricht", "cont.selSal": "<option value=\"\">—</option><option>Herr</option><option>Frau</option><option>Divers</option>", "cont.selTitle": "<option value=\"\">—</option><option>Dr.</option><option>Prof.</option><option>Prof. Dr.</option>", "cont.selRole": "<option value=\"\">— Auswählen —</option><option>Forschung / Wissenschaft</option><option>Politik / Regulierung</option><option>Technik / Entwicklung</option><option>Journalismus / Autorenschaft</option><option>Zivilgesellschaft / Aktivismus</option><option>Wirtschaft / Unternehmen</option><option>Studierende</option><option>Interessierte Bürgerin</option><option>Sonstiges</option>", "cont.submit": "Senden →", "cont.note": "Läuft über eine Proton-Mailbox via Formspree. Datenschutzfreundliche Statistik: nur aggregierte Seitenaufrufe. Keine Cookies. Kein persönliches Profiling. Keine Werbe-Tracker.", "forum.link": "Das ganze Forum auf GitHub öffnen →", "forum.note": "Die Kommentare laufen über GitHub Discussions via giscus. Zum Posten braucht es ein kostenloses GitHub-Konto; Lesen steht allen offen. Keine Tracker außer GitHub selbst.", "foot.about": "Über mich", "foot.impressum": "Impressum", "foot.privacy": "Datenschutz", "foot.copy": "© MMXXVI · Michael S. D. Kormann · Alle Rechte vorbehalten · #ComputeFreedom", "arepo.tagline": "KI wird die Welt mit Bildern überfluten. Aber Deine Unterschrift kann sie nicht fälschen.", "arepo.lede": "Gleiches Prinzip, ein anderes Problem: Wenn jeder jedes Bild erzeugen kann, wie beweist Du, dass ein Bild von Dir ist?", "arepo.pitch": "Mit AREPO bürgst Du für ein Bild. Du unterschreibst es, jeder kann die Unterschrift prüfen, und hält sie, dann kommt das Bild von Dir.", "arepo.status": "<b>In Arbeit.</b> Ein kurzer Film erklärt die Idee, das Werkzeug kommt danach.", "arepo.cta": "Schreib mir →", "hz.note": "<b>Wie das zu lesen ist.</b> Das AGI-Band <b>[Feb–Okt 2026]</b> folgt dem Lager, das sagt, universell einsetzbare KI sei bereits im Gange: <a href=\"https://www.noemamag.com/artificial-general-intelligence-is-already-here/\" target=\"_blank\" rel=\"noopener\">Agüera y Arcas &amp; Norvig</a> nannten die heutigen Modelle schon 2023 allgemeine Intelligenz, Tyler Cowen nannte o3 im April 2025 AGI, und Ethan Mollick beschreibt das Vorhandene als <a href=\"https://www.oneusefulthing.org/p/on-jagged-agi-o3-gemini-25-and-everything\" target=\"_blank\" rel=\"noopener\">jagged AGI</a>. Umfrage-Mediane setzen den Übergang noch Jahre später an, und die Breite des Bandes ist dieser Dissens. Die ASI-Daten stammen aus der <a href=\"https://www.metaculus.com/questions/5121/\" target=\"_blank\" rel=\"noopener\">Metaculus-Community-Prognose</a>, dem <a href=\"https://blog.aifutures.org/p/clarifying-how-our-ai-timelines-forecasts\" target=\"_blank\" rel=\"noopener\">AI Futures Project</a> und der <a href=\"https://forecastingresearch.substack.com/p/leap-wave-8-ai-timelines\" target=\"_blank\" rel=\"noopener\">LEAP-Expertenumfrage</a> (alle 2026). Die Vergangenheit auf dieser Linie ist echte Hardware, die man einmal kaufen konnte. Die Zukunft zwischen den Schwellen ist Szenario-Interpolation im Geist von <a href=\"https://ai-2027.com\" target=\"_blank\" rel=\"noopener\">ai-2027.com</a>, so skaliert, dass die heutige Spalte den heute veröffentlichten Zahlen entspricht. Die Fehlerbalken weiten sich von heute aus in beide Richtungen.", "mech.rec1": "<span class=\"src\">Öffentliches Protokoll · Vereinte Nationen</span><span class=\"claim\">Die erste Sitzung des UN Global Dialogue tagt in Genf; sein Wissenschaftspanel berichtet Tage zuvor, dass die Sicherheit an der Spitze nicht garantiert werden kann.</span><span class=\"when\">6.–7. Juli 2026</span>", "mech.rec2": "<span class=\"src\">Öffentliches Protokoll · Weißes Haus</span><span class=\"claim\">Ein Dekret gibt der US-Regierung 30 Tage Vorabzugang zu erfassten Spitzenmodellen vor der Freigabe.</span><span class=\"when\">2. Juni 2026</span>", "mech.rec3": "<span class=\"src\">Öffentliches Protokoll</span><span class=\"claim\">Das Pentagon stuft Anthropic wegen der Waffen-Schutzvorkehrungen als „Lieferketten-Risiko“ ein.</span><span class=\"when\">März 2026</span>", "mech.rec4": "<span class=\"src\">Öffentliches Protokoll</span><span class=\"claim\">OpenAI und xAI unterzeichnen weitreichende Verteidigungseinsätze, während das Rechenrennen sich beschleunigt.</span><span class=\"when\">Februar 2026</span>", "mech.rec5": "<span class=\"src\">Öffentliches Protokoll</span><span class=\"claim\">Der Spitzen-KI-Ausbau löst Zusagen für mehrere neue Kernreaktoren aus.</span><span class=\"when\">2025–2026</span>", "mech.rec6": "<span class=\"src\">Öffentliche Erklärung · Center for AI Safety</span><span class=\"claim\">Hinton, Bengio, Altman, Hassabis: KI-Risiko auf einer Stufe mit Pandemien und Atomkrieg.</span><span class=\"when\">Mai 2023</span>"};
     function apply(lang){
       window.CFLANG = lang;
       document.documentElement.lang = lang;
@@ -2370,6 +3289,7 @@
       });
       var b = document.getElementById('langToggle');
       if (b) b.textContent = (lang === 'de') ? 'EN' : 'DE';
+      if (window.__cfThemeLabel) window.__cfThemeLabel();   // Theme-Knopf spricht mit
       if (window.__cfHorizonRender) window.__cfHorizonRender();
     }
     window.__cfApplyLang = apply;
@@ -2377,6 +3297,515 @@
     var b = document.getElementById('langToggle');
     if (b) b.addEventListener('click', function(){ apply(window.CFLANG === 'de' ? 'en' : 'de'); });
     apply(window.CFLANG || 'en');
+  })();
+  </script>
+
+  <!-- ░░ THEME: DREI ZUSTÄNDE ░░
+       WAHL (choice):    'dark' | 'light' | 'system'  — was der Besucher will
+       WIRKUNG (effect): 'dark' | 'light'             — was gemalt wird
+       Nur die WAHL wird gespeichert. Bei 'system' folgt die Wirkung dem Gerät,
+       live, auch wenn es mitten im Besuch umschaltet.
+       Zyklus des Knopfes: Dark → Light → Auto → Dark -->
+  <script>
+  (function(){
+    var root = document.documentElement;
+    var btn  = document.getElementById('themeToggle');
+    var meta = document.querySelector('meta[name="theme-color"]');
+    // Farbe der Browser-Leiste auf Mobilgeräten: muss zum Seitengrund passen
+    var BAR = { dark: '#08111A', light: '#F3F5F6' };
+    var CYCLE = ['dark', 'light', 'system'];
+
+    var LABEL = {
+      dark:   { en: 'Theme: dark — click for light',  de: 'Thema: dunkel — klicken für hell' },
+      light:  { en: 'Theme: light — click for auto',  de: 'Thema: hell — klicken für automatisch' },
+      system: { en: 'Theme: auto (follows your system) — click for dark',
+                de: 'Thema: automatisch (folgt Deinem System) — klicken für dunkel' }
+    };
+
+    var choice = window.CFCHOICE || 'system';
+
+    function systemTheme(){
+      return window.__cfSystemTheme ? window.__cfSystemTheme() : 'dark';
+    }
+    function effectiveOf(c){ return c === 'system' ? systemTheme() : c; }
+
+    // Dämmerung. Läuft beim Klick UND wenn das Gerät im Auto-Modus umschaltet.
+    // Der Verzug lässt die Seite erst zur Ruhe kommen, bevor der Himmel glüht.
+    var dawnTimer;
+    function dawn(){
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      root.classList.remove('tt-dawn');
+      void root.offsetWidth;              // Neustart der Animation erzwingen
+      root.classList.add('tt-dawn');
+      clearTimeout(dawnTimer);
+      dawnTimer = setTimeout(function(){ root.classList.remove('tt-dawn'); }, 2800);
+    }
+
+    // Malt die WIRKUNG. Rührt die WAHL nicht an.
+    function paint(effect){
+      if (effect === 'light') root.setAttribute('data-theme','light');
+      else root.removeAttribute('data-theme');
+      if (meta) meta.setAttribute('content', effect === 'light' ? BAR.light : BAR.dark);
+      window.CFTHEME = effect;
+      // Das Horizon-Instrument zeichnet Farben teils selbst → neu zeichnen lassen
+      if (window.__cfHorizonRender) window.__cfHorizonRender();
+      window.dispatchEvent(new CustomEvent('cf-theme', { detail: { theme: effect } }));
+    }
+
+    // Setzt die WAHL und leitet die Wirkung daraus ab.
+    function setChoice(c, remember, animate){
+      choice = c;
+      window.CFCHOICE = c;
+      if (c === 'system') root.setAttribute('data-auto','');
+      else root.removeAttribute('data-auto');
+      if (remember) { try { localStorage.setItem('cf-theme', c); } catch(e) {} }
+      if (animate) dawn();
+      paint(effectiveOf(c));
+      label();
+    }
+
+    function label(){
+      if (!btn) return;
+      var lang = window.CFLANG === 'de' ? 'de' : 'en';
+      var txt = (LABEL[choice] || LABEL.system)[lang];
+      btn.setAttribute('aria-label', txt);
+      btn.setAttribute('title', txt);
+      btn.setAttribute('aria-pressed', window.CFTHEME === 'light' ? 'true' : 'false');
+    }
+
+    if (btn) btn.addEventListener('click', function(){
+      var next = CYCLE[(CYCLE.indexOf(choice) + 1) % CYCLE.length];
+      setChoice(next, true, true);
+    });
+
+    // Das Gerät schaltet um (z.B. macOS abends): im Auto-Modus mitgehen —
+    // MIT Dämmerung, denn das ist der Moment, für den sie gedacht ist.
+    if (window.matchMedia) {
+      var mq = window.matchMedia('(prefers-color-scheme: light)');
+      var onSys = function(){
+        if (choice !== 'system') return;      // feste Wahl schlägt das System
+        var next = systemTheme();
+        if (next === window.CFTHEME) return;  // nichts zu tun
+        dawn();
+        paint(next);
+        label();
+      };
+      if (mq.addEventListener) mq.addEventListener('change', onSys);
+      else if (mq.addListener) mq.addListener(onSys);
+    }
+
+    setChoice(choice, false, false);   // Startzustand, ohne Dämmerung und ohne Speichern
+
+    window.__cfSetTheme   = function(effect){ paint(effect); };
+    window.__cfSetChoice  = setChoice;
+    window.__cfThemeLabel = label;    // damit der Sprachwechsel die Beschriftung mitzieht
+  })();
+  </script>
+
+  <!-- ░░ KOPFZEILE SCHRUMPFT BEIM SCROLLEN ░░
+       Es ändern sich nur drei Variablen (--header-h, --logo-h, --wordmark).
+       Die Tabs-Leiste hängt mit ihrem sticky-top an --header-h und dockt dadurch
+       von selbst nach — keine zweite Berechnung, keine doppelte Navigation.
+       Zwei Schwellen (Hysterese): sonst flackert der Kopf, wenn man genau auf
+       der Grenze steht. -->
+  <script>
+  (function(){
+    var root = document.documentElement;
+    var AN = 96, AUS = 56;          // schrumpft ab 96px, wächst erst unter 56px wieder
+    var shrunk = false, ticking = false;
+
+    function read(){
+      ticking = false;
+      var y = window.pageYOffset || root.scrollTop || 0;
+      if (!shrunk && y > AN)       { shrunk = true;  root.classList.add('hdr-shrunk'); }
+      else if (shrunk && y < AUS)  { shrunk = false; root.classList.remove('hdr-shrunk'); }
+    }
+    function onScroll(){
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(read);   // höchstens einmal pro Bild — kein Ruckeln
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    read();
+
+    // ── Die echte Höhe des Kopfes an --sticky-h melden ──
+    // Sprungmarken hängen daran. Der Kopf ist jetzt Nav + Tabs in einem, und
+    // seine Höhe ändert sich (Schrumpfen, Umbruch der Tabs auf schmalen
+    // Geräten, Sprachwechsel). Deshalb gemessen statt geraten.
+    var hdr = document.querySelector('header');
+    if (hdr) {
+      var melden = function(){
+        var h = Math.round(hdr.getBoundingClientRect().height);
+        if (h > 0) root.style.setProperty('--sticky-h', h + 'px');
+      };
+      melden();
+      if (window.ResizeObserver) new ResizeObserver(melden).observe(hdr);
+      else window.addEventListener('resize', melden);
+      window.addEventListener('load', melden);
+    }
+  })();
+  </script>
+
+  <!-- ░░ UHR IN DER EYEBROW ░░
+       Lokale Zeit trägt, UTC steht klein daneben. Datum kommt live aus der Uhr
+       des Geräts — kein Standortzugriff, keine Abfrage, kein Netzwerk. -->
+  <script>
+  (function(){
+    var el = document.getElementById('cfClock');
+    if (!el) return;
+
+    function two(n){ return n < 10 ? '0' + n : '' + n; }
+
+    function tz(d, lang){
+      // Kürzel der Zeitzone, in der jeweiligen Sprache: MESZ / CEST / GMT+2 …
+      try {
+        var p = new Intl.DateTimeFormat(lang === 'de' ? 'de-DE' : 'en-GB',
+                 { timeZoneName: 'short' }).formatToParts(d);
+        for (var i = 0; i < p.length; i++) if (p[i].type === 'timeZoneName') return p[i].value;
+      } catch(e) {}
+      return '';
+    }
+
+    var eye = document.getElementById('cfEyeDate');
+
+    function render(){
+      var d = new Date();
+      var lang = window.CFLANG === 'de' ? 'de' : 'en';
+
+      // Kopf: Ortszeit gross, UTC klein darunter
+      var loc  = two(d.getHours()) + '<span class="cf-tick">:</span>' + two(d.getMinutes());
+      var utc  = two(d.getUTCHours()) + ':' + two(d.getUTCMinutes());
+      var zone = tz(d, lang);
+      el.innerHTML =
+        '<span class="cf-local">' + loc + (zone ? ' <span class="cf-zone">' + zone + '</span>' : '') + '</span>' +
+        '<span class="cf-utc">' + utc + '&nbsp;UTC</span>';
+
+      // Eyebrow: das Datum, dort wo vorher "July 2026" stand — jetzt lebendig
+      if (eye) {
+        var date;
+        try {
+          date = new Intl.DateTimeFormat(lang === 'de' ? 'de-DE' : 'en-GB',
+                   { day: 'numeric', month: 'long', year: 'numeric' }).format(d);
+        } catch(e) { date = d.toDateString(); }
+        eye.textContent = ' · ' + date;
+      }
+    }
+
+    render();
+    // zur vollen Minute nachziehen, danach im Minutentakt
+    setTimeout(function(){ render(); setInterval(render, 60000); },
+               (60 - new Date().getSeconds()) * 1000);
+    // Sprachwechsel: Monatsname und Zeitzonen-Kürzel müssen mitgehen
+    var langBtn = document.getElementById('langToggle');
+    if (langBtn) langBtn.addEventListener('click', function(){ setTimeout(render, 0); });
+    window.__cfClockRender = render;
+  })();
+  </script>
+
+  <!-- ░░ THEME NACH TAGESZEIT (Variante zum Vergleich) ░░
+       Nur aktiv, wenn THEME_SOURCE unten auf 'daylight' steht. Nutzt allein die
+       Uhr des Geräts — keine Geolocation, kein Standort, keine Abfrage. -->
+  <script>
+  (function(){
+    var THEME_SOURCE = 'system';   // 'system' = Geräte-Einstellung (Stand jetzt)
+                                   // 'daylight' = echte Tageszeit des Besuchers
+    var DAY_START = 7;             // ab dieser lokalen Stunde: hell
+    var DAY_END   = 19;            // ab dieser lokalen Stunde: dunkel
+
+    if (THEME_SOURCE !== 'daylight') return;
+    if (window.__cfThemeChosen && window.__cfThemeChosen()) return;  // eigene Wahl gewinnt
+
+    function byClock(){
+      var h = new Date().getHours();
+      return (h >= DAY_START && h < DAY_END) ? 'light' : 'dark';
+    }
+    function tick(){
+      if (window.__cfThemeChosen && window.__cfThemeChosen()) return;
+      var want = byClock();
+      if (want !== window.CFTHEME && window.__cfSetTheme) window.__cfSetTheme(want, false);
+    }
+    tick();
+    setInterval(tick, 60000);   // trägt den Sonnenauf- und -untergang nach, live
+  })();
+  </script>
+
+  <!-- ░░ MARKEN-ECHO + LESEFORTSCHRITT (v40→v42) ░░
+       Übrig aus dem Piktogramm-Puls der v4.0: das Zucken der Marke im Takt
+       des Störungsfilters, und der Melder, der den Lesefortschritt der
+       aktiven Sektion als 'cf-read' nach oben gibt. Alles Weitere lebt im
+       Header-Instrument (Takt-Block am Dateiende). -->
+  <script>
+  (function () {
+    var reduce = false;
+    try { reduce = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+
+    // ── ECHO · Die Marke zuckt im Takt des Störungsfilters ──
+    // 'cf-holo-burst' feuert im selben Frame, in dem unten der Burst beginnt.
+    // tzzzz — tZTZZZZ, oben wie unten. Ein Organismus, zwei Zeichen.
+    var mark = document.querySelector('.brand svg');
+    if (mark) {
+      mark.addEventListener('animationend', function () { mark.classList.remove('echo'); });
+      window.addEventListener('cf-holo-burst', function () {
+        if (reduce || document.hidden) return;
+        mark.classList.remove('echo');
+        void mark.getBoundingClientRect();
+        mark.classList.add('echo');
+      });
+    }
+
+    // ── Lesefortschritt der aktiven Sektion → 'cf-read' ──
+    // 01: der Punkt steigt · 02: die Klammern greifen · 03: die Ringe weiten.
+    var LESER = ['principle', 'mechanism', 'origin'];
+    function fortschritt() {
+      for (var i = 0; i < LESER.length; i++) {
+        var id = LESER[i];
+        var sec = document.getElementById(id);
+        if (!sec || !sec.classList.contains('on')) continue;
+        var r = sec.getBoundingClientRect();
+        var vh = window.innerHeight || 1;
+        var lauf = r.height - vh;
+        var p = lauf > 0 ? Math.min(1, Math.max(0, -r.top / lauf)) : 1;
+        try { window.dispatchEvent(new CustomEvent('cf-read', { detail: { id: id, p: p } })); } catch (e) {}
+      }
+    }
+    var ticking = false;
+    window.addEventListener('scroll', function () {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () { ticking = false; fortschritt(); });
+    }, { passive: true });
+    fortschritt();
+  })();
+  </script>
+
+  <!-- ░░ THE HEADER INSTRUMENT · der Takt (v42) ░░
+       Das Band ist permanent — kein Öffnen, kein Schließen. Hier wohnen:
+       der Instrument-Wechsel (mit INK-Zeichnen und Choreographie), der
+       BEAT-Herzschlag, und alle ECHO-Empfänger: cf-hz (Aperture, Heute,
+       AGI-Band, Marken), cf-1985 (das Tape), cf-read (Korridor, Klammern),
+       cf-position-recorded (der Strich), giscus (das Argumentfeld),
+       Sturm-Hover (das Siegel verifiziert sich). Mikrotexte: englisch. -->
+  <script>
+  (function () {
+    var band = document.getElementById('hdrInstrument');
+    if (!band) return;
+    var reduce = false;
+    try { reduce = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+    var inst = function (id) { return band.querySelector('.inst[data-inst="' + id + '"]'); };
+
+    // ── Instrument folgt dem Tab: Zeichnen (ink) + Choreographie (play) ──
+    var alle = band.querySelectorAll('.inst');
+    var playT = null, inkT = null;
+    function setInst(id, choreo) {
+      var aktiv = null;
+      for (var i = 0; i < alle.length; i++) {
+        var an = alle[i].dataset.inst === id;
+        alle[i].classList.toggle('on', an);
+        alle[i].classList.remove('play', 'ink', 'dissolve');
+        if (!an) alle[i].classList.remove('played');
+        if (an) aktiv = alle[i];
+      }
+      if (aktiv && choreo !== false) {
+        void aktiv.getBoundingClientRect();
+        aktiv.classList.add('ink', 'play');
+        if (id === 'arepo') aktiv.classList.add('played');   // hält »signed«, solange der Tab lebt
+        clearTimeout(inkT);
+        inkT = setTimeout(function () { aktiv.classList.remove('ink'); }, 950);
+        clearTimeout(playT);
+        playT = setTimeout(function () { aktiv.classList.remove('play'); }, 3400);
+      }
+    }
+    window.addEventListener('cf-tab', function (e) { setInst(e.detail.id); });
+    // Erstladen: openTab lief bereits — Zustand aus dem DOM, mit Zeichnen.
+    var erstesPanel = document.querySelector('.tabpanel.on');
+    setInst(erstesPanel ? erstesPanel.id : 'horizon');
+
+    // ── 00 · HORIZON: Aperture, Heute, AGI-Band, Maschinenmarken, das Tape ──
+    var apG = band.querySelector('.st-ap-g');
+    var agi = band.querySelector('.st-agi');
+    var instH = inst('horizon');
+    var X0 = 25, SPAN = 380;                        // Linie 25…405 im 430er-Band
+    function apX(p) { return X0 + p * SPAN; }
+    window.addEventListener('cf-hz', function (e) {
+      var d = e.detail;
+      if (apG) apG.style.transform = 'translateX(' + apX(d.p).toFixed(1) + 'px)';
+      if (agi) {
+        agi.setAttribute('x1', apX(d.a0).toFixed(1));
+        agi.setAttribute('x2', apX(d.a1).toFixed(1));
+        agi.classList.toggle('hot', d.inAgi);
+      }
+      // Heute wandert mit dem Kalender: fester/gestrichelter Split + Punkt.
+      if (typeof d.today === 'number' && instH) {
+        var tx = apX(d.today).toFixed(1);
+        var past = instH.querySelector('.st-line');
+        var fut = instH.querySelector('.st-future');
+        var now = instH.querySelector('.st-now');
+        if (past) past.setAttribute('x2', tx);
+        if (fut) fut.setAttribute('x1', tx);
+        if (now) now.setAttribute('cx', tx);
+      }
+    });
+    // Maschinenmarken über __cfHzPos(jahr, monat) — die interne Zeiteinheit
+    // bleibt Privatsache des Horizon-Instruments (gelernt in v4.1).
+    function setMarks() {
+      var g = band.querySelector('.st-marks');
+      if (!g || !window.__cfHzPos || g.childNodes.length) return;
+      var ns = 'http://www.w3.org/2000/svg';
+      // Vier Marken — im 430er-Band kleben sechs auf der gestauchten
+      // Vergangenheit zusammen (gemessen: C64 und www lagen 19 px auseinander).
+      [[1960, 1, '1960'], [1984, 6, 'C64'], [2007, 6, 'phone'], [2022, 11, 'GPT']]
+        .forEach(function (m) {
+          var x = apX(window.__cfHzPos(m[0], m[1])).toFixed(1);
+          var l = document.createElementNS(ns, 'line');
+          l.setAttribute('class', 'st-tick');
+          l.setAttribute('x1', x); l.setAttribute('x2', x);
+          l.setAttribute('y1', '33'); l.setAttribute('y2', '38');
+          g.appendChild(l);
+          var tx = document.createElementNS(ns, 'text');
+          tx.setAttribute('class', 'st-micro');
+          tx.setAttribute('x', x); tx.setAttribute('y', '51');
+          tx.setAttribute('text-anchor', 'middle');
+          tx.textContent = m[2];
+          g.appendChild(tx);
+        });
+    }
+    window.addEventListener('cf-hz', setMarks);
+    // Das Tape: hängt am Lichtschlitz, kippt, sinkt zurück in die Linie.
+    // »1985 remembered itself.« fällt nur EINMAL pro Sitzung; das Tape
+    // grüßt bei jedem Ära-Eintritt (12-s-Sperre sitzt an der Quelle).
+    window.addEventListener('cf-1985', function () {
+      if (!instH) return;
+      instH.classList.remove('tape'); void instH.getBoundingClientRect();
+      instH.classList.add('tape');
+      setTimeout(function () { instH.classList.remove('tape'); }, 2500);
+      var einmal = false;
+      try { einmal = !sessionStorage.getItem('cf-1985-note'); if (einmal) sessionStorage.setItem('cf-1985-note', '1'); }
+      catch (e) { einmal = !window.__cf1985; window.__cf1985 = true; }
+      if (einmal) {
+        instH.classList.add('note');
+        setTimeout(function () { instH.classList.remove('note'); }, 3500);
+      }
+    });
+
+    // ── 01/02 · Lesefortschritt: der Punkt steigt, die Klammern greifen ──
+    var instP = inst('principle'), instM = inst('mechanism');
+    var aiDot = instP ? instP.querySelector('.st-ai') : null;
+    var held = false;
+    window.addEventListener('cf-read', function (e) {
+      var d = e.detail;
+      if (d.id === 'principle' && aiDot) {
+        aiDot.style.transform = 'translateY(' + ((0.5 - d.p) * 20).toFixed(1) + 'px)';
+      }
+      if (d.id === 'mechanism' && instM) {
+        instM.style.setProperty('--grip', d.p.toFixed(3));
+        if (d.p >= 0.85 && !held) {          // die Klammern halten den Kern
+          held = true;
+          instM.classList.remove('holds'); void instM.getBoundingClientRect();
+          instM.classList.add('holds');
+          setTimeout(function () { instM.classList.remove('holds'); }, 1000);
+        } else if (d.p < 0.6 && held) {
+          held = false;                      // Hysterese: erst lösen, dann wieder greifen
+        }
+      }
+    });
+
+    // ── 03 · ORIGIN: der Nachpuls (alle ~8 s ein Ring, ohne Wort) ──
+    setInterval(function () {
+      var o = inst('origin');
+      if (reduce || !o || !o.classList.contains('on') || document.hidden) return;
+      if (o.classList.contains('play')) return;
+      o.classList.remove('pulse'); void o.getBoundingClientRect();
+      o.classList.add('pulse');
+      setTimeout(function () { o.classList.remove('pulse'); }, 2700);
+    }, 8000);
+
+    // ── 04 · CONTACT: Fokus hebt, Tippen zeichnet die Signatur, Senden setzt den Strich ──
+    var instC = inst('contact');
+    var form = document.getElementById('contactForm');
+    var sig = band.querySelector('.st-sig');
+    var sigPts = [[300, 26]];
+    if (instC && form && sig) {
+      form.addEventListener('focusin', function () { instC.classList.add('lift'); });
+      form.addEventListener('focusout', function (e) {
+        if (!e.relatedTarget || !form.contains(e.relatedTarget)) instC.classList.remove('lift');
+      });
+      form.addEventListener('input', function (e) {
+        // Jeder Anschlag zieht die Spur — deterministisch aus dem Zeichen:
+        // dieselbe Nachricht ergibt dieselbe Handschrift.
+        var ch = (e.data && e.data.charCodeAt(0)) || (((e.target && e.target.value) || '').length * 7 + 13);
+        var last = sigPts[sigPts.length - 1];
+        var nx = last[0] + 3 + (ch % 4);
+        var ny = 26 + ((ch * 31) % 13) - 6;
+        if (nx > 398) {                      // die Spur läuft weiter wie ein Schrieb
+          var dx = nx - 398;
+          sigPts = sigPts.map(function (p) { return [p[0] - dx, p[1]]; })
+                         .filter(function (p) { return p[0] >= 298; });
+          nx = 398;
+        }
+        sigPts.push([nx, ny]);
+        sig.setAttribute('points', sigPts.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' '));
+      });
+      window.addEventListener('cf-position-recorded', function () {
+        var end = sigPts[sigPts.length - 1];
+        var mark2 = band.querySelector('.st-recmark');
+        if (mark2) {
+          var mx = Math.min(408, end[0] + 10).toFixed(1);
+          mark2.setAttribute('x1', mx); mark2.setAttribute('x2', mx);
+        }
+        instC.classList.remove('rec'); void instC.getBoundingClientRect();
+        instC.classList.add('rec');
+        setTimeout(function () { instC.classList.remove('rec'); }, 4400);
+      });
+    }
+
+    // ── 05 · FORUM: Widerspruch bekommt einen Ort ──
+    var speakLock = false;
+    window.addEventListener('message', function (ev) {
+      if (String(ev.origin).indexOf('giscus.app') === -1) return;
+      var f = inst('forum');
+      if (!f || !f.classList.contains('on') || speakLock) return;
+      speakLock = true;
+      setTimeout(function () { speakLock = false; }, 4000);
+      f.classList.remove('speak'); void f.getBoundingClientRect();
+      f.classList.add('speak');
+      setTimeout(function () { f.classList.remove('speak'); }, 5200);
+    });
+
+    // ── 06 · AREPO: der Sturm verifiziert das Siegel ──
+    var storm = document.querySelector('.arepo-storm');
+    if (storm) {
+      storm.addEventListener('pointerenter', function () {
+        var a = inst('arepo');
+        if (!a || !a.classList.contains('on') || a.classList.contains('play')) return;
+        a.classList.remove('dissolve'); void a.getBoundingClientRect();
+        a.classList.add('dissolve');
+        setTimeout(function () { a.classList.remove('dissolve'); }, 900);
+      });
+    }
+
+    // ── BEAT · der seltene Herzschlag ──
+    // Alle 20–30 s EIN leises Lebenszeichen des aktiven Instruments (der
+    // Akzent zieht sich nach; SATOR lässt eine Welle durch die Reihen
+    // laufen). Nie während Zeichnen/Choreographie, nie im Hintergrund-Tab,
+    // nie bei reduzierter Bewegung. Attract-Mode, kein Lärm.
+    if (!reduce) {
+      (function beatTakt() {
+        setTimeout(function () {
+          if (!document.hidden) {
+            var g = band.querySelector('.inst.on');
+            if (g && !g.classList.contains('ink') && !g.classList.contains('play') && !g.classList.contains('beat')) {
+              g.classList.add('beat');
+              setTimeout(function () { g.classList.remove('beat'); }, 1100);
+            }
+          }
+          beatTakt();
+        }, 20000 + Math.random() * 10000);
+      })();
+    }
+
+    // Erstbefüllung: das Horizon-Instrument einmal rendern lassen — jetzt
+    // hören wir zu, Aperture, AGI-Band und Marken stehen ab Sekunde eins.
+    if (window.__cfHorizonRender) window.__cfHorizonRender();
   })();
   </script>
 </body>
