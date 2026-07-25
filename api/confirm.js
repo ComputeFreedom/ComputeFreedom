@@ -55,8 +55,8 @@ export default async function handler(req, res) {
     secure: Number(process.env.SMTP_PORT) === 465,
     auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
   });
-  const an = process.env.SUBSCRIBE_TO || 'info@computefreedom.org';
-  const von = process.env.SUBSCRIBE_FROM || 'info@computefreedom.org';
+  const an = process.env.SUBSCRIBE_TO || 'contact@computefreedom.org';
+  const von = process.env.SUBSCRIBE_FROM || 'contact@computefreedom.org';
 
   try {
     if (v.zweck === 'del') {

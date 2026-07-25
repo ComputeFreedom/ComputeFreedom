@@ -98,7 +98,7 @@ export default async function handler(req, res) {
       auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
     });
     await transporter.sendMail({
-      from: process.env.SUBSCRIBE_FROM || 'info@computefreedom.org',
+      from: process.env.SUBSCRIBE_FROM || 'contact@computefreedom.org',
       to: syn.email,
       subject: 'Bestätige Deine Email · ComputeFreedom',
       text:
@@ -117,9 +117,20 @@ export default async function handler(req, res) {
     // Fehlersuche. SMTP-Antworten enthalten keine Geheimnisse, nur Klartext
     // wie »535 Authentication failed«.
     const grund = (e && (e.response || e.message)) ? String(e.response || e.message).slice(0, 300) : 'unbekannt';
-    console.error('[C|F] Versand fehlgeschlagen:', grund, '· code:', e && e.code, '· host:', process.env.SMTP_HOST, '· port:', process.env.SMTP_PORT);
+    // Adressen sind keine Geheimnisse — das Passwort taucht hier nirgends auf.
+    // Bei »535 authentication failed« ist fast immer der BENUTZER falsch, und
+    // das laesst sich sonst nicht nachsehen: Vercel zeigt gesetzte Werte, die
+    // als »Sensitive« markiert sind, kein zweites Mal an.
+    const wer = {
+      host: process.env.SMTP_HOST || '(nicht gesetzt)',
+      port: process.env.SMTP_PORT || '(nicht gesetzt)',
+      user: process.env.SMTP_USER || '(nicht gesetzt)',
+      von:  process.env.SUBSCRIBE_FROM || '(nicht gesetzt)',
+      pass_laenge: (process.env.SMTP_PASS || '').length,
+    };
+    console.error('[C|F] Versand fehlgeschlagen:', grund, '· code:', e && e.code, '·', JSON.stringify(wer));
     p.versand = 'FAIL';
-    return res.status(500).json({ ok: false, error: 'versand', pruefungen: p, grund });
+    return res.status(500).json({ ok: false, error: 'versand', pruefungen: p, grund, wer });
   }
 
   return res.status(200).json({ ok: true, pruefungen: p, domain: syn.domain, mx: mx.wirt || null });
