@@ -99,8 +99,13 @@ export function pruefeLink(query, key, maxAlterMs = 7 * 24 * 3600 * 1000) {
 // ---------------------------------------------------------------- Ratenbegrenzung
 // Schlichter Zähler im Speicher der Funktionsinstanz. Kein vollständiger Schutz
 // (Vercel startet mehrere Instanzen), aber er bremst das plumpe Nachschießen.
+// Die Grenze war 5 in 10 Minuten. Zu eng: hinter einem Haushalts- oder
+// Buero-Anschluss teilen sich alle dieselbe IP. Am 25.07.2026 hat ein Besucher
+// den Zaehler gefuellt, und der naechste im selben WLAN bekam »?TOO MANY
+// FILES«, obwohl er zum ersten Mal da war. 12 bremst plumpes Nachschiessen
+// weiterhin — jeder Versuch kostet ohnehin eine Rechenaufgabe.
 const EIMER = new Map();
-export function zuVieleVersuche(ip, grenze = 5, fensterMs = 10 * 60 * 1000) {
+export function zuVieleVersuche(ip, grenze = 12, fensterMs = 10 * 60 * 1000) {
   const jetzt = Date.now();
   const liste = (EIMER.get(ip) || []).filter(t => jetzt - t < fensterMs);
   liste.push(jetzt);
