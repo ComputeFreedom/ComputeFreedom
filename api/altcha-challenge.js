@@ -1,7 +1,12 @@
 // GET /api/altcha-challenge
 // Gibt eine frische ALTCHA-Aufgabe aus (die "Rechenaufgabe fuer den Browser").
 // Der Browser des Besuchers loest sie unsichtbar; geprueft wird sie in /api/subscribe.
-import { createChallenge } from 'altcha-lib';
+// WICHTIG: der Unterpfad /v1. altcha-lib 2.x hat eine zweite, voellig andere
+// Aufgaben-Form ({parameters:{...}} statt {algorithm,challenge,salt,signature}).
+// Das ausgelieferte Widget spricht die ERSTE Form. Nimmt man die Vorgabe von
+// 2.x, bekommt der Browser eine Aufgabe ohne Signatur, loest sie falsch, und
+// die Pruefung sagt NEIN — genau der ALTCHA-Fehler vom 25.07.2026.
+import { createChallenge } from 'altcha-lib/v1';
 
 const hmacKey = process.env.ALTCHA_HMAC_KEY;
 

@@ -8,7 +8,6 @@
 <meta name="robots" content="noindex">
 <link rel="icon" href="logo_pd_favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="fonts.css">
-<script async defer src="altcha.min.js" type="module"></script>
 <script>
 /* Sprachwahl wie in index.html: ?lang= schlaegt localStorage schlaegt Vorgabe (en).
    Derselbe Schluessel cf-lang, damit die Wahl ueber beide Seiten traegt. */
@@ -165,7 +164,6 @@ document.documentElement.lang=window.CFLANG;
      box-shadow:0 0 0 1px rgba(255,255,255,.10) inset,0 0 34px rgba(168,188,199,.34),
                 0 10px 30px rgba(0,0,0,.45)}
   .hp{position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;overflow:hidden}
-  altcha-widget{display:none}   /* rechnet unsichtbar, kein Klickzwang */
   .go{margin-top:16px;display:inline-block;background:transparent;color:#c3d6e6;
      border:1px solid rgba(150,185,215,.45);border-radius:10px;padding:12px 24px;font-size:15.5px;
      letter-spacing:.03em;cursor:not-allowed;opacity:.55;transition:.3s;font-family:inherit}
@@ -276,10 +274,13 @@ document.documentElement.lang=window.CFLANG;
                  aria-label="Email address" data-i18n-aria="a11y.email">
         </div>
         <div class="hp" aria-hidden="true">
-          <label data-i18n="form.hp">Website (please leave empty)<input type="text" id="website" name="website" tabindex="-1" autocomplete="off"></label>
+          <!-- Die Beschriftung steckt in einem eigenen span. Der Sprachwechsel
+               schreibt innerHTML — stuende das data-i18n am label, riss der
+               Wechsel auf Deutsch das Honeypot-Feld mit heraus, und das
+               Formular tat danach gar nichts mehr. (gefunden 25.07.2026) -->
+          <label><span data-i18n="form.hp">Website (please leave empty)</span><input type="text" id="website" name="website" tabindex="-1" autocomplete="off"></label>
         </div>
-        <altcha-widget id="altcha" challengeurl="/api/altcha-challenge" name="altcha"
-                       auto="onload" hidefooter hidelogo></altcha-widget>
+        <input type="hidden" id="altcha" name="altcha" value="">
         <input type="hidden" id="cf_human" name="cf_human" value="">
         <input type="hidden" id="t_start" name="t_start" value="">
         <div class="err" id="err"></div>
@@ -658,12 +659,8 @@ document.documentElement.lang=window.CFLANG;
   }
 
   async function sendeAnmeldung(){
-    const w = document.getElementById('altcha');
     let altWert = '';
-    try{
-      altWert = (w && w.value) || '';
-      if(!altWert && w){ const i = w.querySelector('input[name=altcha]'); if(i) altWert = i.value || ''; }
-    }catch(e){}
+    try{ altWert = await nachweis(); }catch(e){}
     const payload = {
       email: email.value.trim(),
       website: website.value,
@@ -686,6 +683,74 @@ document.documentElement.lang=window.CFLANG;
       try{ localStorage.setItem('cf-seen','1'); }catch(e){}
     });
   })();
+
+  /* ============================ Nachweis ============================
+     Der Server stellt eine Aufgabe: finde die Zahl n, fuer die
+     SHA-256(salt + n) die vorgegebene Pruefsumme ergibt. Ein Mensch merkt
+     davon nichts — der Browser rechnet, waehrend die Adresse getippt wird.
+     Ein Bot muss dieselbe Arbeit leisten, und zwar fuer jeden Versuch.
+
+     Gerechnet wird in Buendeln, damit die Seite nicht einfriert: 512
+     Pruefsummen gleichzeitig, dann kurz Luft holen. Auf dem Handy sind das
+     Bruchteile einer Sekunde.
+
+     Wir starten sofort beim Seitenaufbau. Bis der Regler oben ist und die
+     Adresse steht, liegt die Antwort laengst bereit. */
+  let nachweisLaeuft = null;
+
+  function hex(puffer){
+    return Array.from(new Uint8Array(puffer))
+      .map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+  }
+
+  async function rechne(){
+    const r = await fetch('/api/altcha-challenge', {cache:'no-store'});
+    if(!r.ok) throw new Error('Aufgabe nicht erhalten: ' + r.status);
+    const c = await r.json();
+    if(!c || !c.challenge || !c.salt) throw new Error('Aufgabe unvollstaendig');
+    const alg = (c.algorithm || 'SHA-256').toUpperCase();
+    const max = c.maxnumber || 1000000;
+    const enc = new TextEncoder();
+    const t0 = (self.performance || Date).now();
+    const BUENDEL = 512;
+    for(let start = 0; start <= max; start += BUENDEL){
+      const bis = Math.min(start + BUENDEL - 1, max);
+      const zahlen = [];
+      const arbeit = [];
+      for(let i = start; i <= bis; i++){
+        zahlen.push(i);
+        arbeit.push(crypto.subtle.digest(alg, enc.encode(c.salt + i)));
+      }
+      const summen = await Promise.all(arbeit);
+      for(let k = 0; k < summen.length; k++){
+        if(hex(summen[k]) === c.challenge){
+          return btoa(JSON.stringify({
+            algorithm: c.algorithm, challenge: c.challenge, number: zahlen[k],
+            salt: c.salt, signature: c.signature,
+            took: Math.round((self.performance || Date).now() - t0)
+          }));
+        }
+      }
+    }
+    throw new Error('keine Loesung bis ' + max);
+  }
+
+  function nachweisStarten(){
+    if(!nachweisLaeuft) nachweisLaeuft = rechne().then(function(wert){
+      /* Auch ins Feld schreiben: so ist der Zustand von aussen sichtbar
+         und die Nutzlast geht selbst dann mit, wenn das Formular anders
+         abgeschickt wird als ueber unseren eigenen Weg. */
+      var f = document.getElementById('altcha'); if(f) f.value = wert;
+      return wert;
+    }).catch(function(e){
+      /* Kein Alarm auf der Seite: der C64 sagt es gleich selbst, ehrlich. */
+      nachweisLaeuft = null;
+      return '';
+    });
+    return nachweisLaeuft;
+  }
+  function nachweis(){ return nachweisStarten(); }
+  nachweisStarten();
 
   weiter.addEventListener('click',startAnimation);
   nochmal.addEventListener('click',function(){

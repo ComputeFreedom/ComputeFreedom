@@ -11,7 +11,9 @@
 //   altcha  : gelöste ALTCHA-Aufgabe
 //   cf_human: "CF-OK", wird erst gesetzt, wenn der Fader auf 0 dB einrastet
 //   t_start : Zeitstempel beim Seitenaufbau (Zeit-Falle)
-import { verifySolution } from 'altcha-lib';
+// Muss aus derselben Fassung kommen wie die Aufgabe: altcha-lib/v1.
+// Die Pruefung aus 2.x wirft bei einer v1-Nutzlast eine Ausnahme.
+import { verifySolution } from 'altcha-lib/v1';
 import nodemailer from 'nodemailer';
 import { pruefeSyntax, pruefeMx, baueLink, zuVieleVersuche, ipVon, basisUrl } from './cf-mail.js';
 
