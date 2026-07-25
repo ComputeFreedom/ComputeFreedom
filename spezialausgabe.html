@@ -56,25 +56,35 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;col
 .caption,.panel{display:none !important}
 
 /* ---- Der Erzaehler ----
-   Unten links, ueber dem dunklen Boden des Bildes. Nicht oben: dort steht das
-   Zeichen. Eine Zeile zur Zeit, damit nichts um Aufmerksamkeit kaempft. */
+   Er stand zuerst unten links am Bildrand. Das war ein Fehler: wer las,
+   verpasste das Bild, wer sah, verpasste den Satz — zwischen beiden lagen
+   fuenfzig Bildschirmprozent. Jetzt steht er direkt unter dem Zeichen, in
+   einer Spalte, die mittig sitzt und links ausgerichtet bleibt. Das Auge
+   springt eine Zeilenhoehe, nicht eine halbe Seite.
+
+   Die Oberkante rechnet sich aus der Geometrie des Zeichens selbst:
+   .logo sitzt bei 9.5vh und ist clamp(170px,32vh,310px) hoch. Unterkante
+   plus ein Handbreit — damit haengt der Text an jeder Fenstergroesse
+   gleich weit unter dem Zeichen, statt einmal zu raten. */
 #off{position:fixed;z-index:14;pointer-events:none;
- left:max(30px,calc(env(safe-area-inset-left) + 30px));
- bottom:max(76px,calc(env(safe-area-inset-bottom) + 76px));
- max-width:min(48ch,72vw)}
+ left:50%;transform:translateX(-50%);
+ top:calc(9.5vh + clamp(170px,32vh,310px) + 26px);
+ width:min(50ch,80vw);text-align:left}
 #off .zeile{
- font:400 clamp(13px,1.32vw,17.5px)/1.72 'JetBrains Mono',ui-monospace,'SFMono-Regular',monospace;
- letter-spacing:.015em;color:#b9cede;text-wrap:pretty;
+ font:400 clamp(13.5px,1.36vw,18px)/1.74 'JetBrains Mono',ui-monospace,'SFMono-Regular',monospace;
+ letter-spacing:.015em;color:#c6dbea;text-wrap:pretty;
  text-shadow:0 1px 3px rgba(0,0,0,.95),0 0 22px rgba(0,0,0,.8);
  opacity:0;transform:translateY(7px);
  transition:opacity .55s ease,transform .75s cubic-bezier(.22,.9,.24,1)}
 #off .zeile.on{opacity:1;transform:none}
 /* Weicher Schatten hinter dem Erzaehler. Ohne ihn verliert er sich, sobald
-   das leuchtende Gitter des Bildes darunter liegt. */
-#off::before{content:"";position:absolute;inset:-20px -70px -18px -26px;z-index:-1;
- pointer-events:none;border-radius:18px;
- background:linear-gradient(100deg,rgba(2,4,9,.80) 0%,rgba(2,4,9,.55) 58%,rgba(2,4,9,0) 100%);
- filter:blur(9px)}
+   das leuchtende Gitter des Bildes darunter liegt. Kein Kasten, ein Hauch:
+   die Ellipse laeuft nach allen Seiten auf null aus. */
+#off::before{content:"";position:absolute;inset:-26px -54px -24px -46px;z-index:-1;
+ pointer-events:none;
+ background:radial-gradient(ellipse 62% 118% at 44% 50%,
+   rgba(2,4,9,.84) 0%,rgba(2,4,9,.56) 48%,rgba(2,4,9,.18) 78%,rgba(2,4,9,0) 100%);
+ filter:blur(10px)}
 #off .zeile::before{content:"";display:inline-block;width:14px;height:1px;
  vertical-align:.35em;margin-right:11px;background:rgba(168,188,199,.5)}
 #off b{color:#DD7740;font-weight:500}
@@ -89,7 +99,8 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;col
  color:#eaf4ff;margin-top:.55em}
 
 @media (max-width:640px){
-  #off{bottom:max(96px,calc(env(safe-area-inset-bottom) + 96px));max-width:84vw}
+  #off{top:calc(9.5vh + clamp(170px,32vh,310px) + 18px);width:86vw}
+  #off::before{inset:-20px -26px -18px -22px}
 }
 
 /* Ueberspringen. Klein, ruhig, immer erreichbar — niemand wird festgehalten. */
@@ -299,7 +310,7 @@ const contact=$('contactGlow');
 const leftBase=lB, leftShine=lS, rightBase=rB, rightShine=rS;
 let worldT=0;
 const FULL=[-245,6,592,68], OVER=[9.0,8.5,126,63], HERO=[6.0,7.4,132,65.5];
-const S=1.69;
+const S=2.414;   /* 70 % Tempo — Lesezeit fuer den Erzaehler (war 1.69) */
 const sleep=ms=>new Promise(r=>setTimeout(r,ms*S));
 const clamp=x=>Math.max(0,Math.min(1,x));
 const smooth=t=>t*t*(3-2*t);
@@ -489,7 +500,7 @@ $('sPb').oninput=e=>gain.pb=e.target.value/100;
 $('sPg').oninput=e=>gain.pg=e.target.value/100;
 
 /* ---------- Phasen ---------- */
-const DUR=[0,3000,4200,2200,3800,Infinity];
+const DUR=[0,4286,6000,3143,5429,Infinity];  /* dieselben 70 %, in echten ms */
 const NAMES=['Ruhe','Aktivierung · Photonen erwachen','Extraktion · Photonen tragen das Logo','Glas','Hologramm · Reflexionen','Text'];
 let phase=0, phT=0, auto=false, last=performance.now();
 function setBtns(){document.querySelectorAll('[data-ph]').forEach(b=>b.classList.toggle('on',+b.dataset.ph===phase));
@@ -950,7 +961,9 @@ async function intro(){
     reedom.animate([{opacity:1,filter:'blur(0px)',transform:'translateX(0)'},{opacity:.82,offset:.25},{opacity:0,filter:'blur(1.8px)',transform:'translateX(4px)'}],{duration:680*S,easing:'cubic-bezier(.55,0,.55,1)',fill:'forwards'}).finished
   ]);
   off(2);                                   /* der Name ist fort, zwei Zeichen bleiben */
-  await sleep(700);                         /* Atemzug, bevor das C hereinfaehrt */
+  await sleep(1100);                        /* Atemzug, bevor das C hereinfaehrt.
+                                               Die laengste Zeile: zwei Farbnamen
+                                               und zwei Zahlen wollen gelesen werden. */
   let contactFxStarted=false;
   let glowAnim=Promise.resolve(), glintAnim=Promise.resolve(), moveF=Promise.resolve();
   const F_LEFT=87.665;
@@ -978,7 +991,7 @@ async function intro(){
   /* Die Formation ist gedehnt (1080 -> 1450), damit der Erzaehler mitkommt:
      drei Gedanken in 1,8 s waren zu eng, in 3,9 s atmen sie. */
   const FORM=2300;
-  setTimeout(()=>off(3), 1200*S);           /* der Strich, zur Mitte der Fahrt */
+  setTimeout(()=>off(3), 700*S);            /* der Strich, frueh auf der Fahrt */
   const moveC=tween(FORM,p=>{const x=-262.24+(263.3*p); C.setAttribute('transform','translate('+x.toFixed(3)+' 0)')} ,t=>1-Math.pow(1-t,3));
   const buildInterface=tween(FORM,p=>{
     const lp=mixPoints(l0,l1,p), rp=mixPoints(r0,r1,p);
