@@ -201,8 +201,15 @@ document.documentElement.lang=window.CFLANG;
   .trust .nw{white-space:nowrap}
   .trust b{color:#cfe0ee;font-weight:500;white-space:nowrap}
 
-  .c64ov{position:fixed;inset:0;background:rgba(2,3,8,.88);display:none;align-items:center;justify-content:center;padding:24px;z-index:40}
+  /* Die Ueberlagerung muss scrollen koennen: mit dem Postfach-Feld darunter
+     ist sie auf einem Handy hoeher als der Bildschirm. align-items:center
+     haette den Ueberhang abgeschnitten — automatische Raender zentrieren
+     genauso, lassen aber scrollen. */
+  .c64ov{position:fixed;inset:0;background:rgba(2,3,8,.94);display:none;
+     justify-content:center;align-items:flex-start;padding:24px 16px;z-index:40;
+     overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
   .c64ov.show{display:flex}
+  .c64ov > div{margin:auto 0;width:100%;max-width:min(700px,100%)}
   .c64{width:min(680px,96vw);background:var(--c64-border);border-radius:14px;padding:26px 24px;box-shadow:0 24px 70px rgba(0,0,0,.6)}
   .screen{position:relative;background:var(--c64-screen);border-radius:6px;padding:22px 20px;min-height:300px;overflow:hidden}
   .screen::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:6px;
@@ -213,6 +220,21 @@ document.documentElement.lang=window.CFLANG;
   .bad{color:#FFB27A;text-shadow:0 0 9px rgba(255,178,122,.65)}
   .cur{display:inline-block;width:.6em;height:1em;vertical-align:-2px;background:var(--c64-text);box-shadow:0 0 8px rgba(180,169,255,.7);animation:blink 1s steps(1) infinite}
   @keyframes blink{50%{opacity:0}}
+  /* ============ Das Postfach-Feld ============
+     Der wichtigste Satz nach dem Absenden. Er steht unter dem C64, in
+     normaler Schrift, gut lesbar — nicht im Zeilenstrom der Maschine. */
+  .postfach{display:none;margin:20px auto 0;max-width:min(680px,96vw);
+     background:linear-gradient(180deg,#101f2c,#0a141d);
+     border:1px solid rgba(190,214,234,.35);border-left:3px solid var(--lightblue);
+     border-radius:12px;padding:20px 22px;text-align:left;
+     box-shadow:0 0 40px rgba(168,188,199,.12)}
+  .postfach.show{display:block;animation:rise .5s ease both}
+  .postfach h2{margin:0 0 8px;font-family:'Fraunces',Georgia,serif;font-weight:340;
+     font-size:clamp(20px,3.2vw,26px);color:#eaf4fb;line-height:1.25}
+  .postfach p{margin:0 0 8px;color:var(--ink-3);font-size:15px;line-height:1.66}
+  .postfach .adr{color:#dcebf7;font-weight:500;word-break:break-all}
+  .postfach .klein{color:var(--ink-4);font-size:13.5px;margin-bottom:0}
+
   .weiter{display:none;margin:18px auto 0;background:linear-gradient(100deg,var(--burnt-bright),#e7eef6 52%,var(--lightblue));
      color:#0a1420;border:none;border-radius:10px;padding:13px 28px;font-size:16px;letter-spacing:.03em;cursor:pointer;
      box-shadow:0 8px 26px rgba(168,188,199,.25);font-family:inherit;font-weight:500}
@@ -312,6 +334,11 @@ document.documentElement.lang=window.CFLANG;
   <div class="c64ov" id="c64ov">
     <div>
       <div class="c64"><div class="screen"><pre id="scr"></pre></div></div>
+      <div class="postfach" id="postfach">
+        <h2 data-i18n="post.head">Now check your mailbox.</h2>
+        <p data-i18n="post.body1">We sent one email to <span class="adr" id="postAdr"></span>. One click on the link inside, and you are on the list.</p>
+        <p class="klein" data-i18n="post.body2">Until you click, nothing is stored — your address lies nowhere. No email? Look in the spam folder, it sometimes lands there on the first try.</p>
+      </div>
       <button class="weiter" id="weiter" data-i18n="c64.next">Let&#8217;s go &#9654;</button>
       <button class="weiter nochmal" id="nochmal" data-i18n="c64.retry">Correct the address</button>
     </div>
@@ -320,7 +347,7 @@ document.documentElement.lang=window.CFLANG;
 <script>
 /* ============================ Sprache ============================ */
 (function(){
-  var I18N = {"doc.title": "ComputeFreedom · Spezialausgabe · Eingang", "hero.h1": "Erlebe die neueste Spezialausgabe von ComputeFreedom.", "hero.lead": "Zieh den Regler auf, bis der Pegel im grünen Bereich steht.", "hero.lead2": "Deine Email genügt.", "cap.hint": "Erst leuchtet das <b class=\"tF\">F</b>, dann das <b class=\"tC\">C</b> — und bei 0 dB beide zusammen.", "cap.lit": "C|F leuchtet", "cap.hot": "Übersteuert — nimm zurück", "a11y.bar": "C|F — der Trennstrich", "form.go": "Weiter geht’s", "form.hp": "Webseite (bitte leer lassen)", "trust.1": "Deine Adresse bleibt bei uns und wird nicht weitergegeben. <b>Kein Tracking.</b>", "trust.2": "Wir melden uns selten, nur wenn es wirklich etwas Neues gibt.", "trust.3": "Und wenn Du nicht mehr magst, gehst Du mit <span class=\"nw\">einem Klick</span>: Deine Email wird sofort und restlos gelöscht.", "perk.head": "Was Deine Adresse wert ist", "perk.1": "<b>Die Spezialausgabe.</b> Sieh zu, wie das neue Zeichen und sein Hologramm aus dem Nichts entstehen — die ganze Sequenz.", "perk.2": "<b>Was sich wirklich bewegt.</b> Anthropic, OpenAI, der Verhandlungstisch. Selten, und nur wenn es zählt.", "perk.3": "<b>Das Forum.</b> Wo das Argument offen auseinandergenommen und beantwortet wird.", "perk.4": "<b>Eine Hand daran.</b> Compute-Souveränität wird gerade entschieden. Rede mit.", "bypass": "Lieber erst umsehen? <span class=\"nw\">Zur Homepage ohne Email</span> &#8594;", "c64.next": "Weiter geht’s ▶", "c64.retry": "Adresse ändern", "anim.head": "Spezialausgabe startet…", "anim.note": "Hier läuft die Animation (ComputeFreedom_Sequenz_v3): Vorspiel p|d → Formation → Hologramm.", "a11y.slider": "Pegelregler: auf 0 dB in den grünen Bereich ziehen", "a11y.email": "Email-Adresse", "a11y.lang": "Sprache", "a11y.meter": "Pegelanzeige"};
+  var I18N = {"doc.title": "ComputeFreedom · Spezialausgabe · Eingang", "hero.h1": "Erlebe die neueste Spezialausgabe von ComputeFreedom.", "hero.lead": "Zieh den Regler auf, bis der Pegel im grünen Bereich steht.", "hero.lead2": "Deine Email genügt.", "cap.hint": "Erst leuchtet das <b class=\"tF\">F</b>, dann das <b class=\"tC\">C</b> — und bei 0 dB beide zusammen.", "cap.lit": "C|F leuchtet", "cap.hot": "Übersteuert — nimm zurück", "a11y.bar": "C|F — der Trennstrich", "form.go": "Weiter geht’s", "form.hp": "Webseite (bitte leer lassen)", "trust.1": "Deine Adresse bleibt bei uns und wird nicht weitergegeben. <b>Kein Tracking.</b>", "trust.2": "Wir melden uns selten, nur wenn es wirklich etwas Neues gibt.", "trust.3": "Und wenn Du nicht mehr magst, gehst Du mit <span class=\"nw\">einem Klick</span>: Deine Email wird sofort und restlos gelöscht.", "perk.head": "Was Deine Adresse wert ist", "perk.1": "<b>Die Spezialausgabe.</b> Sieh zu, wie das neue Zeichen und sein Hologramm aus dem Nichts entstehen — die ganze Sequenz.", "perk.2": "<b>Was sich wirklich bewegt.</b> Anthropic, OpenAI, der Verhandlungstisch. Selten, und nur wenn es zählt.", "perk.3": "<b>Das Forum.</b> Wo das Argument offen auseinandergenommen und beantwortet wird.", "perk.4": "<b>Eine Hand daran.</b> Compute-Souveränität wird gerade entschieden. Rede mit.", "bypass": "Lieber erst umsehen? <span class=\"nw\">Zur Homepage ohne Email</span> &#8594;", "post.head": "Schau jetzt in Dein Postfach.", "post.body1": "Wir haben eine Email an <span class=\"adr\" id=\"postAdr\"></span> geschickt. Ein Klick auf den Link darin, und Du bist auf der Liste.", "post.body2": "Bis Du klickst, ist nichts gespeichert — Deine Adresse liegt nirgends. Keine Email da? Sieh im Spam-Ordner nach, beim ersten Mal landet sie manchmal dort.", "c64.next": "Zur Spezialausgabe ▶", "c64.retry": "Adresse ändern", "anim.head": "Spezialausgabe startet…", "anim.note": "Hier läuft die Animation (ComputeFreedom_Sequenz_v3): Vorspiel p|d → Formation → Hologramm.", "a11y.slider": "Pegelregler: auf 0 dB in den grünen Bereich ziehen", "a11y.email": "Email-Adresse", "a11y.lang": "Sprache", "a11y.meter": "Pegelanzeige"};
   var MSG  = {"en": {"errSlider": "Hold the fader in the green band, at 0 dB.", "errEmail": "Please enter a valid email address.", "errSend": "Something went wrong on our side. Please try again in a moment.", "c64Title": "    **** COMPUTE FREEDOM 64 ****", "c64Motto": " FREEDOM LIMITED ONLY BY ITSELF", "c64Load": "LOAD \"C|F-LIST\",8,1", "c64Hp": "HONEYPOT CHECK ", "c64Alt": "ALTCHA CHECK ", "c64Cf": "C|F CHECK ", "c64Mail": "E-MAIL ", "c64Ok": "OK", "c64Saved": "SAVED", "c64Welcome": "WELCOME. YOU ARE IN."}, "de": {"errSlider": "Halte den Regler im grünen Bereich, bei 0 dB.", "errEmail": "Bitte eine gültige Email eingeben.", "errSend": "Bei uns ist etwas schiefgegangen. Bitte gleich noch einmal versuchen.", "c64Title": "    **** COMPUTE FREEDOM 64 ****", "c64Motto": " FREIHEIT NUR DURCH SICH SELBST BEGRENZT", "c64Load": "LOAD \"C|F-LISTE\",8,1", "c64Hp": "HONEYPOT-CHECK ", "c64Alt": "ALTCHA-CHECK ", "c64Cf": "C|F-CHECK ", "c64Mail": "E-MAIL ", "c64Ok": "OK", "c64Saved": "GESPEICHERT", "c64Welcome": "WILLKOMMEN. DU BIST DABEI."}};
   window.CFMSG = function(k){ return (MSG[window.CFLANG] || MSG.en)[k]; };
   window.CFI18N = I18N;
@@ -531,6 +558,7 @@ document.documentElement.lang=window.CFLANG;
 
   window.__cfRelabel = function(){
     setNote(noteKey);
+    if (window.__cfPostfachNachziehen) window.__cfPostfachNachziehen();
     if (err.dataset.key) err.textContent = window.CFMSG(err.dataset.key);
   };
   function showErr(key){ err.dataset.key = key; err.textContent = window.CFMSG(key); }
@@ -543,6 +571,24 @@ document.documentElement.lang=window.CFLANG;
     if(!emailOK()){ showErr('errEmail'); return; }
     runC64();
   });
+
+  /* Das Postfach-Feld einblenden. Die Adresse wird als Text gesetzt, nie als
+     HTML — was der Besucher tippt, darf niemals Markup werden. */
+  let postfachAdresse = '';
+  function zeigePostfach(adresse){
+    const kasten = document.getElementById('postfach');
+    if(!kasten) return;
+    if(adresse != null) postfachAdresse = adresse;
+    const feld = kasten.querySelector('.adr');
+    if(feld) feld.textContent = postfachAdresse;
+    kasten.classList.add('show');
+  }
+  /* Der Sprachwechsel schreibt den Absatz neu — dann muss die Adresse
+     wieder hinein, sonst steht dort pl\u00f6tzlich eine L\u00fccke. */
+  window.__cfPostfachNachziehen = function(){
+    const kasten = document.getElementById('postfach');
+    if(kasten && kasten.classList.contains('show')) zeigePostfach(null);
+  };
 
   const ov=document.getElementById('c64ov'), scr=document.getElementById('scr'),
         weiter=document.getElementById('weiter'), nochmal=document.getElementById('nochmal');
@@ -559,6 +605,8 @@ document.documentElement.lang=window.CFLANG;
     await sleep((lang?820:500)+Math.random()*120);
     buf+='<span class="'+(fehler?'bad':'ok')+'">'+r+'</span>\n'; draw(''); await sleep(180);
   }
+  /* Wie typeErr, nur in der hellen Farbe — fuer den einen Satz, der zaehlt. */
+  async function typeOk(t){ let l=''; for(const ch of t){ l+=ch; draw('<span class="ok">'+l+'</span>'); await sleep(16+Math.random()*18);} buf+='<span class="ok">'+l+'</span>\n'; draw(''); await sleep(90); }
   async function typeErr(t){ let l=''; for(const ch of t){ l+=ch; draw('<span class="bad">'+l+'</span>'); await sleep(16+Math.random()*18);} buf+='<span class="bad">'+l+'</span>\n'; draw(''); await sleep(70); }
   /* Der C64 ist Ladestation UND Pruefstand. Er zeigt, was der Server wirklich
      geantwortet hat, und darf abbrechen — sonst waere er Theater.
@@ -602,10 +650,12 @@ document.documentElement.lang=window.CFLANG;
   const C64LBL = {
     en:{ hp:'HONEYPOT CHECK', alt:'ALTCHA CHECK', cf:'C|F CHECK', syn:'ADDRESS CHECK',
          mx:'DOMAIN CHECK (MX)', snd:'CONFIRMATION', ok:'OK', fail:'FAILED', sent:'SENT',
-         inbox:'CHECK YOUR MAILBOX.', dial:'DIALLING '+'…' },
+         inbox:'CHECK YOUR MAILBOX.', inbox2:'ONE CLICK IN THAT EMAIL AND YOU ARE IN.',
+         dial:'DIALLING '+'…' },
     de:{ hp:'HONEYPOT-CHECK', alt:'ALTCHA-CHECK', cf:'C|F-CHECK', syn:'ADRESS-CHECK',
          mx:'DOMAIN-CHECK (MX)', snd:'BESTAETIGUNG', ok:'OK', fail:'FEHLER', sent:'GESENDET',
-         inbox:'SCHAU IN DEIN POSTFACH.', dial:'WAEHLE '+'…' }
+         inbox:'SCHAU IN DEIN POSTFACH.', inbox2:'EIN KLICK IN DER MAIL, UND DU BIST DABEI.',
+         dial:'WAEHLE '+'…' }
   };
   function L(k){ return (C64LBL[window.CFLANG]||C64LBL.en)[k]; }
 
@@ -641,8 +691,12 @@ document.documentElement.lang=window.CFLANG;
 
     if (a.ok && !a.still){
       await typeLine('');
-      await typeLine(L('inbox'));
+      await typeOk('>>> ' + L('inbox') + ' <<<');
+      await typeLine(L('inbox2'));
       await typeLine('READY.');
+      /* Der wichtigste Satz gehoert nicht in den Zeilenstrom der Maschine,
+         sondern gross darunter — mit der Adresse, an die es ging. */
+      zeigePostfach(email.value.trim());
       weiter.classList.add('show');
     } else if (a.still){
       await typeLine(''); await typeLine('READY.');
@@ -755,6 +809,7 @@ document.documentElement.lang=window.CFLANG;
   weiter.addEventListener('click',startAnimation);
   nochmal.addEventListener('click',function(){
     ov.classList.remove('show'); nochmal.classList.remove('show');
+    const kasten=document.getElementById('postfach'); if(kasten)kasten.classList.remove('show');
     email.focus({preventScroll:true}); email.select();
   });
   function startAnimation(){

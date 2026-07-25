@@ -18,7 +18,11 @@ export default async function handler(req, res) {
   // expires: die Aufgabe ist 5 Minuten gueltig (Schutz gegen Wiederverwendung).
   const challenge = await createChallenge({
     hmacKey,
-    maxNumber: 120000,
+    // 50 000 statt 120 000: der Browser rechnet die Aufgabe im schlechtesten
+    // Fall doppelt so schnell durch. Auf einem alten Handy ist das der
+    // Unterschied zwischen »faellt nicht auf« und »haengt«. Fuer einen Bot
+    // bleibt es Arbeit, und zwar bei JEDEM Versuch.
+    maxNumber: 50000,
     expires: new Date(Date.now() + 5 * 60 * 1000),
   });
 

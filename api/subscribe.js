@@ -112,8 +112,14 @@ export default async function handler(req, res) {
     });
     p.versand = 'OK';
   } catch (e) {
+    // Den Grund NICHT verschlucken. Bisher stand in den Logs nichts, und der
+    // C64 sagte nur »DEVICE NOT PRESENT« — richtig, aber unbrauchbar fuer die
+    // Fehlersuche. SMTP-Antworten enthalten keine Geheimnisse, nur Klartext
+    // wie »535 Authentication failed«.
+    const grund = (e && (e.response || e.message)) ? String(e.response || e.message).slice(0, 300) : 'unbekannt';
+    console.error('[C|F] Versand fehlgeschlagen:', grund, '· code:', e && e.code, '· host:', process.env.SMTP_HOST, '· port:', process.env.SMTP_PORT);
     p.versand = 'FAIL';
-    return res.status(500).json({ ok: false, error: 'versand', pruefungen: p });
+    return res.status(500).json({ ok: false, error: 'versand', pruefungen: p, grund });
   }
 
   return res.status(200).json({ ok: true, pruefungen: p, domain: syn.domain, mx: mx.wirt || null });
