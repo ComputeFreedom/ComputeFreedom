@@ -12,6 +12,25 @@
   <link id="favicon" rel="icon" type="image/svg+xml" />
   <!-- Self-hosted fonts (DSGVO: no request to Google servers) -->
   <link rel="stylesheet" href="fonts.css" />
+  <link rel="stylesheet" href="collage.css" />
+  <script>
+  /* Erstbesuch fuehrt ueber die Eingangsseite, danach nie wieder.
+     Der Merker liegt in localStorage — kein Cookie, keine Kennung, nichts geht
+     an einen Server. Dieselbe Ablage, in der schon Sprache und Theme stehen.
+     Nicht abgefangen werden: Tieflinks (#… oder ?…), interne Navigation und
+     der ausdrueckliche Wunsch, den Eingang noch einmal zu sehen (?intro=1). */
+  (function(){
+    try{
+      var q = location.search;
+      if (q.indexOf('intro=1') > -1){ localStorage.removeItem('cf-seen'); location.replace('eingang.html'); return; }
+      if (localStorage.getItem('cf-seen')) return;
+      if (location.hash || q) return;
+      var r = document.referrer || '';
+      if (r && r.indexOf(location.origin) === 0) return;
+      location.replace('eingang.html');
+    }catch(e){}
+  })();
+  </script>
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -591,16 +610,114 @@
     /* hologram */
     .holo-stage { position: relative; display: flex; flex-direction: column; align-items: center; gap: 18px; margin-left: auto; }
     .holo-wrap { position: relative; line-height: 0; }
-    #holo { width: min(66vw, 380px); height: auto; display: block; filter: drop-shadow(var(--holo-shadow)); }
+    /* ── Glas-Hologramm · der Zustand vom Ende der Spezialausgabe, dauerhaft ──
+       Der Kasten gibt die Buehne, das SVG traegt das Zeichen aus Glas, die
+       Flaeche darueber traegt die wandernden Lichtflimmer. */
+    #cfhBox {
+      position: relative; width: min(66vw, 420px); aspect-ratio: 1 / 0.86;
+      border-radius: 10px; filter: drop-shadow(var(--holo-shadow));
+    }
+    #cfhLogo {
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      width: 100%; height: 56%; z-index: 1;
+    }
+    #cfhLogo svg { display: block; width: 100%; height: 100%; overflow: visible; }
+    #cfhCanvas { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+    /* Die feine Zeilenrasterung bleibt — sie macht aus dem Glas ein Hologramm. */
     .holo-wrap::after {
-      content: ""; position: absolute; inset: 0; pointer-events: none;
+      content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 3;
       background: repeating-linear-gradient(0deg, var(--scan-a) 0 2px, var(--scan-b) 2px 3px);
     }
+    /* Auf Papier braucht das Glas eine dunkle Kammer. Ein Hologramm ist Licht,
+       das addiert wird — auf hellem Grund gaebe es nichts zu addieren. Also
+       bekommt es im hellen Thema seine eigene Vitrine statt zu verschwinden. */
+    [data-theme="light"] #cfhBox {
+      background:
+        radial-gradient(ellipse 62% 52% at 50% 44%, rgba(18,38,60,0.85), rgba(6,12,20,0.98) 72%),
+        var(--marianen, #08111A);
+      background-color: #060C14;
+      box-shadow: inset 0 0 0 1px rgba(26,40,51,0.14);
+    }
+    [data-theme="light"] .holo-wrap::after { border-radius: 10px; }
     .holo-meta {
       font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
       color: var(--ink-dim); text-align: center; line-height: 1.9;
     }
     .holo-meta b { color: var(--lightblue); font-weight: 500; display: block; }
+
+    /* ─────────────── UPDATE · was neu ist ─────────────── */
+    .update { padding: 0 0 clamp(36px, 6vw, 64px); }
+    .update-grid { display: grid; grid-template-columns: 1fr; }
+    .update-card {
+      max-width: 82ch;
+      background: linear-gradient(180deg, var(--blue-veil), transparent);
+      border: 1px solid var(--hairline); border-left: 3px solid var(--lightblue);
+      border-radius: 6px; padding: clamp(20px, 3vw, 30px);
+    }
+    .update-label {
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--lightblue); display: flex; align-items: center; gap: 9px;
+    }
+    .update-head {
+      font-family: var(--serif); font-weight: 400; font-size: clamp(22px, 2.6vw, 31px);
+      line-height: 1.25; margin: 12px 0 12px; color: var(--ink);
+    }
+    .update-body { color: var(--ink-dim); font-size: 16px; line-height: 1.72; margin-bottom: 10px; }
+    .update-body b { color: var(--ink); font-weight: 500; }
+    .update-links { display: flex; flex-wrap: wrap; gap: 10px 20px; margin-top: 18px; }
+    .update-links a { color: var(--lightblue); font-size: 14px; letter-spacing: 0.02em; }
+
+    /* ── Email-Optionen · beide Richtungen an einem Ort ──
+       Wer gehen will, soll den Weg sehen, ohne ihn suchen zu muessen. */
+    .mailopt { margin-top: clamp(30px, 4vw, 52px); }
+    .mailopt-head {
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--ink-dim); margin-bottom: 16px;
+      padding-bottom: 12px; border-bottom: 1px solid var(--hairline);
+    }
+    .mailopt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px, 2.4vw, 28px); }
+    .leave { background: var(--surface); border: 1px solid var(--hairline);
+             border-radius: 6px; padding: clamp(18px, 2.6vw, 26px); }
+    .leave.join { border-left: 3px solid var(--burnt); }
+    .leave.part { border-left: 3px solid var(--lightblue); }
+    .leave h3 { font-family: var(--serif); font-weight: 400; font-size: 19px;
+                margin-bottom: 8px; color: var(--ink); }
+    .leave p { color: var(--ink-dim); font-size: 14px; line-height: 1.65; margin-bottom: 14px; }
+    .leave ul { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 7px; }
+    .leave li { position: relative; padding-left: 18px; color: var(--ink-dim);
+                font-size: 14px; line-height: 1.6; }
+    .leave li::before {
+      content: ""; position: absolute; left: 2px; top: 0.6em; width: 6px; height: 6px;
+      border-radius: 50%; background: var(--burnt);
+    }
+    .leave .go-in {
+      display: inline-block; color: var(--burnt-bright); font-size: 14px;
+      border-bottom: 1px solid var(--burnt-veil); padding-bottom: 2px;
+    }
+    .leave form { display: flex; gap: 8px; flex-wrap: wrap; }
+    .leave input[type=email] {
+      flex: 1 1 150px; min-width: 0; background: var(--abyss);
+      border: 1px solid var(--hairline); border-radius: 4px; color: var(--ink);
+      font-family: inherit; font-size: 15px; padding: 11px 13px;
+    }
+    .leave input[type=email]:focus { outline: none; border-color: var(--lightblue); }
+    .leave form button {
+      flex: 0 0 auto; width: auto; align-self: stretch;
+      background: transparent; border: 1px solid var(--hairline); border-radius: 4px;
+      color: var(--ink-dim); font-family: var(--mono); font-size: 12px;
+      font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 11px 17px; cursor: pointer; box-shadow: none;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .leave form button:hover:not(:disabled) {
+      color: var(--ink); border-color: var(--lightblue); background: var(--blue-veil);
+    }
+    .leave form button:disabled { opacity: 0.5; cursor: default; }
+    .leave .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+    .leave-status { font-size: 13.5px; line-height: 1.6; margin-top: 12px; min-height: 1.2em; }
+    .leave-status.ok { color: var(--lightblue); }
+    .leave-status.err { color: var(--burnt-bright); }
+    @media (max-width: 700px) { .mailopt-grid { grid-template-columns: 1fr; } }
 
     /* ─────────────── DISPATCH (breaking) ─────────────── */
     .dispatch { padding: 0 0 clamp(36px, 6vw, 64px); }
@@ -1056,7 +1173,7 @@
     @media (max-width: 920px) {
       .hero .wrap { grid-template-columns: 1fr; }
       .holo-stage { order: -1; margin: 0 auto; }
-      #holo { width: min(62vw, 320px); }
+      #cfhBox { width: min(78vw, 360px); }
     }
     @media (max-width: 860px) {
       .grid-2, .records, .contact-grid, form .row { grid-template-columns: 1fr; }
@@ -1250,25 +1367,11 @@
   <header>
     <div class="wrap nav">
       <a class="brand" href="#top" aria-label="Compute Freedom home">
-        <!-- p|d mark, inline so the opening sequence can build it part by part (strong bar for small size) -->
-        <svg id="navMark" viewBox="-159.0 -1596.5 2357.0 2126.5" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Compute Freedom p|d mark">
-          <g class="gP">
-            <path d="M912.0 -505.0C912.0 -227.7 714.1 -3.0 470.0 -3.0C225.9 -3.0 28.0 -227.7 28.0 -505.0C28.0 -782.3 225.9 -1007.0 470.0 -1007.0C714.1 -1007.0 912.0 -782.3 912.0 -505.0Z M746.0 -505.0C746.0 -273.0 614.8 -85.0 453.0 -85.0C291.2 -85.0 160.0 -273.0 160.0 -505.0C160.0 -737.0 291.2 -925.0 453.0 -925.0C614.8 -925.0 746.0 -737.0 746.0 -505.0Z" fill="#B85025" fill-rule="evenodd"/>
-            <path d="M0.0 -1000.0L160.0 -1000.0L160.0 440.0L0.0 440.0Z" fill="#B85025"/>
-            <path d="M0.0 357.0C0.0 405.1 -63.0 431.7 -63.0 440.0L0.0 440.0Z M160.0 357.0C160.0 405.1 223.0 431.7 223.0 440.0L160.0 440.0Z" fill="#B85025"/>
-            <path d="M160.0 -1000.0L-69.0 -1000.0L-69.0 -963.0C0.0 -963.0 0.0 -963.0 0.0 -896.0Z" fill="#B85025"/>
-          </g>
-          <g class="gD">
-            <path d="M1127.0 -495.0C1127.0 -772.3 1324.9 -997.0 1569.0 -997.0C1813.1 -997.0 2011.0 -772.3 2011.0 -495.0C2011.0 -217.7 1813.1 7.0 1569.0 7.0C1324.9 7.0 1127.0 -217.7 1127.0 -495.0Z M1293.0 -495.0C1293.0 -727.0 1424.2 -915.0 1586.0 -915.0C1747.8 -915.0 1879.0 -727.0 1879.0 -495.0C1879.0 -263.0 1747.8 -75.0 1586.0 -75.0C1424.2 -75.0 1293.0 -263.0 1293.0 -495.0Z" fill="#A8BCC7" fill-rule="evenodd"/>
-            <path d="M1879.0 -1453.5L2039.0 -1453.5L2039.0 0.0L1879.0 0.0Z" fill="#A8BCC7"/>
-            <path d="M1879.0 -1453.5L2039.0 -1506.5L2039.0 -1453.5Z" fill="#A8BCC7"/>
-            <path d="M2039.0 -1453.5L1848.0 -1453.5L1848.0 -1416.5C1879.0 -1416.5 1879.0 -1416.5 1879.0 -1349.5Z" fill="#A8BCC7"/>
-            <path d="M1879.0 0.0L2108.0 0.0L2108.0 -37.0C2039.0 -37.0 2039.0 -37.0 2039.0 -104.0Z" fill="#A8BCC7"/>
-          </g>
-          <g class="gBar"><rect x="974.0" y="-1370.0" width="91.0" height="1634.0" fill="#A8BCC7"/></g>
-        </svg>
-        <span class="wordmark">Com<b>p</b>uteFree<i>d</i>om</span>
-        <span class="ver-tag">v42.0</span>
+        <!-- C‹|›F, die neue Marke. Farben wie beim p|d: Burnt Orange #B85025
+             und Polar Grey #A8BCC7 (Blatt B der Marken-Definition). -->
+        <svg id="navMark" viewBox="0 0 83.12 53.0" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Compute Freedom C|F mark" focusable="false"><g transform="translate(-9.5400,-10.5000) scale(1.000000)" opacity="1.0"><mask id="knav" maskUnits="userSpaceOnUse" x="0" y="0" width="110" height="80"><rect x="0" y="0" width="110" height="80" fill="white"/><path d="M60.50 34.50 L66.50 41.50 L60.50 48.50" fill="none" stroke="black" stroke-width="6.5" stroke-linejoin="round"/></mask><path d="M46.945 51.17Q46.945 53.24 45.805 55.34Q44.665 57.44 42.519999999999996 59.195Q40.375 60.95 37.315 62.03Q34.254999999999995 63.11 30.384999999999998 63.11Q23.935 63.11 19.27 60.305Q14.605 57.5 12.07 52.58Q9.535 47.66 9.535 41.269999999999996Q9.535 36.44 11.035 32.375Q12.535 28.310000000000002 15.25 25.310000000000002Q17.965 22.310000000000002 21.625 20.645000000000003Q25.285 18.980000000000004 29.605 18.980000000000004Q32.665 18.980000000000004 34.56999999999999 19.595000000000002Q36.474999999999994 20.21 37.56999999999999 20.84Q38.665 21.47 39.265 21.47Q40.015 21.47 40.36 20.93Q40.705 20.39 41.08 19.865000000000002Q41.455 19.340000000000003 42.175 19.340000000000003Q42.655 19.340000000000003 42.985 19.640000000000004Q43.315 19.940000000000005 43.525 20.690000000000005L46.705 30.950000000000003Q46.915 31.61 46.599999999999994 32.105000000000004Q46.285 32.6 45.625 32.72Q44.995 32.81 44.485 32.555Q43.975 32.3 43.705 31.67Q42.055 28.07 40.06 25.925Q38.065 23.78 35.71 22.835Q33.355000000000004 21.89 30.565 21.89Q27.775 21.89 25.42 23.135Q23.065 24.380000000000003 21.355 26.69Q19.645 29.0 18.685000000000002 32.24Q17.725 35.480000000000004 17.725 39.5Q17.725 45.620000000000005 19.69 49.88Q21.655 54.14 25.03 56.36Q28.405 58.58 32.724999999999994 58.58Q36.925 58.58 39.97 56.614999999999995Q43.015 54.65 44.635 51.11Q44.964999999999996 50.480000000000004 45.325 50.255Q45.685 50.03 46.135 50.120000000000005Q46.555 50.18 46.75 50.45Q46.945 50.72 46.945 51.17Z" fill="#B85025"/><line x1="55" y1="12" x2="55" y2="62" stroke="#A8BCC7" stroke-width="3" stroke-linecap="round"/><path d="M49.50 34.50 L43.50 41.50 L49.50 48.50" stroke="#A8BCC7" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M84.055 20.0Q85.135 20.0 85.825 19.7Q86.515 19.4 87.07 19.115Q87.625 18.83 88.225 18.83Q89.065 18.83 89.485 19.25Q89.905 19.67 90.205 20.690000000000005L92.575 29.39Q92.785 30.05 92.455 30.47Q92.125 30.89 91.495 31.01Q90.92500000000001 31.1 90.44500000000001 30.89Q89.965 30.68 89.635 29.990000000000002Q88.225 26.9 87.00999999999999 25.355Q85.795 23.810000000000002 84.445 23.270000000000003Q83.095 22.730000000000004 81.235 22.730000000000004H73.795V57.38Q73.795 58.01 74.155 58.459999999999994Q74.515 58.91 75.295 59.03L78.145 59.39Q78.83500000000001 59.51 79.15 59.84Q79.465 60.17 79.465 60.77Q79.465 61.31 79.075 61.655Q78.685 62.0 77.815 62.0H62.755Q61.915 62.0 61.510000000000005 61.655Q61.105000000000004 61.31 61.105000000000004 60.77Q61.105000000000004 59.75 62.305 59.39L64.165 59.03Q64.885 58.85 65.275 58.43Q65.665 58.01 65.665 57.38V24.620000000000005Q65.665 23.990000000000002 65.275 23.57Q64.885 23.15 64.165 22.97L62.305 22.61Q61.105000000000004 22.25 61.105000000000004 21.230000000000004Q61.105000000000004 20.660000000000004 61.510000000000005 20.330000000000002Q61.915 20.0 62.755 20.0ZM70.435 40.64H80.455Q82.345 40.64 83.11 39.92Q83.875 39.2 84.265 37.04Q84.415 36.41 84.73 36.125Q85.045 35.84 85.525 35.81Q86.66499999999999 35.72 86.965 36.92L89.155 45.74Q89.33500000000001 46.43 89.14 46.82Q88.945 47.21 88.405 47.39Q87.86500000000001 47.54 87.4 47.36Q86.935 47.18 86.515 46.61Q85.765 45.29 85.12 44.57Q84.475 43.85 83.65 43.58Q82.825 43.31 81.535 43.31H70.435Z" fill="#A8BCC7" mask="url(#knav)"/><path d="M60.50 34.50 L66.50 41.50 L60.50 48.50" stroke="#B85025" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></svg>
+        <span class="wordmark"><b>C</b>ompute<i>F</i>reedom</span>
+        <span class="ver-tag">v43.0</span>
       </a>
       <!-- Die Sektions-Links standen früher hier: Horizon, Principle, Mechanism,
            Origin, Forum, AREPO — exakt dieselben Ziele wie die Tabs eine Zeile
@@ -1573,10 +1676,10 @@
 
   <main id="top">
   <!-- ░░ HERO ░░ -->
-  <section class="hero">
+  <section class="hero cf-bg quiet hero-cut">
     <div class="wrap">
       <div class="hero-copy">
-        <span class="eyebrow reveal"><span data-i18n="hero.eyebrow">Compute Sovereignty · v42.0</span><span class="cf-eyedate" id="cfEyeDate"></span></span>
+        <span class="eyebrow reveal"><span data-i18n="hero.eyebrow">Compute Sovereignty · v43.0</span><span class="cf-eyedate" id="cfEyeDate"></span></span>
         <h1 data-i18n="hero.h1" class="reveal">The Right to <span class="run">Run.</span><br/>The Duty to <span class="restrain">Restrain.</span></h1>
         <p class="hero-lede reveal" data-i18n="hero.lede">
           Two legal obligations: a <b>lower</b> boundary, and an <b>upper</b> one.
@@ -1594,14 +1697,136 @@
       </div>
 
       <div class="holo-stage reveal">
-        <div class="holo-wrap"><canvas id="holo" width="600" height="540"></canvas></div>
+        <div class="holo-wrap">
+          <div id="cfhBox">
+<div class="cfh-logo" id="cfhLogo"><svg aria-label="ComputeFreedom logo animation" fill="none" id="cfhSvg" preserveAspectRatio="xMidYMid meet" role="img" style="isolation:isolate" viewBox="-245 6 592 68" viewbox="-245 6 592 68" xmlns="http://www.w3.org/2000/svg">
+<defs>
+
+
+<!-- Fenster-Gradient für Wanderreflex-Masken (CP2-Technik) -->
+<lineargradient id="gW" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#000"></stop><stop offset="0.32" stop-color="#555"></stop><stop offset="0.47" stop-color="#fff"></stop><stop offset="0.53" stop-color="#fff"></stop><stop offset="0.68" stop-color="#555"></stop><stop offset="1" stop-color="#000"></stop></lineargradient>
+<mask height="240" id="bandC" maskunits="userSpaceOnUse" width="240" x="-40" y="-80"><g><animatetransform attributename="transform" calcmode="linear" dur="12s" keytimes="0;0.166;0.5;1" repeatcount="indefinite" type="translate" values="-72 0;-72 0;72 0;72 0"></animatetransform><rect fill="url(#gW)" height="220" transform="rotate(-32 50 40)" width="48" x="26" y="-60"></rect></g></mask>
+<mask height="240" id="bandF" maskunits="userSpaceOnUse" width="240" x="-40" y="-80"><g><animatetransform attributename="transform" calcmode="linear" dur="7s" keytimes="0;0.314;0.571;1" repeatcount="indefinite" type="translate" values="-46 0;-46 0;46 0;46 0"></animatetransform><rect fill="url(#gW)" height="220" transform="rotate(-28 98 40)" width="34" x="80" y="-60"></rect></g></mask>
+<mask height="240" id="swMC" maskunits="userSpaceOnUse" width="240" x="-40" y="-80"><g transform="translate(-72 0)"><rect fill="url(#gW)" height="220" transform="rotate(-32 50 40)" width="48" x="26" y="-60"></rect></g></mask>
+<mask height="240" id="swMF" maskunits="userSpaceOnUse" width="240" x="-40" y="-80"><g transform="translate(-46 0)"><rect fill="url(#gW)" height="220" transform="rotate(-28 98 40)" width="34" x="80" y="-60"></rect></g></mask>
+<!-- Metall-Körper: Band-Gradients -->
+<lineargradient gradientunits="userSpaceOnUse" id="gradC" x1="0" x2="0" y1="18" y2="64">
+<stop offset="0" stop-color="#9c440c"></stop><stop offset="0.09" stop-color="#ef8f36"></stop>
+<stop offset="0.26" stop-color="#d3661a"></stop><stop offset="0.46" stop-color="#743408"></stop>
+<stop offset="0.58" stop-color="#471f04"></stop><stop offset="0.74" stop-color="#cc6e1e"></stop>
+<stop offset="0.9" stop-color="#ffbd66"></stop><stop offset="1" stop-color="#8a430a"></stop>
+</lineargradient>
+<lineargradient gradientunits="userSpaceOnUse" id="gradF" x1="0" x2="0" y1="18" y2="64">
+<stop offset="0" stop-color="#3d9dcf"></stop><stop offset="0.09" stop-color="#c9f4ff"></stop>
+<stop offset="0.26" stop-color="#4cc2f0"></stop><stop offset="0.46" stop-color="#155a86"></stop>
+<stop offset="0.58" stop-color="#06334e"></stop><stop offset="0.74" stop-color="#27a6e2"></stop>
+<stop offset="0.9" stop-color="#c8f4ff"></stop><stop offset="1" stop-color="#2f8fc4"></stop>
+</lineargradient>
+<lineargradient gradientunits="userSpaceOnUse" id="gradA" x1="0" x2="0" y1="12" y2="62">
+<stop offset="0" stop-color="#5c88a4"></stop><stop offset="0.12" stop-color="#c8e4f6"></stop>
+<stop offset="0.3" stop-color="#8db8d2"></stop><stop offset="0.5" stop-color="#35607e"></stop>
+<stop offset="0.62" stop-color="#25485e"></stop><stop offset="0.8" stop-color="#93c6e0"></stop>
+<stop offset="0.92" stop-color="#cfe9f9"></stop><stop offset="1" stop-color="#5c88a4"></stop>
+</lineargradient>
+<lineargradient gradientunits="userSpaceOnUse" id="gradAng" x1="0" x2="0" y1="33" y2="50">
+<stop offset="0" stop-color="#eaf6ff"></stop><stop offset="0.32" stop-color="#9cc4dc"></stop>
+<stop offset="0.58" stop-color="#3b607a"></stop><stop offset="0.84" stop-color="#cfeafa"></stop>
+<stop offset="1" stop-color="#8fb9d3"></stop>
+</lineargradient>
+<lineargradient id="gFlare" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#eaf7ff" stop-opacity="0"></stop><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.9"></stop><stop offset="1" stop-color="#eaf7ff" stop-opacity="0"></stop></lineargradient>
+<radialgradient id="rFlare"><stop offset="0" stop-color="#ffffff" stop-opacity="0.85"></stop><stop offset="0.4" stop-color="#cfeaff" stop-opacity="0.35"></stop><stop offset="1" stop-color="#cfeaff" stop-opacity="0"></stop></radialgradient>
+<!-- Licht-Pässe: Bevel (glatt, poliert) -->
+<filter color-interpolation-filters="sRGB" height="180%" id="bevC" width="180%" x="-40%" y="-40%">
+<fegaussianblur in="SourceAlpha" result="bump" stddeviation="0.45"></fegaussianblur>
+<fediffuselighting diffuseconstant="0.09" in="bump" lighting-color="#7e3d0e" surfacescale="0.9"><fedistantlight azimuth="212" elevation="42"></fedistantlight></fediffuselighting><fecomposite in2="SourceAlpha" operator="in" result="dl"></fecomposite>
+<fespecularlighting in="bump" lighting-color="#ffd79a" specularconstant="4.3" specularexponent="19" surfacescale="0.9"><fedistantlight azimuth="212" elevation="23"></fedistantlight></fespecularlighting><fecomposite in2="SourceAlpha" operator="in" result="s1"></fecomposite>
+<fespecularlighting in="bump" lighting-color="#ff8f30" specularconstant="1.35" specularexponent="11" surfacescale="0.9"><fedistantlight azimuth="20" elevation="28"></fedistantlight></fespecularlighting><fecomposite in2="SourceAlpha" operator="in" result="s2"></fecomposite>
+<feblend in="dl" in2="s1" mode="screen" result="m1"></feblend><feblend in="m1" in2="s2" mode="screen"></feblend>
+</filter>
+<filter color-interpolation-filters="sRGB" height="180%" id="bevF" width="180%" x="-40%" y="-40%">
+<fegaussianblur in="SourceAlpha" result="bump" stddeviation="0.45"></fegaussianblur>
+<fediffuselighting diffuseconstant="0.08" in="bump" lighting-color="#2c5f7e" surfacescale="0.9"><fedistantlight azimuth="328" elevation="42"></fedistantlight></fediffuselighting><fecomposite in2="SourceAlpha" operator="in" result="dl"></fecomposite>
+<fespecularlighting in="bump" lighting-color="#eefcff" specularconstant="4.5" specularexponent="19" surfacescale="0.9"><fedistantlight azimuth="328" elevation="23"></fedistantlight></fespecularlighting><fecomposite in2="SourceAlpha" operator="in" result="s1"></fecomposite>
+<fespecularlighting in="bump" lighting-color="#4fd2fa" specularconstant="1.25" specularexponent="11" surfacescale="0.9"><fedistantlight azimuth="160" elevation="28"></fedistantlight></fespecularlighting><fecomposite in2="SourceAlpha" operator="in" result="s2"></fecomposite>
+<feblend in="dl" in2="s1" mode="screen" result="m1"></feblend><feblend in="m1" in2="s2" mode="screen"></feblend>
+</filter>
+<filter color-interpolation-filters="sRGB" height="220%" id="bevA" width="220%" x="-60%" y="-60%">
+<fegaussianblur in="SourceAlpha" result="bump" stddeviation="0.3"></fegaussianblur>
+<fediffuselighting diffuseconstant="0.1" in="bump" lighting-color="#4a7186" surfacescale="0.9"><fedistantlight azimuth="255" elevation="42"></fedistantlight></fediffuselighting><fecomposite in2="SourceAlpha" operator="in" result="dl"></fecomposite>
+<fespecularlighting in="bump" lighting-color="#ffffff" specularconstant="2.4" specularexponent="16" surfacescale="0.9"><fedistantlight azimuth="255" elevation="30"></fedistantlight></fespecularlighting><fecomposite in2="SourceAlpha" operator="in" result="s1"></fecomposite>
+<fespecularlighting in="bump" lighting-color="#aee0f7" specularconstant="1.0" specularexponent="10" surfacescale="0.9"><fedistantlight azimuth="100" elevation="28"></fedistantlight></fespecularlighting><fecomposite in2="SourceAlpha" operator="in" result="s2"></fecomposite>
+<feblend in="dl" in2="s1" mode="screen" result="m1"></feblend><feblend in="m1" in2="s2" mode="screen"></feblend>
+</filter>
+<!-- Wanderreflex-Pässe: starke Spekulare (CP2-Glanzniveau) -->
+<filter color-interpolation-filters="sRGB" height="180%" id="bevCs" width="180%" x="-40%" y="-40%">
+<fegaussianblur in="SourceAlpha" result="bump0" stddeviation="0.5"></fegaussianblur>
+<feturbulence basefrequency="1.6 0.045" numoctaves="2" result="turb" seed="7" type="fractalNoise"></feturbulence>
+<fecolormatrix in="turb" result="turbA" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.16 0.16 0.16 0 0"></fecolormatrix>
+<fecomposite in="bump0" in2="turbA" k2="1" k3="0.1" operator="arithmetic" result="bump"></fecomposite>
+<fediffuselighting diffuseconstant="0.14" in="bump" lighting-color="#8a3a08" surfacescale="0.8"><fedistantlight azimuth="206" elevation="42"></fedistantlight></fediffuselighting><fecomposite in2="SourceAlpha" operator="in" result="dl"></fecomposite>
+<fespecularlighting in="bump" lighting-color="#ffe8bd" specularconstant="5.2" specularexponent="13" surfacescale="0.8"><fedistantlight azimuth="206" elevation="20"></fedistantlight></fespecularlighting><fecomposite in2="SourceAlpha" operator="in" result="sl"></fecomposite>
+<feblend in="dl" in2="sl" mode="screen"></feblend>
+</filter>
+<filter color-interpolation-filters="sRGB" height="180%" id="bevFs" width="180%" x="-40%" y="-40%">
+<fegaussianblur in="SourceAlpha" result="bump0" stddeviation="0.5"></fegaussianblur>
+<feturbulence basefrequency="1.6 0.045" numoctaves="2" result="turb" seed="11" type="fractalNoise"></feturbulence>
+<fecolormatrix in="turb" result="turbA" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.16 0.16 0.16 0 0"></fecolormatrix>
+<fecomposite in="bump0" in2="turbA" k2="1" k3="0.1" operator="arithmetic" result="bump"></fecomposite>
+<fediffuselighting diffuseconstant="0.12" in="bump" lighting-color="#3d6478" surfacescale="0.8"><fedistantlight azimuth="332" elevation="42"></fedistantlight></fediffuselighting><fecomposite in2="SourceAlpha" operator="in" result="dl"></fecomposite>
+<fespecularlighting in="bump" lighting-color="#e2f8ff" specularconstant="6.6" specularexponent="12" surfacescale="0.8"><fedistantlight azimuth="332" elevation="20"></fedistantlight></fespecularlighting><fecomposite in2="SourceAlpha" operator="in" result="sl"></fecomposite>
+<feblend in="dl" in2="sl" mode="screen"></feblend>
+</filter>
+<filter color-interpolation-filters="sRGB" height="340%" id="flashA" width="340%" x="-120%" y="-120%">
+<fegaussianblur in="SourceAlpha" result="bump" stddeviation="0.55"></fegaussianblur>
+<fediffuselighting diffuseconstant="0.5" in="bump" lighting-color="#d9eefc" surfacescale="0.8"><fedistantlight azimuth="255" elevation="42"></fedistantlight></fediffuselighting><fecomposite in2="SourceAlpha" operator="in" result="dl"></fecomposite>
+<fespecularlighting in="bump" lighting-color="#ffffff" specularconstant="5.5" specularexponent="9" surfacescale="0.8"><fedistantlight azimuth="255" elevation="30"></fedistantlight></fespecularlighting><fecomposite in2="SourceAlpha" operator="in" result="sl"></fecomposite>
+<feblend in="dl" in2="sl" mode="screen" result="lit"></feblend>
+<fegaussianblur in="lit" result="bl" stddeviation="1.5"></fegaussianblur><feblend in="lit" in2="bl" mode="screen"></feblend>
+</filter>
+<filter color-interpolation-filters="sRGB" height="340%" id="glowWarm" width="340%" x="-120%" y="-120%">
+<fegaussianblur result="b" stddeviation="1.1"></fegaussianblur><feblend in="SourceGraphic" in2="b" mode="screen"></feblend>
+</filter>
+<filter color-interpolation-filters="sRGB" height="340%" id="glowCool" width="340%" x="-120%" y="-120%">
+<fegaussianblur result="b" stddeviation="1.2"></fegaussianblur><feblend in="SourceGraphic" in2="b" mode="screen"></feblend>
+</filter>
+<lineargradient gradientunits="userSpaceOnUse" id="gradW" x1="0" x2="0" y1="18" y2="64"><stop offset="0" stop-color="#ffffff"></stop><stop offset="0.5" stop-color="#f2f6fb"></stop><stop offset="1" stop-color="#d7e0ea"></stop></lineargradient><lineargradient gradientunits="userSpaceOnUse" id="gradAngleBlue" x1="40" x2="40" y1="33" y2="50">
+<stop offset="0" stop-color="#e6fbff"></stop><stop offset="0.24" stop-color="#8fe7ff"></stop><stop offset="0.55" stop-color="#29b8ff"></stop><stop offset="0.82" stop-color="#7adfff"></stop><stop offset="1" stop-color="#effcff"></stop>
+</lineargradient>
+<lineargradient gradientunits="userSpaceOnUse" id="gradAngleWarm" x1="76" x2="76" y1="33" y2="50">
+<stop offset="0" stop-color="#ffe2c2"></stop><stop offset="0.24" stop-color="#ffc07a"></stop><stop offset="0.55" stop-color="#f48a2c"></stop><stop offset="0.82" stop-color="#ffbe77"></stop><stop offset="1" stop-color="#fff0de"></stop>
+</lineargradient>
+<mask height="62" id="fNotchMask" maskUnits="userSpaceOnUse" width="62" x="72" y="10"><rect fill="#fff" height="62" width="62" x="72" y="10"></rect><path d="M83.95 34.75 L88.75 41.50 L83.95 48.25" fill="none" id="notchCut" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="0"></path></mask><filter id="holoGlow" x="-60%" y="-60%" width="220%" height="220%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceGraphic" stdDeviation="1.1" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><linearGradient id="glassGradSolid" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="12" y2="64"><stop offset="0" stop-color="#f4fafe"/><stop offset="0.40" stop-color="#c9dff0"/><stop offset="0.75" stop-color="#b4d2e8"/><stop offset="1" stop-color="#eef7fd"/></linearGradient><filter id="glassRim" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB"><feMorphology operator="erode" radius="0.35" in="SourceAlpha" result="er"/><feComposite in="SourceAlpha" in2="er" operator="out" result="edge"/><feFlood flood-color="#eef9ff" flood-opacity="0.85"/><feComposite in2="edge" operator="in" result="rim"/><feGaussianBlur in="rim" stdDeviation="0.2" result="rimS"/><feMerge><feMergeNode in="rimS"/><feMergeNode in="rim"/></feMerge></filter><filter id="glassTop" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB"><feOffset in="SourceAlpha" dy="0.45" result="o"/><feComposite in="SourceAlpha" in2="o" operator="out" result="e"/><feFlood flood-color="#ffffff" flood-opacity="0.95"/><feComposite in2="e" operator="in" result="t"/><feGaussianBlur in="t" stdDeviation="0.12" result="tS"/><feMerge><feMergeNode in="tS"/><feMergeNode in="t"/></feMerge></filter><filter id="glassBottom" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB"><feOffset in="SourceAlpha" dy="-0.45" result="o"/><feComposite in="SourceAlpha" in2="o" operator="out" result="e"/><feFlood flood-color="#9fd0f0" flood-opacity="0.55"/><feComposite in2="e" operator="in" result="t"/><feGaussianBlur in="t" stdDeviation="0.22"/></filter><linearGradient id="glintGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0.36" stop-color="#000000"/><stop offset="0.46" stop-color="#ffffff"/><stop offset="0.51" stop-color="#ffffff"/><stop offset="0.62" stop-color="#000000"/></linearGradient><mask id="glintMask" maskUnits="userSpaceOnUse" x="-260" y="0" width="640" height="90"><rect x="-260" y="0" width="640" height="90" fill="url(#glintGrad)"/></mask><linearGradient id="sweepWarmGrad" x1="0" y1="0" x2="1" y2="0.30"><stop offset="0.40" stop-color="#000000"/><stop offset="0.475" stop-color="#ffffff"/><stop offset="0.525" stop-color="#ffffff"/><stop offset="0.60" stop-color="#000000"/></linearGradient><mask id="sweepWarmMask" maskUnits="userSpaceOnUse" x="-260" y="0" width="640" height="90"><rect x="-260" y="0" width="640" height="90" fill="url(#sweepWarmGrad)"/></mask><linearGradient id="sweepCoolGrad" x1="0" y1="0.30" x2="1" y2="0"><stop offset="0.40" stop-color="#000000"/><stop offset="0.475" stop-color="#ffffff"/><stop offset="0.525" stop-color="#ffffff"/><stop offset="0.60" stop-color="#000000"/></linearGradient><mask id="sweepCoolMask" maskUnits="userSpaceOnUse" x="-260" y="0" width="640" height="90"><rect x="-260" y="0" width="640" height="90" fill="url(#sweepCoolGrad)"/></mask><linearGradient id="zr0e" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="72"><stop offset="0" stop-color="#000"/><stop offset="0.22" stop-color="#fff"/><stop offset="0.78" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient><linearGradient id="zr0c" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="48"><stop offset="0" stop-color="#000"/><stop offset="0.28" stop-color="#fff"/><stop offset="0.72" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient><linearGradient id="zr1e" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="68"><stop offset="0" stop-color="#000"/><stop offset="0.22" stop-color="#fff"/><stop offset="0.78" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient><linearGradient id="zr1c" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="44"><stop offset="0" stop-color="#000"/><stop offset="0.28" stop-color="#fff"/><stop offset="0.72" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient><linearGradient id="zr2e" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="72"><stop offset="0" stop-color="#000"/><stop offset="0.22" stop-color="#fff"/><stop offset="0.78" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient><linearGradient id="zr2c" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="48"><stop offset="0" stop-color="#000"/><stop offset="0.28" stop-color="#fff"/><stop offset="0.72" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient><mask id="mskZ0e" maskUnits="userSpaceOnUse" x="-320" y="-40" width="760" height="170"><rect x="-320" y="-40" width="760" height="170" fill="url(#zr0e)"/></mask><mask id="mskZ0c" maskUnits="userSpaceOnUse" x="-320" y="-40" width="760" height="170"><rect x="-320" y="-40" width="760" height="170" fill="url(#zr0c)"/></mask><mask id="mskZ1e" maskUnits="userSpaceOnUse" x="-320" y="-40" width="760" height="170"><rect x="-320" y="-40" width="760" height="170" fill="url(#zr1e)"/></mask><mask id="mskZ1c" maskUnits="userSpaceOnUse" x="-320" y="-40" width="760" height="170"><rect x="-320" y="-40" width="760" height="170" fill="url(#zr1c)"/></mask><mask id="mskZ2e" maskUnits="userSpaceOnUse" x="-320" y="-40" width="760" height="170"><rect x="-320" y="-40" width="760" height="170" fill="url(#zr2e)"/></mask><mask id="mskZ2c" maskUnits="userSpaceOnUse" x="-320" y="-40" width="760" height="170"><rect x="-320" y="-40" width="760" height="170" fill="url(#zr2c)"/></mask></defs>
+<g id="glyphs">
+<g id="letterC" opacity="1" transform="translate(-262.24 0)">
+
+<path d="M68.945 51.17Q68.945 53.24 67.80499999999999 55.34Q66.66499999999999 57.44 64.52 59.195Q62.375 60.95 59.315 62.03Q56.254999999999995 63.11 52.385 63.11Q45.935 63.11 41.27 60.305Q36.605000000000004 57.5 34.07 52.58Q31.535 47.66 31.535 41.269999999999996Q31.535 36.44 33.035 32.375Q34.535 28.310000000000002 37.25 25.310000000000002Q39.965 22.310000000000002 43.625 20.645000000000003Q47.285 18.980000000000004 51.605000000000004 18.980000000000004Q54.665 18.980000000000004 56.56999999999999 19.595000000000002Q58.474999999999994 20.21 59.56999999999999 20.84Q60.665 21.47 61.265 21.47Q62.015 21.47 62.36 20.93Q62.705 20.39 63.08 19.865000000000002Q63.455 19.340000000000003 64.175 19.340000000000003Q64.655 19.340000000000003 64.985 19.640000000000004Q65.315 19.940000000000005 65.525 20.690000000000005L68.705 30.950000000000003Q68.91499999999999 31.61 68.6 32.105000000000004Q68.285 32.6 67.625 32.72Q66.995 32.81 66.485 32.555Q65.975 32.3 65.705 31.67Q64.055 28.07 62.06 25.925Q60.065 23.78 57.71 22.835Q55.355000000000004 21.89 52.565 21.89Q49.775 21.89 47.42 23.135Q45.065 24.380000000000003 43.355 26.69Q41.644999999999996 29.0 40.685 32.24Q39.725 35.480000000000004 39.725 39.5Q39.725 45.620000000000005 41.69 49.88Q43.655 54.14 47.03 56.36Q50.405 58.58 54.724999999999994 58.58Q58.925 58.58 61.97 56.614999999999995Q65.015 54.65 66.63499999999999 51.11Q66.965 50.480000000000004 67.325 50.255Q67.685 50.03 68.13499999999999 50.120000000000005Q68.555 50.18 68.75 50.45Q68.945 50.72 68.945 51.17Z" fill="url(#gradC)"></path><g style="mix-blend-mode:screen"><g opacity="0.95"><animate attributename="opacity" calcmode="linear" dur="7.9s" keytimes="0;0.22;0.41;0.63;0.82;1" repeatcount="indefinite" values="0.88;1;0.92;0.99;0.9;0.88"></animate><g filter="url(#bevC)"><path d="M68.945 51.17Q68.945 53.24 67.80499999999999 55.34Q66.66499999999999 57.44 64.52 59.195Q62.375 60.95 59.315 62.03Q56.254999999999995 63.11 52.385 63.11Q45.935 63.11 41.27 60.305Q36.605000000000004 57.5 34.07 52.58Q31.535 47.66 31.535 41.269999999999996Q31.535 36.44 33.035 32.375Q34.535 28.310000000000002 37.25 25.310000000000002Q39.965 22.310000000000002 43.625 20.645000000000003Q47.285 18.980000000000004 51.605000000000004 18.980000000000004Q54.665 18.980000000000004 56.56999999999999 19.595000000000002Q58.474999999999994 20.21 59.56999999999999 20.84Q60.665 21.47 61.265 21.47Q62.015 21.47 62.36 20.93Q62.705 20.39 63.08 19.865000000000002Q63.455 19.340000000000003 64.175 19.340000000000003Q64.655 19.340000000000003 64.985 19.640000000000004Q65.315 19.940000000000005 65.525 20.690000000000005L68.705 30.950000000000003Q68.91499999999999 31.61 68.6 32.105000000000004Q68.285 32.6 67.625 32.72Q66.995 32.81 66.485 32.555Q65.975 32.3 65.705 31.67Q64.055 28.07 62.06 25.925Q60.065 23.78 57.71 22.835Q55.355000000000004 21.89 52.565 21.89Q49.775 21.89 47.42 23.135Q45.065 24.380000000000003 43.355 26.69Q41.644999999999996 29.0 40.685 32.24Q39.725 35.480000000000004 39.725 39.5Q39.725 45.620000000000005 41.69 49.88Q43.655 54.14 47.03 56.36Q50.405 58.58 54.724999999999994 58.58Q58.925 58.58 61.97 56.614999999999995Q65.015 54.65 66.63499999999999 51.11Q66.965 50.480000000000004 67.325 50.255Q67.685 50.03 68.13499999999999 50.120000000000005Q68.555 50.18 68.75 50.45Q68.945 50.72 68.945 51.17Z" fill="#fff"></path></g></g></g>
+</g>
+<g id="ompute" opacity="1"><path d="M-173.465 33.05Q-168.935 33.05 -165.5 34.94Q-162.065 36.83 -160.13 40.19Q-158.195 43.55 -158.195 47.93Q-158.195 52.16 -160.175 55.504999999999995Q-162.155 58.85 -165.635 60.785Q-169.115 62.72 -173.70499999999998 62.72Q-178.23499999999999 62.72 -181.65499999999997 60.815Q-185.075 58.91 -187.01 55.55Q-188.945 52.19 -188.945 47.84Q-188.945 43.55 -186.98 40.22Q-185.015 36.89 -181.535 34.97Q-178.055 33.05 -173.465 33.05ZM-171.335 59.87Q-169.055 59.54 -167.66 57.905Q-166.265 56.27 -165.82999999999998 53.465Q-165.39499999999998 50.66 -166.085 46.76Q-166.745 42.89 -168.155 40.34Q-169.565 37.79 -171.53 36.665000000000006Q-173.495 35.540000000000006 -175.835 35.900000000000006Q-178.085 36.260000000000005 -179.495 37.88Q-180.905 39.5 -181.325 42.305Q-181.745 45.11 -181.085 49.01Q-180.42499999999998 52.88 -179.015 55.43000000000001Q-177.605 57.980000000000004 -175.64 59.105000000000004Q-173.675 60.23 -171.335 59.87ZM-142.475 34.97V57.53Q-142.475 58.4 -142.20499999999998 58.82Q-141.935 59.24 -141.36499999999998 59.42L-140.135 59.72Q-139.20499999999998 60.08 -139.20499999999998 60.83Q-139.20499999999998 62.0 -140.73499999999999 62.0H-151.86499999999998Q-152.64499999999998 62.0 -153.005 61.7Q-153.36499999999998 61.4 -153.36499999999998 60.89Q-153.36499999999998 60.47 -153.10999999999999 60.185Q-152.855 59.9 -152.315 59.72L-150.995 59.42Q-150.42499999999998 59.24 -150.14 58.835Q-149.855 58.43 -149.855 57.56V39.620000000000005Q-149.855 38.900000000000006 -150.09499999999997 38.585Q-150.33499999999998 38.269999999999996 -150.845 38.18L-152.64499999999998 38.09Q-153.185 38.0 -153.41 37.745000000000005Q-153.635 37.49 -153.635 37.13Q-153.635 36.68 -153.365 36.394999999999996Q-153.095 36.11 -152.345 35.870000000000005L-147.065 33.95Q-146.045 33.59 -145.39999999999998 33.410000000000004Q-144.755 33.230000000000004 -144.215 33.230000000000004Q-143.345 33.230000000000004 -142.91 33.71Q-142.475 34.19 -142.475 34.97ZM-143.375 41.480000000000004 -144.635 40.19 -143.405 39.11Q-139.715 35.75 -136.985 34.4Q-134.255 33.05 -131.795 33.05Q-127.95499999999998 33.05 -125.64499999999998 35.465Q-123.335 37.88 -123.335 42.019999999999996V57.44Q-123.335 58.37 -123.035 58.805Q-122.73499999999999 59.24 -122.13499999999999 59.42L-120.99499999999999 59.75Q-120.095 60.08 -120.095 60.83Q-120.095 62.0 -121.595 62.0H-132.575Q-134.075 62.0 -134.075 60.83Q-134.075 60.08 -133.17499999999998 59.72L-131.885 59.42Q-131.285 59.24 -131.0 58.790000000000006Q-130.715 58.34 -130.715 57.44V43.1Q-130.715 40.28 -132.065 38.885000000000005Q-133.415 37.49 -135.725 37.49Q-137.165 37.49 -138.755 38.19500000000001Q-140.345 38.900000000000006 -142.11499999999998 40.43ZM-124.23499999999999 41.480000000000004 -125.49499999999999 40.19 -124.26499999999999 39.11Q-120.66499999999999 35.84 -118.07 34.445Q-115.475 33.05 -113.10499999999999 33.05Q-109.445 33.05 -107.43499999999999 35.48Q-105.42499999999998 37.91 -104.975 42.019999999999996L-103.23499999999999 57.44Q-103.115 58.37 -102.85999999999999 58.805Q-102.60499999999999 59.24 -102.005 59.42L-100.835 59.72Q-100.29499999999999 59.9 -100.03999999999999 60.185Q-99.785 60.47 -99.785 60.89Q-99.785 61.4 -100.145 61.7Q-100.505 62.0 -101.255 62.0H-112.505Q-114.035 62.0 -114.035 60.83Q-114.035 60.08 -113.10499999999999 59.72L-111.845 59.42Q-111.24499999999999 59.24 -110.91499999999999 58.790000000000006Q-110.585 58.34 -110.67499999999998 57.44L-112.35499999999999 43.1Q-112.685 40.31 -113.795 38.900000000000006Q-114.905 37.49 -117.065 37.49Q-118.35499999999999 37.49 -119.82499999999999 38.225Q-121.29499999999999 38.96 -123.005 40.400000000000006ZM-86.585 34.97V38.480000000000004L-86.285 39.11V71.51Q-86.285 72.38 -86.0 72.815Q-85.71499999999999 73.25 -85.17499999999998 73.37L-83.345 73.7Q-82.77499999999999 73.85 -82.51999999999998 74.15Q-82.26499999999999 74.45 -82.26499999999999 74.87Q-82.26499999999999 75.38 -82.62499999999999 75.68Q-82.98499999999999 75.98 -83.76499999999999 75.98H-95.675Q-96.425 75.98 -96.785 75.68Q-97.145 75.38 -97.145 74.87Q-97.145 74.45 -96.88999999999999 74.16499999999999Q-96.63499999999999 73.88 -96.09499999999998 73.7L-94.80499999999999 73.4Q-94.23499999999999 73.22 -93.94999999999999 72.815Q-93.66499999999999 72.41 -93.66499999999999 71.53999999999999V39.620000000000005Q-93.66499999999999 38.900000000000006 -93.905 38.585Q-94.145 38.269999999999996 -94.65499999999999 38.18L-96.45499999999998 38.09Q-96.99499999999999 37.97 -97.22 37.730000000000004Q-97.445 37.49 -97.445 37.1Q-97.445 36.68 -97.17499999999998 36.425Q-96.90499999999999 36.17 -96.15499999999999 35.870000000000005L-91.17499999999998 33.95Q-90.15499999999999 33.56 -89.50999999999999 33.395Q-88.865 33.230000000000004 -88.38499999999999 33.230000000000004Q-87.45499999999998 33.230000000000004 -87.01999999999998 33.695Q-86.585 34.16 -86.585 34.97ZM-87.87499999999999 42.29 -89.04499999999999 40.67Q-86.70499999999998 37.07 -83.63 35.06Q-80.55499999999999 33.05 -76.865 33.05Q-73.32499999999999 33.05 -70.54999999999998 34.864999999999995Q-67.77499999999999 36.68 -66.16999999999999 39.86Q-64.565 43.04 -64.565 47.18Q-64.565 51.95 -66.455 55.43Q-68.345 58.91 -71.55499999999999 60.815Q-74.76499999999999 62.72 -78.725 62.72Q-82.29499999999999 62.72 -85.08499999999998 61.01Q-87.87499999999999 59.3 -89.615 56.09L-87.84499999999998 54.47Q-86.315 57.05 -84.32 58.355Q-82.32499999999999 59.66 -80.04499999999999 59.66Q-77.82499999999999 59.66 -76.07 58.4Q-74.315 57.14 -73.29499999999999 54.545Q-72.27499999999999 51.95 -72.27499999999999 47.99Q-72.27499999999999 44.24 -73.26499999999999 41.765Q-74.255 39.29 -75.94999999999999 38.06Q-77.645 36.83 -79.835 36.83Q-82.115 36.83 -84.155 38.18Q-86.195 39.53 -87.87499999999999 42.29ZM-38.04499999999999 58.1V56.39L-38.254999999999995 56.24V39.620000000000005Q-38.254999999999995 38.900000000000006 -38.47999999999999 38.585Q-38.70499999999999 38.269999999999996 -39.21499999999999 38.21L-41.04499999999999 38.09Q-41.55499999999999 38.0 -41.79499999999999 37.76Q-42.03499999999999 37.519999999999996 -42.03499999999999 37.13Q-42.03499999999999 36.68 -41.749999999999986 36.41Q-41.46499999999999 36.14 -40.74499999999999 35.870000000000005L-35.46499999999999 33.980000000000004Q-34.41499999999999 33.59 -33.76999999999999 33.425000000000004Q-33.124999999999986 33.260000000000005 -32.584999999999994 33.260000000000005Q-31.74499999999999 33.260000000000005 -31.309999999999988 33.725Q-30.87499999999999 34.19 -30.87499999999999 35.0V57.53Q-30.87499999999999 58.4 -30.58999999999999 58.82Q-30.30499999999999 59.24 -29.734999999999992 59.42L-28.50499999999999 59.72Q-27.934999999999988 59.9 -27.67999999999999 60.185Q-27.42499999999999 60.47 -27.42499999999999 60.89Q-27.42499999999999 61.4 -27.78499999999999 61.7Q-28.14499999999999 62.0 -28.92499999999999 62.0H-34.59499999999999Q-36.09499999999999 62.0 -37.06999999999999 60.935Q-38.04499999999999 59.87 -38.04499999999999 58.1ZM-57.06499999999999 53.75V39.620000000000005Q-57.06499999999999 38.900000000000006 -57.30499999999999 38.585Q-57.54499999999999 38.269999999999996 -58.05499999999999 38.21L-59.85499999999999 38.09Q-60.39499999999999 38.0 -60.61999999999999 37.76Q-60.84499999999999 37.519999999999996 -60.84499999999999 37.13Q-60.84499999999999 36.68 -60.57499999999999 36.41Q-60.30499999999999 36.14 -59.55499999999999 35.870000000000005L-54.27499999999999 33.980000000000004Q-53.19499999999999 33.59 -52.56499999999999 33.425000000000004Q-51.93499999999999 33.260000000000005 -51.48499999999999 33.260000000000005Q-50.584999999999994 33.260000000000005 -50.13499999999999 33.725Q-49.68499999999999 34.19 -49.68499999999999 35.0V52.64Q-49.68499999999999 55.46 -48.31999999999999 56.870000000000005Q-46.95499999999999 58.28 -44.70499999999999 58.28Q-43.29499999999999 58.28 -41.67499999999999 57.575Q-40.05499999999999 56.87 -38.28499999999999 55.34L-37.05499999999999 54.26L-35.764999999999986 55.55L-37.02499999999999 56.66Q-40.68499999999999 60.02 -43.42999999999999 61.370000000000005Q-46.17499999999999 62.72 -48.63499999999999 62.72Q-52.41499999999999 62.72 -54.739999999999995 60.29Q-57.06499999999999 57.86 -57.06499999999999 53.75ZM-21.214999999999993 36.41 -22.714999999999993 35.99Q-23.464999999999993 35.78 -23.749999999999993 35.480000000000004Q-24.034999999999993 35.18 -24.034999999999993 34.790000000000006Q-24.034999999999993 34.25 -23.659999999999993 33.980000000000004Q-23.284999999999993 33.71 -22.68499999999999 33.71H-20.794999999999995Q-20.044999999999995 33.71 -19.564999999999994 33.455Q-19.084999999999994 33.2 -18.63499999999999 32.510000000000005L-15.784999999999993 28.009999999999998Q-15.244999999999992 27.29 -14.734999999999992 26.945Q-14.224999999999993 26.6 -13.714999999999993 26.6Q-13.144999999999992 26.6 -12.829999999999993 26.96Q-12.514999999999993 27.32 -12.514999999999993 27.980000000000004V54.02Q-12.514999999999993 56.12 -11.674999999999994 57.215Q-10.834999999999994 58.31 -9.304999999999993 58.31Q-8.224999999999994 58.31 -7.609999999999994 57.905Q-6.994999999999994 57.5 -6.634999999999993 56.975Q-6.2749999999999915 56.45 -5.944999999999991 56.045Q-5.614999999999991 55.64 -5.1349999999999945 55.61Q-4.714999999999993 55.61 -4.489999999999993 55.879999999999995Q-4.2649999999999935 56.15 -4.2649999999999935 56.75Q-4.2649999999999935 58.28 -5.284999999999993 59.6Q-6.304999999999993 60.92 -8.089999999999993 61.745000000000005Q-9.874999999999993 62.57 -12.154999999999992 62.57Q-15.724999999999993 62.57 -17.79499999999999 60.739999999999995Q-19.86499999999999 58.91 -19.86499999999999 55.22V38.150000000000006Q-19.86499999999999 37.400000000000006 -20.179999999999993 37.025000000000006Q-20.49499999999999 36.650000000000006 -21.214999999999993 36.41ZM-15.574999999999992 36.38V33.71H-5.8849999999999945Q-5.224999999999994 33.71 -4.864999999999993 33.965Q-4.504999999999992 34.22 -4.504999999999992 34.730000000000004Q-4.504999999999992 35.42 -5.209999999999992 35.900000000000006Q-5.914999999999992 36.38 -7.474999999999994 36.38ZM26.695000000000004 44.36Q26.695000000000004 45.86 25.825000000000003 46.655Q24.955000000000005 47.45 23.335000000000004 47.45H4.375000000000006V45.32H17.725000000000005Q19.225000000000005 45.32 19.225000000000005 44.0Q19.225000000000005 40.010000000000005 17.635000000000005 37.85Q16.045000000000005 35.69 13.375000000000007 35.69Q11.305000000000005 35.69 9.715000000000005 36.905Q8.125000000000005 38.120000000000005 7.2400000000000055 40.385000000000005Q6.355000000000006 42.650000000000006 6.355000000000006 45.74Q6.355000000000006 51.65 9.145000000000007 54.635Q11.935000000000006 57.62 16.495000000000005 57.62Q19.315000000000005 57.62 21.400000000000006 56.42Q23.485000000000007 55.22 24.505000000000006 53.15Q24.955000000000005 52.61 25.240000000000006 52.415Q25.525000000000006 52.22 25.855000000000004 52.22Q26.275000000000006 52.22 26.485000000000007 52.61Q26.695000000000004 53.0 26.665000000000006 53.54Q26.515000000000004 56.03 24.880000000000003 58.129999999999995Q23.245000000000005 60.23 20.470000000000006 61.474999999999994Q17.695000000000007 62.72 14.155000000000005 62.72Q9.865000000000006 62.72 6.580000000000005 60.95Q3.295000000000006 59.18 1.4500000000000062 55.97Q-0.3949999999999938 52.76 -0.3949999999999938 48.44Q-0.3949999999999938 43.97 1.3900000000000061 40.504999999999995Q3.175000000000006 37.04 6.475000000000006 35.045Q9.775000000000006 33.05 14.365000000000006 33.05Q18.205000000000005 33.05 20.965000000000003 34.489999999999995Q23.725000000000005 35.93 25.210000000000004 38.480000000000004Q26.695000000000004 41.03 26.695000000000004 44.36Z" fill="url(#gradW)"></path><g opacity="0.5" style="mix-blend-mode:screen"><g filter="url(#bevA)"><path d="M-173.465 33.05Q-168.935 33.05 -165.5 34.94Q-162.065 36.83 -160.13 40.19Q-158.195 43.55 -158.195 47.93Q-158.195 52.16 -160.175 55.504999999999995Q-162.155 58.85 -165.635 60.785Q-169.115 62.72 -173.70499999999998 62.72Q-178.23499999999999 62.72 -181.65499999999997 60.815Q-185.075 58.91 -187.01 55.55Q-188.945 52.19 -188.945 47.84Q-188.945 43.55 -186.98 40.22Q-185.015 36.89 -181.535 34.97Q-178.055 33.05 -173.465 33.05ZM-171.335 59.87Q-169.055 59.54 -167.66 57.905Q-166.265 56.27 -165.82999999999998 53.465Q-165.39499999999998 50.66 -166.085 46.76Q-166.745 42.89 -168.155 40.34Q-169.565 37.79 -171.53 36.665000000000006Q-173.495 35.540000000000006 -175.835 35.900000000000006Q-178.085 36.260000000000005 -179.495 37.88Q-180.905 39.5 -181.325 42.305Q-181.745 45.11 -181.085 49.01Q-180.42499999999998 52.88 -179.015 55.43000000000001Q-177.605 57.980000000000004 -175.64 59.105000000000004Q-173.675 60.23 -171.335 59.87ZM-142.475 34.97V57.53Q-142.475 58.4 -142.20499999999998 58.82Q-141.935 59.24 -141.36499999999998 59.42L-140.135 59.72Q-139.20499999999998 60.08 -139.20499999999998 60.83Q-139.20499999999998 62.0 -140.73499999999999 62.0H-151.86499999999998Q-152.64499999999998 62.0 -153.005 61.7Q-153.36499999999998 61.4 -153.36499999999998 60.89Q-153.36499999999998 60.47 -153.10999999999999 60.185Q-152.855 59.9 -152.315 59.72L-150.995 59.42Q-150.42499999999998 59.24 -150.14 58.835Q-149.855 58.43 -149.855 57.56V39.620000000000005Q-149.855 38.900000000000006 -150.09499999999997 38.585Q-150.33499999999998 38.269999999999996 -150.845 38.18L-152.64499999999998 38.09Q-153.185 38.0 -153.41 37.745000000000005Q-153.635 37.49 -153.635 37.13Q-153.635 36.68 -153.365 36.394999999999996Q-153.095 36.11 -152.345 35.870000000000005L-147.065 33.95Q-146.045 33.59 -145.39999999999998 33.410000000000004Q-144.755 33.230000000000004 -144.215 33.230000000000004Q-143.345 33.230000000000004 -142.91 33.71Q-142.475 34.19 -142.475 34.97ZM-143.375 41.480000000000004 -144.635 40.19 -143.405 39.11Q-139.715 35.75 -136.985 34.4Q-134.255 33.05 -131.795 33.05Q-127.95499999999998 33.05 -125.64499999999998 35.465Q-123.335 37.88 -123.335 42.019999999999996V57.44Q-123.335 58.37 -123.035 58.805Q-122.73499999999999 59.24 -122.13499999999999 59.42L-120.99499999999999 59.75Q-120.095 60.08 -120.095 60.83Q-120.095 62.0 -121.595 62.0H-132.575Q-134.075 62.0 -134.075 60.83Q-134.075 60.08 -133.17499999999998 59.72L-131.885 59.42Q-131.285 59.24 -131.0 58.790000000000006Q-130.715 58.34 -130.715 57.44V43.1Q-130.715 40.28 -132.065 38.885000000000005Q-133.415 37.49 -135.725 37.49Q-137.165 37.49 -138.755 38.19500000000001Q-140.345 38.900000000000006 -142.11499999999998 40.43ZM-124.23499999999999 41.480000000000004 -125.49499999999999 40.19 -124.26499999999999 39.11Q-120.66499999999999 35.84 -118.07 34.445Q-115.475 33.05 -113.10499999999999 33.05Q-109.445 33.05 -107.43499999999999 35.48Q-105.42499999999998 37.91 -104.975 42.019999999999996L-103.23499999999999 57.44Q-103.115 58.37 -102.85999999999999 58.805Q-102.60499999999999 59.24 -102.005 59.42L-100.835 59.72Q-100.29499999999999 59.9 -100.03999999999999 60.185Q-99.785 60.47 -99.785 60.89Q-99.785 61.4 -100.145 61.7Q-100.505 62.0 -101.255 62.0H-112.505Q-114.035 62.0 -114.035 60.83Q-114.035 60.08 -113.10499999999999 59.72L-111.845 59.42Q-111.24499999999999 59.24 -110.91499999999999 58.790000000000006Q-110.585 58.34 -110.67499999999998 57.44L-112.35499999999999 43.1Q-112.685 40.31 -113.795 38.900000000000006Q-114.905 37.49 -117.065 37.49Q-118.35499999999999 37.49 -119.82499999999999 38.225Q-121.29499999999999 38.96 -123.005 40.400000000000006ZM-86.585 34.97V38.480000000000004L-86.285 39.11V71.51Q-86.285 72.38 -86.0 72.815Q-85.71499999999999 73.25 -85.17499999999998 73.37L-83.345 73.7Q-82.77499999999999 73.85 -82.51999999999998 74.15Q-82.26499999999999 74.45 -82.26499999999999 74.87Q-82.26499999999999 75.38 -82.62499999999999 75.68Q-82.98499999999999 75.98 -83.76499999999999 75.98H-95.675Q-96.425 75.98 -96.785 75.68Q-97.145 75.38 -97.145 74.87Q-97.145 74.45 -96.88999999999999 74.16499999999999Q-96.63499999999999 73.88 -96.09499999999998 73.7L-94.80499999999999 73.4Q-94.23499999999999 73.22 -93.94999999999999 72.815Q-93.66499999999999 72.41 -93.66499999999999 71.53999999999999V39.620000000000005Q-93.66499999999999 38.900000000000006 -93.905 38.585Q-94.145 38.269999999999996 -94.65499999999999 38.18L-96.45499999999998 38.09Q-96.99499999999999 37.97 -97.22 37.730000000000004Q-97.445 37.49 -97.445 37.1Q-97.445 36.68 -97.17499999999998 36.425Q-96.90499999999999 36.17 -96.15499999999999 35.870000000000005L-91.17499999999998 33.95Q-90.15499999999999 33.56 -89.50999999999999 33.395Q-88.865 33.230000000000004 -88.38499999999999 33.230000000000004Q-87.45499999999998 33.230000000000004 -87.01999999999998 33.695Q-86.585 34.16 -86.585 34.97ZM-87.87499999999999 42.29 -89.04499999999999 40.67Q-86.70499999999998 37.07 -83.63 35.06Q-80.55499999999999 33.05 -76.865 33.05Q-73.32499999999999 33.05 -70.54999999999998 34.864999999999995Q-67.77499999999999 36.68 -66.16999999999999 39.86Q-64.565 43.04 -64.565 47.18Q-64.565 51.95 -66.455 55.43Q-68.345 58.91 -71.55499999999999 60.815Q-74.76499999999999 62.72 -78.725 62.72Q-82.29499999999999 62.72 -85.08499999999998 61.01Q-87.87499999999999 59.3 -89.615 56.09L-87.84499999999998 54.47Q-86.315 57.05 -84.32 58.355Q-82.32499999999999 59.66 -80.04499999999999 59.66Q-77.82499999999999 59.66 -76.07 58.4Q-74.315 57.14 -73.29499999999999 54.545Q-72.27499999999999 51.95 -72.27499999999999 47.99Q-72.27499999999999 44.24 -73.26499999999999 41.765Q-74.255 39.29 -75.94999999999999 38.06Q-77.645 36.83 -79.835 36.83Q-82.115 36.83 -84.155 38.18Q-86.195 39.53 -87.87499999999999 42.29ZM-38.04499999999999 58.1V56.39L-38.254999999999995 56.24V39.620000000000005Q-38.254999999999995 38.900000000000006 -38.47999999999999 38.585Q-38.70499999999999 38.269999999999996 -39.21499999999999 38.21L-41.04499999999999 38.09Q-41.55499999999999 38.0 -41.79499999999999 37.76Q-42.03499999999999 37.519999999999996 -42.03499999999999 37.13Q-42.03499999999999 36.68 -41.749999999999986 36.41Q-41.46499999999999 36.14 -40.74499999999999 35.870000000000005L-35.46499999999999 33.980000000000004Q-34.41499999999999 33.59 -33.76999999999999 33.425000000000004Q-33.124999999999986 33.260000000000005 -32.584999999999994 33.260000000000005Q-31.74499999999999 33.260000000000005 -31.309999999999988 33.725Q-30.87499999999999 34.19 -30.87499999999999 35.0V57.53Q-30.87499999999999 58.4 -30.58999999999999 58.82Q-30.30499999999999 59.24 -29.734999999999992 59.42L-28.50499999999999 59.72Q-27.934999999999988 59.9 -27.67999999999999 60.185Q-27.42499999999999 60.47 -27.42499999999999 60.89Q-27.42499999999999 61.4 -27.78499999999999 61.7Q-28.14499999999999 62.0 -28.92499999999999 62.0H-34.59499999999999Q-36.09499999999999 62.0 -37.06999999999999 60.935Q-38.04499999999999 59.87 -38.04499999999999 58.1ZM-57.06499999999999 53.75V39.620000000000005Q-57.06499999999999 38.900000000000006 -57.30499999999999 38.585Q-57.54499999999999 38.269999999999996 -58.05499999999999 38.21L-59.85499999999999 38.09Q-60.39499999999999 38.0 -60.61999999999999 37.76Q-60.84499999999999 37.519999999999996 -60.84499999999999 37.13Q-60.84499999999999 36.68 -60.57499999999999 36.41Q-60.30499999999999 36.14 -59.55499999999999 35.870000000000005L-54.27499999999999 33.980000000000004Q-53.19499999999999 33.59 -52.56499999999999 33.425000000000004Q-51.93499999999999 33.260000000000005 -51.48499999999999 33.260000000000005Q-50.584999999999994 33.260000000000005 -50.13499999999999 33.725Q-49.68499999999999 34.19 -49.68499999999999 35.0V52.64Q-49.68499999999999 55.46 -48.31999999999999 56.870000000000005Q-46.95499999999999 58.28 -44.70499999999999 58.28Q-43.29499999999999 58.28 -41.67499999999999 57.575Q-40.05499999999999 56.87 -38.28499999999999 55.34L-37.05499999999999 54.26L-35.764999999999986 55.55L-37.02499999999999 56.66Q-40.68499999999999 60.02 -43.42999999999999 61.370000000000005Q-46.17499999999999 62.72 -48.63499999999999 62.72Q-52.41499999999999 62.72 -54.739999999999995 60.29Q-57.06499999999999 57.86 -57.06499999999999 53.75ZM-21.214999999999993 36.41 -22.714999999999993 35.99Q-23.464999999999993 35.78 -23.749999999999993 35.480000000000004Q-24.034999999999993 35.18 -24.034999999999993 34.790000000000006Q-24.034999999999993 34.25 -23.659999999999993 33.980000000000004Q-23.284999999999993 33.71 -22.68499999999999 33.71H-20.794999999999995Q-20.044999999999995 33.71 -19.564999999999994 33.455Q-19.084999999999994 33.2 -18.63499999999999 32.510000000000005L-15.784999999999993 28.009999999999998Q-15.244999999999992 27.29 -14.734999999999992 26.945Q-14.224999999999993 26.6 -13.714999999999993 26.6Q-13.144999999999992 26.6 -12.829999999999993 26.96Q-12.514999999999993 27.32 -12.514999999999993 27.980000000000004V54.02Q-12.514999999999993 56.12 -11.674999999999994 57.215Q-10.834999999999994 58.31 -9.304999999999993 58.31Q-8.224999999999994 58.31 -7.609999999999994 57.905Q-6.994999999999994 57.5 -6.634999999999993 56.975Q-6.2749999999999915 56.45 -5.944999999999991 56.045Q-5.614999999999991 55.64 -5.1349999999999945 55.61Q-4.714999999999993 55.61 -4.489999999999993 55.879999999999995Q-4.2649999999999935 56.15 -4.2649999999999935 56.75Q-4.2649999999999935 58.28 -5.284999999999993 59.6Q-6.304999999999993 60.92 -8.089999999999993 61.745000000000005Q-9.874999999999993 62.57 -12.154999999999992 62.57Q-15.724999999999993 62.57 -17.79499999999999 60.739999999999995Q-19.86499999999999 58.91 -19.86499999999999 55.22V38.150000000000006Q-19.86499999999999 37.400000000000006 -20.179999999999993 37.025000000000006Q-20.49499999999999 36.650000000000006 -21.214999999999993 36.41ZM-15.574999999999992 36.38V33.71H-5.8849999999999945Q-5.224999999999994 33.71 -4.864999999999993 33.965Q-4.504999999999992 34.22 -4.504999999999992 34.730000000000004Q-4.504999999999992 35.42 -5.209999999999992 35.900000000000006Q-5.914999999999992 36.38 -7.474999999999994 36.38ZM26.695000000000004 44.36Q26.695000000000004 45.86 25.825000000000003 46.655Q24.955000000000005 47.45 23.335000000000004 47.45H4.375000000000006V45.32H17.725000000000005Q19.225000000000005 45.32 19.225000000000005 44.0Q19.225000000000005 40.010000000000005 17.635000000000005 37.85Q16.045000000000005 35.69 13.375000000000007 35.69Q11.305000000000005 35.69 9.715000000000005 36.905Q8.125000000000005 38.120000000000005 7.2400000000000055 40.385000000000005Q6.355000000000006 42.650000000000006 6.355000000000006 45.74Q6.355000000000006 51.65 9.145000000000007 54.635Q11.935000000000006 57.62 16.495000000000005 57.62Q19.315000000000005 57.62 21.400000000000006 56.42Q23.485000000000007 55.22 24.505000000000006 53.15Q24.955000000000005 52.61 25.240000000000006 52.415Q25.525000000000006 52.22 25.855000000000004 52.22Q26.275000000000006 52.22 26.485000000000007 52.61Q26.695000000000004 53.0 26.665000000000006 53.54Q26.515000000000004 56.03 24.880000000000003 58.129999999999995Q23.245000000000005 60.23 20.470000000000006 61.474999999999994Q17.695000000000007 62.72 14.155000000000005 62.72Q9.865000000000006 62.72 6.580000000000005 60.95Q3.295000000000006 59.18 1.4500000000000062 55.97Q-0.3949999999999938 52.76 -0.3949999999999938 48.44Q-0.3949999999999938 43.97 1.3900000000000061 40.504999999999995Q3.175000000000006 37.04 6.475000000000006 35.045Q9.775000000000006 33.05 14.365000000000006 33.05Q18.205000000000005 33.05 20.965000000000003 34.489999999999995Q23.725000000000005 35.93 25.210000000000004 38.480000000000004Q26.695000000000004 41.03 26.695000000000004 44.36Z" fill="#fff"></path></g></g></g>
+<g id="reedom" opacity="1"><path d="M127.865 46.22Q127.865 41.93 129.125 38.989999999999995Q130.385 36.05 132.39499999999998 34.55Q134.405 33.05 136.685 33.05Q139.475 33.05 141.005 34.61Q142.535 36.17 142.535 39.019999999999996Q142.535 41.39 141.53 42.575Q140.525 43.760000000000005 138.935 43.760000000000005Q137.345 43.760000000000005 136.49 42.89Q135.635 42.019999999999996 135.635 40.46V39.41Q135.605 38.42 135.17 37.94Q134.73499999999999 37.46 133.715 37.46Q132.515 37.46 131.42 38.405Q130.325 39.35 129.635 41.269999999999996Q128.945 43.19 128.945 46.16ZM128.525 34.97 128.945 41.900000000000006V57.53Q128.945 58.34 129.27499999999998 58.730000000000004Q129.605 59.12 130.475 59.27L133.115 59.66Q133.775 59.75 134.10500000000002 60.05Q134.435 60.35 134.435 60.86Q134.435 61.4 134.04500000000002 61.7Q133.655 62.0 132.905 62.0H119.55499999999999Q118.77499999999999 62.0 118.41499999999999 61.7Q118.05499999999999 61.4 118.05499999999999 60.89Q118.05499999999999 60.47 118.31 60.185Q118.565 59.9 119.13499999999999 59.72L120.425 59.42Q120.99499999999999 59.24 121.28 58.835Q121.565 58.43 121.565 57.56V39.68Q121.565 38.96 121.32499999999999 38.644999999999996Q121.085 38.33 120.575 38.24L118.77499999999999 38.150000000000006Q118.235 38.03 118.00999999999999 37.79Q117.785 37.55 117.785 37.16Q117.785 36.74 118.07 36.455Q118.35499999999999 36.17 119.075 35.900000000000006L124.265 34.040000000000006Q125.585 33.56 126.215 33.395Q126.845 33.230000000000004 127.205 33.230000000000004Q127.80499999999999 33.230000000000004 128.12 33.635000000000005Q128.435 34.040000000000006 128.525 34.97ZM172.805 44.36Q172.805 45.86 171.935 46.655Q171.065 47.45 169.445 47.45H150.485V45.32H163.835Q165.335 45.32 165.335 44.0Q165.335 40.010000000000005 163.745 37.85Q162.155 35.69 159.485 35.69Q157.415 35.69 155.825 36.905Q154.235 38.120000000000005 153.35000000000002 40.385000000000005Q152.465 42.650000000000006 152.465 45.74Q152.465 51.65 155.255 54.635Q158.04500000000002 57.62 162.605 57.62Q165.425 57.62 167.51 56.42Q169.595 55.22 170.615 53.15Q171.065 52.61 171.35 52.415Q171.635 52.22 171.965 52.22Q172.385 52.22 172.595 52.61Q172.805 53.0 172.775 53.54Q172.625 56.03 170.99 58.129999999999995Q169.355 60.23 166.57999999999998 61.474999999999994Q163.805 62.72 160.265 62.72Q155.975 62.72 152.69 60.95Q149.405 59.18 147.56 55.97Q145.715 52.76 145.715 48.44Q145.715 43.97 147.5 40.504999999999995Q149.285 37.04 152.58499999999998 35.045Q155.885 33.05 160.475 33.05Q164.315 33.05 167.075 34.489999999999995Q169.835 35.93 171.32 38.480000000000004Q172.805 41.03 172.805 44.36ZM204.425 44.36Q204.425 45.86 203.555 46.655Q202.685 47.45 201.065 47.45H182.10500000000002V45.32H195.455Q196.955 45.32 196.955 44.0Q196.955 40.010000000000005 195.365 37.85Q193.775 35.69 191.10500000000002 35.69Q189.035 35.69 187.445 36.905Q185.85500000000002 38.120000000000005 184.97000000000003 40.385000000000005Q184.085 42.650000000000006 184.085 45.74Q184.085 51.65 186.875 54.635Q189.66500000000002 57.62 194.225 57.62Q197.04500000000002 57.62 199.13 56.42Q201.215 55.22 202.235 53.15Q202.685 52.61 202.97 52.415Q203.255 52.22 203.585 52.22Q204.005 52.22 204.215 52.61Q204.425 53.0 204.395 53.54Q204.245 56.03 202.61 58.129999999999995Q200.975 60.23 198.2 61.474999999999994Q195.425 62.72 191.885 62.72Q187.595 62.72 184.31 60.95Q181.025 59.18 179.18 55.97Q177.335 52.76 177.335 48.44Q177.335 43.97 179.12 40.504999999999995Q180.905 37.04 184.20499999999998 35.045Q187.505 33.05 192.095 33.05Q195.935 33.05 198.695 34.489999999999995Q201.455 35.93 202.94 38.480000000000004Q204.425 41.03 204.425 44.36ZM230.91500000000002 57.05 230.675 56.87V23.96Q230.675 23.240000000000002 230.45000000000002 22.925Q230.22500000000002 22.61 229.715 22.520000000000003L227.91500000000002 22.43Q227.375 22.310000000000002 227.15 22.07Q226.925 21.83 226.925 21.440000000000005Q226.925 21.020000000000003 227.195 20.735000000000003Q227.465 20.450000000000003 228.185 20.18L233.495 18.29Q234.51500000000001 17.9 235.16000000000003 17.735Q235.805 17.57 236.345 17.57Q237.215 17.57 237.635 18.035Q238.055 18.5 238.055 19.310000000000002V57.53Q238.055 58.4 238.34 58.82Q238.625 59.24 239.195 59.42L240.425 59.72Q240.995 59.9 241.26500000000001 60.185Q241.53500000000003 60.47 241.53500000000003 60.89Q241.53500000000003 61.4 241.16000000000003 61.7Q240.78500000000003 62.0 240.005 62.0H234.215Q232.745 62.0 231.83 61.114999999999995Q230.91500000000002 60.23 230.91500000000002 58.7ZM208.955 48.59Q208.955 43.82 210.84500000000003 40.34Q212.735 36.86 215.96 34.955Q219.185 33.05 223.145 33.05Q226.715 33.05 229.49 34.76Q232.26500000000001 36.47 234.005 39.68L232.235 41.3Q230.735 38.72 228.74 37.415Q226.745 36.11 224.435 36.11Q222.215 36.11 220.46 37.370000000000005Q218.705 38.63 217.685 41.21Q216.66500000000002 43.79 216.66500000000002 47.78Q216.66500000000002 51.5 217.65500000000003 53.975Q218.645 56.45 220.34000000000003 57.695Q222.03500000000003 58.94 224.22500000000002 58.94Q226.53500000000003 58.94 228.56 57.575Q230.585 56.21 232.26500000000001 53.480000000000004L233.435 55.1Q231.095 58.7 228.02 60.71Q224.94500000000002 62.72 221.28500000000003 62.72Q217.715 62.72 214.94 60.905Q212.16500000000002 59.09 210.56 55.910000000000004Q208.955 52.730000000000004 208.955 48.59ZM261.27500000000003 33.05Q265.805 33.05 269.24 34.94Q272.675 36.83 274.61 40.19Q276.545 43.55 276.545 47.93Q276.545 52.16 274.56500000000005 55.504999999999995Q272.58500000000004 58.85 269.105 60.785Q265.625 62.72 261.035 62.72Q256.505 62.72 253.085 60.815Q249.66500000000002 58.91 247.73000000000002 55.55Q245.79500000000002 52.19 245.79500000000002 47.84Q245.79500000000002 43.55 247.76000000000002 40.22Q249.72500000000002 36.89 253.205 34.97Q256.685 33.05 261.27500000000003 33.05ZM263.40500000000003 59.87Q265.685 59.54 267.08000000000004 57.905Q268.475 56.27 268.91 53.465Q269.345 50.66 268.65500000000003 46.76Q267.995 42.89 266.58500000000004 40.34Q265.175 37.79 263.21000000000004 36.665000000000006Q261.245 35.540000000000006 258.90500000000003 35.900000000000006Q256.65500000000003 36.260000000000005 255.245 37.88Q253.835 39.5 253.41500000000002 42.305Q252.995 45.11 253.655 49.01Q254.31500000000003 52.88 255.72500000000002 55.43000000000001Q257.135 57.980000000000004 259.1 59.105000000000004Q261.065 60.23 263.40500000000003 59.87ZM292.26500000000004 34.97V57.53Q292.26500000000004 58.4 292.535 58.82Q292.805 59.24 293.375 59.42L294.605 59.72Q295.535 60.08 295.535 60.83Q295.535 62.0 294.005 62.0H282.875Q282.095 62.0 281.735 61.7Q281.375 61.4 281.375 60.89Q281.375 60.47 281.63 60.185Q281.885 59.9 282.425 59.72L283.745 59.42Q284.315 59.24 284.6 58.835Q284.885 58.43 284.885 57.56V39.620000000000005Q284.885 38.900000000000006 284.645 38.585Q284.40500000000003 38.269999999999996 283.89500000000004 38.18L282.095 38.09Q281.555 38.0 281.33000000000004 37.745000000000005Q281.105 37.49 281.105 37.13Q281.105 36.68 281.375 36.394999999999996Q281.64500000000004 36.11 282.39500000000004 35.870000000000005L287.675 33.95Q288.695 33.59 289.34000000000003 33.410000000000004Q289.985 33.230000000000004 290.52500000000003 33.230000000000004Q291.39500000000004 33.230000000000004 291.83000000000004 33.71Q292.26500000000004 34.19 292.26500000000004 34.97ZM291.365 41.480000000000004 290.105 40.19 291.33500000000004 39.11Q295.02500000000003 35.75 297.755 34.4Q300.485 33.05 302.945 33.05Q306.785 33.05 309.095 35.465Q311.40500000000003 37.88 311.40500000000003 42.019999999999996V57.44Q311.40500000000003 58.37 311.70500000000004 58.805Q312.005 59.24 312.605 59.42L313.745 59.75Q314.64500000000004 60.08 314.64500000000004 60.83Q314.64500000000004 62.0 313.14500000000004 62.0H302.165Q300.665 62.0 300.665 60.83Q300.665 60.08 301.565 59.72L302.855 59.42Q303.45500000000004 59.24 303.74 58.790000000000006Q304.02500000000003 58.34 304.02500000000003 57.44V43.1Q304.02500000000003 40.28 302.67500000000007 38.885000000000005Q301.32500000000005 37.49 299.01500000000004 37.49Q297.57500000000005 37.49 295.985 38.19500000000001Q294.39500000000004 38.900000000000006 292.625 40.43ZM310.505 41.480000000000004 309.245 40.19 310.475 39.11Q314.07500000000005 35.84 316.67 34.445Q319.265 33.05 321.635 33.05Q325.295 33.05 327.305 35.48Q329.315 37.91 329.765 42.019999999999996L331.505 57.44Q331.625 58.37 331.88 58.805Q332.135 59.24 332.735 59.42L333.90500000000003 59.72Q334.445 59.9 334.70000000000005 60.185Q334.95500000000004 60.47 334.95500000000004 60.89Q334.95500000000004 61.4 334.595 61.7Q334.235 62.0 333.485 62.0H322.235Q320.70500000000004 62.0 320.70500000000004 60.83Q320.70500000000004 60.08 321.635 59.72L322.89500000000004 59.42Q323.495 59.24 323.82500000000005 58.790000000000006Q324.15500000000003 58.34 324.065 57.44L322.385 43.1Q322.055 40.31 320.94500000000005 38.900000000000006Q319.83500000000004 37.49 317.675 37.49Q316.385 37.49 314.91499999999996 38.225Q313.445 38.96 311.735 40.400000000000006Z" fill="url(#gradW)"></path><g opacity="0.5" style="mix-blend-mode:screen"><g filter="url(#bevA)"><path d="M127.865 46.22Q127.865 41.93 129.125 38.989999999999995Q130.385 36.05 132.39499999999998 34.55Q134.405 33.05 136.685 33.05Q139.475 33.05 141.005 34.61Q142.535 36.17 142.535 39.019999999999996Q142.535 41.39 141.53 42.575Q140.525 43.760000000000005 138.935 43.760000000000005Q137.345 43.760000000000005 136.49 42.89Q135.635 42.019999999999996 135.635 40.46V39.41Q135.605 38.42 135.17 37.94Q134.73499999999999 37.46 133.715 37.46Q132.515 37.46 131.42 38.405Q130.325 39.35 129.635 41.269999999999996Q128.945 43.19 128.945 46.16ZM128.525 34.97 128.945 41.900000000000006V57.53Q128.945 58.34 129.27499999999998 58.730000000000004Q129.605 59.12 130.475 59.27L133.115 59.66Q133.775 59.75 134.10500000000002 60.05Q134.435 60.35 134.435 60.86Q134.435 61.4 134.04500000000002 61.7Q133.655 62.0 132.905 62.0H119.55499999999999Q118.77499999999999 62.0 118.41499999999999 61.7Q118.05499999999999 61.4 118.05499999999999 60.89Q118.05499999999999 60.47 118.31 60.185Q118.565 59.9 119.13499999999999 59.72L120.425 59.42Q120.99499999999999 59.24 121.28 58.835Q121.565 58.43 121.565 57.56V39.68Q121.565 38.96 121.32499999999999 38.644999999999996Q121.085 38.33 120.575 38.24L118.77499999999999 38.150000000000006Q118.235 38.03 118.00999999999999 37.79Q117.785 37.55 117.785 37.16Q117.785 36.74 118.07 36.455Q118.35499999999999 36.17 119.075 35.900000000000006L124.265 34.040000000000006Q125.585 33.56 126.215 33.395Q126.845 33.230000000000004 127.205 33.230000000000004Q127.80499999999999 33.230000000000004 128.12 33.635000000000005Q128.435 34.040000000000006 128.525 34.97ZM172.805 44.36Q172.805 45.86 171.935 46.655Q171.065 47.45 169.445 47.45H150.485V45.32H163.835Q165.335 45.32 165.335 44.0Q165.335 40.010000000000005 163.745 37.85Q162.155 35.69 159.485 35.69Q157.415 35.69 155.825 36.905Q154.235 38.120000000000005 153.35000000000002 40.385000000000005Q152.465 42.650000000000006 152.465 45.74Q152.465 51.65 155.255 54.635Q158.04500000000002 57.62 162.605 57.62Q165.425 57.62 167.51 56.42Q169.595 55.22 170.615 53.15Q171.065 52.61 171.35 52.415Q171.635 52.22 171.965 52.22Q172.385 52.22 172.595 52.61Q172.805 53.0 172.775 53.54Q172.625 56.03 170.99 58.129999999999995Q169.355 60.23 166.57999999999998 61.474999999999994Q163.805 62.72 160.265 62.72Q155.975 62.72 152.69 60.95Q149.405 59.18 147.56 55.97Q145.715 52.76 145.715 48.44Q145.715 43.97 147.5 40.504999999999995Q149.285 37.04 152.58499999999998 35.045Q155.885 33.05 160.475 33.05Q164.315 33.05 167.075 34.489999999999995Q169.835 35.93 171.32 38.480000000000004Q172.805 41.03 172.805 44.36ZM204.425 44.36Q204.425 45.86 203.555 46.655Q202.685 47.45 201.065 47.45H182.10500000000002V45.32H195.455Q196.955 45.32 196.955 44.0Q196.955 40.010000000000005 195.365 37.85Q193.775 35.69 191.10500000000002 35.69Q189.035 35.69 187.445 36.905Q185.85500000000002 38.120000000000005 184.97000000000003 40.385000000000005Q184.085 42.650000000000006 184.085 45.74Q184.085 51.65 186.875 54.635Q189.66500000000002 57.62 194.225 57.62Q197.04500000000002 57.62 199.13 56.42Q201.215 55.22 202.235 53.15Q202.685 52.61 202.97 52.415Q203.255 52.22 203.585 52.22Q204.005 52.22 204.215 52.61Q204.425 53.0 204.395 53.54Q204.245 56.03 202.61 58.129999999999995Q200.975 60.23 198.2 61.474999999999994Q195.425 62.72 191.885 62.72Q187.595 62.72 184.31 60.95Q181.025 59.18 179.18 55.97Q177.335 52.76 177.335 48.44Q177.335 43.97 179.12 40.504999999999995Q180.905 37.04 184.20499999999998 35.045Q187.505 33.05 192.095 33.05Q195.935 33.05 198.695 34.489999999999995Q201.455 35.93 202.94 38.480000000000004Q204.425 41.03 204.425 44.36ZM230.91500000000002 57.05 230.675 56.87V23.96Q230.675 23.240000000000002 230.45000000000002 22.925Q230.22500000000002 22.61 229.715 22.520000000000003L227.91500000000002 22.43Q227.375 22.310000000000002 227.15 22.07Q226.925 21.83 226.925 21.440000000000005Q226.925 21.020000000000003 227.195 20.735000000000003Q227.465 20.450000000000003 228.185 20.18L233.495 18.29Q234.51500000000001 17.9 235.16000000000003 17.735Q235.805 17.57 236.345 17.57Q237.215 17.57 237.635 18.035Q238.055 18.5 238.055 19.310000000000002V57.53Q238.055 58.4 238.34 58.82Q238.625 59.24 239.195 59.42L240.425 59.72Q240.995 59.9 241.26500000000001 60.185Q241.53500000000003 60.47 241.53500000000003 60.89Q241.53500000000003 61.4 241.16000000000003 61.7Q240.78500000000003 62.0 240.005 62.0H234.215Q232.745 62.0 231.83 61.114999999999995Q230.91500000000002 60.23 230.91500000000002 58.7ZM208.955 48.59Q208.955 43.82 210.84500000000003 40.34Q212.735 36.86 215.96 34.955Q219.185 33.05 223.145 33.05Q226.715 33.05 229.49 34.76Q232.26500000000001 36.47 234.005 39.68L232.235 41.3Q230.735 38.72 228.74 37.415Q226.745 36.11 224.435 36.11Q222.215 36.11 220.46 37.370000000000005Q218.705 38.63 217.685 41.21Q216.66500000000002 43.79 216.66500000000002 47.78Q216.66500000000002 51.5 217.65500000000003 53.975Q218.645 56.45 220.34000000000003 57.695Q222.03500000000003 58.94 224.22500000000002 58.94Q226.53500000000003 58.94 228.56 57.575Q230.585 56.21 232.26500000000001 53.480000000000004L233.435 55.1Q231.095 58.7 228.02 60.71Q224.94500000000002 62.72 221.28500000000003 62.72Q217.715 62.72 214.94 60.905Q212.16500000000002 59.09 210.56 55.910000000000004Q208.955 52.730000000000004 208.955 48.59ZM261.27500000000003 33.05Q265.805 33.05 269.24 34.94Q272.675 36.83 274.61 40.19Q276.545 43.55 276.545 47.93Q276.545 52.16 274.56500000000005 55.504999999999995Q272.58500000000004 58.85 269.105 60.785Q265.625 62.72 261.035 62.72Q256.505 62.72 253.085 60.815Q249.66500000000002 58.91 247.73000000000002 55.55Q245.79500000000002 52.19 245.79500000000002 47.84Q245.79500000000002 43.55 247.76000000000002 40.22Q249.72500000000002 36.89 253.205 34.97Q256.685 33.05 261.27500000000003 33.05ZM263.40500000000003 59.87Q265.685 59.54 267.08000000000004 57.905Q268.475 56.27 268.91 53.465Q269.345 50.66 268.65500000000003 46.76Q267.995 42.89 266.58500000000004 40.34Q265.175 37.79 263.21000000000004 36.665000000000006Q261.245 35.540000000000006 258.90500000000003 35.900000000000006Q256.65500000000003 36.260000000000005 255.245 37.88Q253.835 39.5 253.41500000000002 42.305Q252.995 45.11 253.655 49.01Q254.31500000000003 52.88 255.72500000000002 55.43000000000001Q257.135 57.980000000000004 259.1 59.105000000000004Q261.065 60.23 263.40500000000003 59.87ZM292.26500000000004 34.97V57.53Q292.26500000000004 58.4 292.535 58.82Q292.805 59.24 293.375 59.42L294.605 59.72Q295.535 60.08 295.535 60.83Q295.535 62.0 294.005 62.0H282.875Q282.095 62.0 281.735 61.7Q281.375 61.4 281.375 60.89Q281.375 60.47 281.63 60.185Q281.885 59.9 282.425 59.72L283.745 59.42Q284.315 59.24 284.6 58.835Q284.885 58.43 284.885 57.56V39.620000000000005Q284.885 38.900000000000006 284.645 38.585Q284.40500000000003 38.269999999999996 283.89500000000004 38.18L282.095 38.09Q281.555 38.0 281.33000000000004 37.745000000000005Q281.105 37.49 281.105 37.13Q281.105 36.68 281.375 36.394999999999996Q281.64500000000004 36.11 282.39500000000004 35.870000000000005L287.675 33.95Q288.695 33.59 289.34000000000003 33.410000000000004Q289.985 33.230000000000004 290.52500000000003 33.230000000000004Q291.39500000000004 33.230000000000004 291.83000000000004 33.71Q292.26500000000004 34.19 292.26500000000004 34.97ZM291.365 41.480000000000004 290.105 40.19 291.33500000000004 39.11Q295.02500000000003 35.75 297.755 34.4Q300.485 33.05 302.945 33.05Q306.785 33.05 309.095 35.465Q311.40500000000003 37.88 311.40500000000003 42.019999999999996V57.44Q311.40500000000003 58.37 311.70500000000004 58.805Q312.005 59.24 312.605 59.42L313.745 59.75Q314.64500000000004 60.08 314.64500000000004 60.83Q314.64500000000004 62.0 313.14500000000004 62.0H302.165Q300.665 62.0 300.665 60.83Q300.665 60.08 301.565 59.72L302.855 59.42Q303.45500000000004 59.24 303.74 58.790000000000006Q304.02500000000003 58.34 304.02500000000003 57.44V43.1Q304.02500000000003 40.28 302.67500000000007 38.885000000000005Q301.32500000000005 37.49 299.01500000000004 37.49Q297.57500000000005 37.49 295.985 38.19500000000001Q294.39500000000004 38.900000000000006 292.625 40.43ZM310.505 41.480000000000004 309.245 40.19 310.475 39.11Q314.07500000000005 35.84 316.67 34.445Q319.265 33.05 321.635 33.05Q325.295 33.05 327.305 35.48Q329.315 37.91 329.765 42.019999999999996L331.505 57.44Q331.625 58.37 331.88 58.805Q332.135 59.24 332.735 59.42L333.90500000000003 59.72Q334.445 59.9 334.70000000000005 60.185Q334.95500000000004 60.47 334.95500000000004 60.89Q334.95500000000004 61.4 334.595 61.7Q334.235 62.0 333.485 62.0H322.235Q320.70500000000004 62.0 320.70500000000004 60.83Q320.70500000000004 60.08 321.635 59.72L322.89500000000004 59.42Q323.495 59.24 323.82500000000005 58.790000000000006Q324.15500000000003 58.34 324.065 57.44L322.385 43.1Q322.055 40.31 320.94500000000005 38.900000000000006Q319.83500000000004 37.49 317.675 37.49Q316.385 37.49 314.91499999999996 38.225Q313.445 38.96 311.735 40.400000000000006Z" fill="#fff"></path></g></g></g>
+<!-- bar + linker Winkel (stationaer, kein RGAP) -->
+<g id="sep" opacity="1">
+<rect fill="url(#gradA)" height="50" id="barBase" rx="1.5" width="3" x="53.50" y="12"></rect><g filter="url(#bevA)" style="mix-blend-mode:screen"><rect fill="#fff" height="50" id="barShine" rx="1.5" width="3" x="53.50" y="12"></rect></g>
+<path d="M46.00 33.10 L40.40 33.10 L40.40 49.90 L46.00 49.90" fill="none" id="leftBracketBase" stroke="url(#gradAngleBlue)" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.00"></path><g filter="url(#bevA)" style="mix-blend-mode:screen"><path d="M46.00 33.10 L40.40 33.10 L40.40 49.90 L46.00 49.90" fill="none" id="leftBracketShine" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.00"></path></g>
+<g filter="url(#glowCool)" opacity="0" style="mix-blend-mode:screen"><rect fill="#eaf7ff" height="52" rx="2.1" width="4.2" x="52.90" y="11"></rect></g>
+
+</g>
+<!-- rechter Cluster: F + rechter Winkel + Kerbe + Rueckfederung RGAP -->
+
+<ellipse cx="88.2" cy="41.5" fill="#f2a45b" filter="url(#glowWarm)" id="contactGlow" opacity="0" rx="3.2" ry="11.5"></ellipse><g id="rightBracket" opacity="1"><path d="M64.00 33.10 L69.60 33.10 L69.60 49.90 L64.00 49.90" fill="none" id="rightBracketBase" stroke="url(#gradAngleWarm)" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.00"></path><g filter="url(#bevA)" style="mix-blend-mode:screen"><path d="M64.00 33.10 L69.60 33.10 L69.60 49.90 L64.00 49.90" fill="none" id="rightBracketShine" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.00"></path></g></g><g id="letterF" mask="url(#fNotchMask)" opacity="1" transform="translate(0 0)">
+
+<path d="M106.055 20.0Q107.135 20.0 107.82500000000002 19.7Q108.51500000000001 19.4 109.07000000000001 19.115Q109.625 18.83 110.22500000000001 18.83Q111.06500000000001 18.83 111.48500000000001 19.25Q111.905 19.67 112.20500000000001 20.690000000000005L114.57500000000002 29.39Q114.78500000000001 30.05 114.45500000000001 30.47Q114.125 30.89 113.495 31.01Q112.92500000000001 31.1 112.44500000000001 30.89Q111.965 30.68 111.635 29.990000000000002Q110.22500000000001 26.9 109.01000000000002 25.355Q107.79500000000002 23.810000000000002 106.44500000000002 23.270000000000003Q105.09500000000001 22.730000000000004 103.23500000000001 22.730000000000004H95.79500000000002V57.38Q95.79500000000002 58.01 96.15500000000002 58.459999999999994Q96.51500000000001 58.91 97.29500000000002 59.03L100.14500000000001 59.39Q100.83500000000001 59.51 101.15 59.84Q101.465 60.17 101.465 60.77Q101.465 61.31 101.075 61.655Q100.685 62.0 99.81500000000001 62.0H84.75500000000001Q83.915 62.0 83.51 61.655Q83.105 61.31 83.105 60.77Q83.105 59.75 84.305 59.39L86.165 59.03Q86.885 58.85 87.275 58.43Q87.665 58.01 87.665 57.38V24.620000000000005Q87.665 23.990000000000002 87.275 23.57Q86.885 23.15 86.165 22.97L84.305 22.61Q83.105 22.25 83.105 21.230000000000004Q83.105 20.660000000000004 83.51 20.330000000000002Q83.915 20.0 84.75500000000001 20.0ZM92.435 40.64H102.45500000000001Q104.34500000000001 40.64 105.11000000000001 39.92Q105.875 39.2 106.26500000000001 37.04Q106.415 36.41 106.73000000000002 36.125Q107.04500000000002 35.84 107.525 35.81Q108.665 35.72 108.965 36.92L111.155 45.74Q111.33500000000001 46.43 111.14000000000001 46.82Q110.94500000000001 47.21 110.405 47.39Q109.86500000000001 47.54 109.4 47.36Q108.935 47.18 108.51500000000001 46.61Q107.76500000000001 45.29 107.12 44.57Q106.47500000000001 43.85 105.65 43.58Q104.82500000000002 43.31 103.53500000000001 43.31H92.435Z" fill="url(#gradF)"></path><g style="mix-blend-mode:screen"><g opacity="0.95"><animate attributename="opacity" calcmode="linear" dur="3.7s" keytimes="0;0.22;0.41;0.63;0.82;1" repeatcount="indefinite" values="0.9;1;0.93;0.99;0.9;0.9"></animate><g filter="url(#bevF)"><path d="M106.055 20.0Q107.135 20.0 107.82500000000002 19.7Q108.51500000000001 19.4 109.07000000000001 19.115Q109.625 18.83 110.22500000000001 18.83Q111.06500000000001 18.83 111.48500000000001 19.25Q111.905 19.67 112.20500000000001 20.690000000000005L114.57500000000002 29.39Q114.78500000000001 30.05 114.45500000000001 30.47Q114.125 30.89 113.495 31.01Q112.92500000000001 31.1 112.44500000000001 30.89Q111.965 30.68 111.635 29.990000000000002Q110.22500000000001 26.9 109.01000000000002 25.355Q107.79500000000002 23.810000000000002 106.44500000000002 23.270000000000003Q105.09500000000001 22.730000000000004 103.23500000000001 22.730000000000004H95.79500000000002V57.38Q95.79500000000002 58.01 96.15500000000002 58.459999999999994Q96.51500000000001 58.91 97.29500000000002 59.03L100.14500000000001 59.39Q100.83500000000001 59.51 101.15 59.84Q101.465 60.17 101.465 60.77Q101.465 61.31 101.075 61.655Q100.685 62.0 99.81500000000001 62.0H84.75500000000001Q83.915 62.0 83.51 61.655Q83.105 61.31 83.105 60.77Q83.105 59.75 84.305 59.39L86.165 59.03Q86.885 58.85 87.275 58.43Q87.665 58.01 87.665 57.38V24.620000000000005Q87.665 23.990000000000002 87.275 23.57Q86.885 23.15 86.165 22.97L84.305 22.61Q83.105 22.25 83.105 21.230000000000004Q83.105 20.660000000000004 83.51 20.330000000000002Q83.915 20.0 84.75500000000001 20.0ZM92.435 40.64H102.45500000000001Q104.34500000000001 40.64 105.11000000000001 39.92Q105.875 39.2 106.26500000000001 37.04Q106.415 36.41 106.73000000000002 36.125Q107.04500000000002 35.84 107.525 35.81Q108.665 35.72 108.965 36.92L111.155 45.74Q111.33500000000001 46.43 111.14000000000001 46.82Q110.94500000000001 47.21 110.405 47.39Q109.86500000000001 47.54 109.4 47.36Q108.935 47.18 108.51500000000001 46.61Q107.76500000000001 45.29 107.12 44.57Q106.47500000000001 43.85 105.65 43.58Q104.82500000000002 43.31 103.53500000000001 43.31H92.435Z" fill="#fff"></path></g></g></g>
+</g></g>
+</svg></div>
+            <canvas id="cfhCanvas"></canvas>
+          </div>
+        </div>
         <div class="holo-meta" data-i18n="hero.holoMeta"><b>If you don&apos;t run it, you cannot control it.</b></div>
       </div>
     </div>
   </section>
 
   <!-- ░░ DISPATCH (breaking) ░░ -->
-  <section class="dispatch" id="dispatch" aria-label="Urgent dispatch">
+  <section class="dispatch cf-bg quiet pos-r" id="dispatch" aria-label="Urgent dispatch">
     <div class="wrap">
       <div class="dispatch-card reveal">
         <span data-i18n="disp.label" class="dispatch-label"><span class="live-dot"></span>Dispatch · 13 July 2026</span>
@@ -1614,12 +1839,31 @@
     </div>
   </section>
 
+
+  <!-- ░░ UPDATE · was neu ist ░░ -->
+  <section class="update cf-bg quiet pos-l" id="update" aria-label="Update">
+    <div class="wrap">
+      <div class="update-grid">
+        <div class="update-card reveal">
+          <span class="update-label" data-i18n="upd.label"><span class="live-dot"></span>Update · 25 July 2026</span>
+          <h2 class="update-head" data-i18n="upd.head">A new mark, and a door in front of it.</h2>
+          <p class="update-body" data-i18n="upd.body1">The <b>p|d</b> has served since the beginning: the <b>p</b> from Compute, the <b>d</b> from Freedom, two mirror letters that went looking for each other. From today it hands over to a mark that sits closer to the name: <b>C‹|›F</b>, built in Fraunces, with the divider running through it and the angles closing on the notch in the F.</p>
+          <p class="update-body" data-i18n="upd.body2">Above, on the right, that mark stands in glass. Light travels through it and never quite settles — the same state the special edition ends on. Copper in the C and in the right angle, polar blue in the divider, the left angle and the F.</p>
+          <div class="update-links">
+            <a href="eingang.html" data-i18n="upd.linkIntro">See the special edition again →</a>
+            <a href="#contact" data-i18n="upd.linkContact">Take a position →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Sprungmarke: hier stand die Tabs-Leiste, bevor sie in den Kopf wanderte -->
   <div id="panelTop" aria-hidden="true" style="scroll-margin-top:0"></div>
   </div>
 
   <!-- ░░ 00 · THE HORIZON ░░ -->
-  <section class="band tabpanel" id="horizon">
+  <section class="band tabpanel cf-bg pos-l" id="horizon">
     <div class="wrap">
       <div class="sec-head reveal" data-i18n="head.horizon">
         <span class="sec-num">00 — Horizon</span>
@@ -1720,7 +1964,7 @@
   </section>
 
   <!-- ░░ PRINCIPLE ░░ -->
-  <section class="band tabpanel" id="principle">
+  <section class="band tabpanel cf-bg" id="principle">
     <div class="wrap">
       <div class="sec-head reveal" data-i18n="head.principle">
         <span class="sec-num">01 — The Principle</span>
@@ -1750,7 +1994,7 @@
   </section>
 
   <!-- ░░ MECHANISM ░░ -->
-  <section class="band tabpanel" id="mechanism">
+  <section class="band tabpanel cf-bg quiet pos-r" id="mechanism">
     <div class="wrap">
       <div class="sec-head reveal" data-i18n="head.mechanism">
         <span class="sec-num">02 — The Mechanism</span>
@@ -1823,7 +2067,7 @@
   </section>
 
   <!-- ░░ ORIGIN ░░ -->
-  <section class="band tabpanel" id="origin">
+  <section class="band tabpanel cf-bg pos-l" id="origin">
     <div class="wrap">
       <div class="sec-head reveal" data-i18n="head.origin">
         <span class="sec-num">03 — Who &amp; Why</span>
@@ -1847,7 +2091,7 @@
   </section>
 
   <!-- ░░ CONTACT ░░ -->
-  <section class="band tabpanel" id="contact">
+  <section class="band tabpanel cf-bg quiet" id="contact">
     <div class="wrap">
       <div class="sec-head reveal" data-i18n="head.contact">
         <span class="sec-num">04 — Take a Position</span>
@@ -1921,11 +2165,42 @@
           </form>
         </div>
       </div>
+
+      <!-- Email-Optionen: hinein und hinaus, an einem Ort. Wer Kontakt sucht,
+           entscheidet hier ohnehin — dann soll er auch beides sehen. -->
+      <div class="mailopt reveal">
+        <div class="mailopt-head" data-i18n="mail.head">Email options</div>
+        <div class="mailopt-grid">
+
+          <div class="leave join">
+            <h3 data-i18n="mail.joinHead">On the list</h3>
+            <ul>
+              <li data-i18n="mail.join1">The special edition — the new mark and its hologram, coming into being.</li>
+              <li data-i18n="mail.join2">What actually moved at the frontier. Rarely, and only when it counts.</li>
+              <li data-i18n="mail.join3">Your address stays here. No tracking, no third party.</li>
+            </ul>
+            <a class="go-in" href="eingang.html" data-i18n="mail.joinCta">Put me on the list &#8594;</a>
+          </div>
+
+          <div class="leave part">
+            <h3 data-i18n="leave.head">Off the list</h3>
+            <p data-i18n="leave.body">Enter your address and we send you one link. Open it, and your address is gone — at once and for good. We keep no list you could be looked up in, which is exactly why the link has to go to you: nobody can sign anybody else out.</p>
+            <form id="leaveForm" novalidate>
+              <label class="hp" aria-hidden="true">Website<input type="text" id="leaveHp" name="website" tabindex="-1" autocomplete="off"></label>
+              <input type="email" id="leaveMail" name="email" required autocomplete="email"
+                     placeholder="your@address" data-de-ph="deine@adresse" aria-label="Email address">
+              <button type="submit" id="leaveBtn" data-i18n="leave.btn">Send link</button>
+            </form>
+            <p class="leave-status" id="leaveStatus" role="status" aria-live="polite"></p>
+          </div>
+
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- ░░ 06 · AREPO (teaser) ░░ -->
-  <section class="band tabpanel arepo-panel" id="arepo">
+  <section class="band tabpanel arepo-panel cf-bg pos-r" id="arepo">
     <div class="arepo-storm" aria-hidden="true">
       <canvas id="arepoStorm"></canvas>
       <div class="arepo-fullname" id="arepoFullname">Architecture for Registered Endorsement of Pictorial Originals</div>
@@ -1948,7 +2223,7 @@
   </section>
 
   <!-- ░░ FORUM (giscus — appears once configured, see script constants below) ░░ -->
-  <section class="band tabpanel" id="forum">
+  <section class="band tabpanel cf-bg quiet pos-t" id="forum">
     <div class="wrap">
       <div class="sec-head reveal" data-i18n="head.forum">
         <span class="sec-num">05 — The Forum</span>
@@ -1971,8 +2246,8 @@
     <div class="wrap">
       <div class="foot-grid">
         <div class="foot-brand">
-          <img id="footLogo" alt="Compute Freedom p|d mark" />
-          <span class="wordmark" style="font-size:15px">Com<b>p</b>uteFree<i>d</i>om</span>
+          <img id="footLogo" alt="Compute Freedom C|F mark" />
+          <span class="wordmark" style="font-size:15px"><b>C</b>ompute<i>F</i>reedom</span>
         </div>
         <nav class="foot-nav" aria-label="Secondary">
           <a href="about.html" data-i18n="foot.about">About me</a>
@@ -1996,8 +2271,65 @@
     // Strong-bar variant survives at small sizes (footer, favicon; nav mark is inline SVG)
     var STRONG_SVG = MASTER_SVG.replace('x="1006.5" y="-1370.0" width="26.0"', 'x="974.0" y="-1370.0" width="91.0"');
     var strongUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(STRONG_SVG);
-    document.getElementById('footLogo').src = strongUrl;
-    document.getElementById('favicon').href = strongUrl;
+    // Fusszeichen und Favicon tragen die neue Marke in ihrer kleinen Fassung:
+    // C|F ohne Winkel, weil die Winkel unter 12 mm nicht mehr lesen (Blatt B).
+    var CF_SMALL = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 83.12 53.0" width="600" height="383"><g transform="translate(-9.5400,-10.5000) scale(1.000000)" opacity="1.0"><path d="M46.945 51.17Q46.945 53.24 45.805 55.34Q44.665 57.44 42.519999999999996 59.195Q40.375 60.95 37.315 62.03Q34.254999999999995 63.11 30.384999999999998 63.11Q23.935 63.11 19.27 60.305Q14.605 57.5 12.07 52.58Q9.535 47.66 9.535 41.269999999999996Q9.535 36.44 11.035 32.375Q12.535 28.310000000000002 15.25 25.310000000000002Q17.965 22.310000000000002 21.625 20.645000000000003Q25.285 18.980000000000004 29.605 18.980000000000004Q32.665 18.980000000000004 34.56999999999999 19.595000000000002Q36.474999999999994 20.21 37.56999999999999 20.84Q38.665 21.47 39.265 21.47Q40.015 21.47 40.36 20.93Q40.705 20.39 41.08 19.865000000000002Q41.455 19.340000000000003 42.175 19.340000000000003Q42.655 19.340000000000003 42.985 19.640000000000004Q43.315 19.940000000000005 43.525 20.690000000000005L46.705 30.950000000000003Q46.915 31.61 46.599999999999994 32.105000000000004Q46.285 32.6 45.625 32.72Q44.995 32.81 44.485 32.555Q43.975 32.3 43.705 31.67Q42.055 28.07 40.06 25.925Q38.065 23.78 35.71 22.835Q33.355000000000004 21.89 30.565 21.89Q27.775 21.89 25.42 23.135Q23.065 24.380000000000003 21.355 26.69Q19.645 29.0 18.685000000000002 32.24Q17.725 35.480000000000004 17.725 39.5Q17.725 45.620000000000005 19.69 49.88Q21.655 54.14 25.03 56.36Q28.405 58.58 32.724999999999994 58.58Q36.925 58.58 39.97 56.614999999999995Q43.015 54.65 44.635 51.11Q44.964999999999996 50.480000000000004 45.325 50.255Q45.685 50.03 46.135 50.120000000000005Q46.555 50.18 46.75 50.45Q46.945 50.72 46.945 51.17Z" fill="#B85025"/><line x1="55" y1="12" x2="55" y2="62" stroke="#A8BCC7" stroke-width="3" stroke-linecap="round"/><path d="M84.055 20.0Q85.135 20.0 85.825 19.7Q86.515 19.4 87.07 19.115Q87.625 18.83 88.225 18.83Q89.065 18.83 89.485 19.25Q89.905 19.67 90.205 20.690000000000005L92.575 29.39Q92.785 30.05 92.455 30.47Q92.125 30.89 91.495 31.01Q90.92500000000001 31.1 90.44500000000001 30.89Q89.965 30.68 89.635 29.990000000000002Q88.225 26.9 87.00999999999999 25.355Q85.795 23.810000000000002 84.445 23.270000000000003Q83.095 22.730000000000004 81.235 22.730000000000004H73.795V57.38Q73.795 58.01 74.155 58.459999999999994Q74.515 58.91 75.295 59.03L78.145 59.39Q78.83500000000001 59.51 79.15 59.84Q79.465 60.17 79.465 60.77Q79.465 61.31 79.075 61.655Q78.685 62.0 77.815 62.0H62.755Q61.915 62.0 61.510000000000005 61.655Q61.105000000000004 61.31 61.105000000000004 60.77Q61.105000000000004 59.75 62.305 59.39L64.165 59.03Q64.885 58.85 65.275 58.43Q65.665 58.01 65.665 57.38V24.620000000000005Q65.665 23.990000000000002 65.275 23.57Q64.885 23.15 64.165 22.97L62.305 22.61Q61.105000000000004 22.25 61.105000000000004 21.230000000000004Q61.105000000000004 20.660000000000004 61.510000000000005 20.330000000000002Q61.915 20.0 62.755 20.0ZM70.435 40.64H80.455Q82.345 40.64 83.11 39.92Q83.875 39.2 84.265 37.04Q84.415 36.41 84.73 36.125Q85.045 35.84 85.525 35.81Q86.66499999999999 35.72 86.965 36.92L89.155 45.74Q89.33500000000001 46.43 89.14 46.82Q88.945 47.21 88.405 47.39Q87.86500000000001 47.54 87.4 47.36Q86.935 47.18 86.515 46.61Q85.765 45.29 85.12 44.57Q84.475 43.85 83.65 43.58Q82.825 43.31 81.535 43.31H70.435Z" fill="#A8BCC7"/></g></svg>';
+    var cfSmallUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(CF_SMALL);
+    document.getElementById('footLogo').src = cfSmallUrl;
+    document.getElementById('favicon').href = cfSmallUrl;
+
+    // ── Abmeldung von der Mailing-Liste ──
+    // Wir fuehren keine Liste, in der jemand nachschlagen koennte. Also kann
+    // die Seite hier auch nichts streichen — sie kann nur einen signierten
+    // Link an genau diese Adresse schicken. Erst der Klick zaehlt.
+    (function () {
+      var form = document.getElementById('leaveForm');
+      if (!form) return;
+      var mail = document.getElementById('leaveMail');
+      var hp = document.getElementById('leaveHp');
+      var btn = document.getElementById('leaveBtn');
+      var status = document.getElementById('leaveStatus');
+      var de = function () { return document.documentElement.lang === 'de'; };
+
+      var TEXT = {
+        senden:  { en: 'Sending…',    de: 'Wird gesendet…' },
+        ok:      { en: 'Sent. Open the link in that email and your address is gone.',
+                   de: 'Gesendet. Öffne den Link in der Mail, dann ist Deine Adresse weg.' },
+        syntax:  { en: 'That does not look like an email address.',
+                   de: 'Das sieht nicht nach einer Email-Adresse aus.' },
+        kein_mx: { en: 'That domain has no mail server — the address cannot exist.',
+                   de: 'Diese Domain hat keinen Mailserver — die Adresse kann es nicht geben.' },
+        zu_viele:{ en: 'Too many attempts. Try again in a few minutes.',
+                   de: 'Zu viele Versuche. Probier es in ein paar Minuten noch einmal.' },
+        fehler:  { en: 'Something went wrong. Try again in a moment.',
+                   de: 'Da ist etwas schiefgegangen. Versuch es gleich noch einmal.' }
+      };
+      function sag(key, gut) {
+        var t = TEXT[key] || TEXT.fehler;
+        status.textContent = de() ? t.de : t.en;
+        status.className = 'leave-status ' + (gut ? 'ok' : 'err');
+      }
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var adresse = mail.value.trim();
+        if (!adresse) { sag('syntax', false); mail.focus(); return; }
+        btn.disabled = true;
+        status.textContent = de() ? TEXT.senden.de : TEXT.senden.en;
+        status.className = 'leave-status';
+        try {
+          var r = await fetch('/api/unsubscribe', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: adresse, website: hp.value })
+          });
+          var d = await r.json();
+          if (d && d.ok) { sag('ok', true); form.reset(); }
+          else { sag((d && d.error) || 'fehler', false); btn.disabled = false; }
+        } catch (err) {
+          sag('fehler', false); btn.disabled = false;
+        }
+      });
+    })();
 
     // ── Mobile nav ──
     // ── Scroll reveal (start is deferred while the opening sequence runs) ──
@@ -2020,185 +2352,461 @@
       };
     })();
 
-    // ── Living pixel hologram of the p|d mark · with Störungsfilter ──
-    // The mark never stands safely. The Störungsfilter: stacked false-color
-    // copies (RGB split), staccato over-/under-exposure, displacements of
-    // 50–80% of the mark's width and height. Spark-over. tzzzz — tZTZZZZ.
-    //   window.__cfStartHolo()        → mark stands at once (repeat visits)
-    //   window.__cfStartHolo('ramp')  → mark forms through the filter,
-    //                                   starting at ~30% speed, accelerating
-    (function () {
-      var rng = function (seed) { var s = seed >>> 0; return function () { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; };
-      var holo = document.getElementById('holo'), hx = holo.getContext('2d');
-      var HW = holo.width, HH = holo.height;
-      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var cells = [];
-      var mode = 'idle';                 // idle → ramp → stand
-      var phaseStart = null;
-      var RAMP = 2.7;                    // seconds: filter accelerates 30% → 100%
-      var pose = { until: -1, ops: [] };
-      var burst = { until: 0, next: 0 };
-      var glitter = 0;                   // scroll-fed sparkle boost, decays
+    // ── C|F Glas-Hologramm · der Endzustand der Spezialausgabe, dauerhaft ──
+    // Geschnitten aus ComputeFreedom_Sequenz_v3.html. Es leuchtet von selbst,
+    // ohne Anstoss und ohne Ende; es ruht nur, wenn es aus dem Bild gescrollt
+    // ist oder der Besucher weniger Bewegung eingestellt hat.
+    // __cfStartHolo bleibt als leerer Griff bestehen, weil die Eroeffnung
+    // weiter danach greift — sie soll nichts mehr anstossen muessen.
+    window.__cfStartHolo = function () {};
+    /* C|F Glas-Hologramm — der Endzustand der Spezialausgabe, dauerhaft.
+       Geschnitten aus ComputeFreedom_Sequenz_v3.html. Keine Photonen, keine
+       Phasen, kein Weltbild: nur das Glas und die wandernden Lichtflimmer.
+       Der Baustein braucht im Dokument:
+         #cfhBox    ein Kasten (position:relative), in dem alles sitzt
+         #cfhLogo   das SVG des Zeichens (aus cf_holo_svg.html)
+         #cfhCanvas die Zeichenflaeche fuer die Flimmer
+    */
+    (()=>{
+    'use strict';
+    if(!document.getElementById('cfhBox'))return;
+    const $=id=>document.getElementById(id);
+    const svg=$('cfhSvg'), glyphs=$('glyphs'), C=$('letterC'), F=$('letterF');
+    const ompute=$('ompute'), reedom=$('reedom'), notch=$('notchCut');
+    const barBase=$('barBase'), barShine=$('barShine');
+    const lB=$('leftBracketBase'), lS=$('leftBracketShine'), rB=$('rightBracketBase'), rS=$('rightBracketShine');
+    /* Unterglut, Randlicht und Phasenschild gehoeren zur Weltszene — hier nicht. */
+    const logoSvgEl=document.querySelector('#cfhLogo svg');
+    /* --- Intro/Weltwerdung: Refs, Aliase, Helfer --- */
+    const logo=$('cfhLogo');
+    const leftBase=lB, leftShine=lS, rightBase=rB, rightShine=rS;
+    let worldT=0;
+    const FULL=[-245,6,592,68], OVER=[9.0,8.5,126,63], HERO=[6.0,7.4,132,65.5];
+    const S=1.69;
+    const sleep=ms=>new Promise(r=>setTimeout(r,ms*S));
+    const clamp=x=>Math.max(0,Math.min(1,x));
+    const smooth=t=>t*t*(3-2*t);
+    const easeOut=t=>1-Math.pow(1-t,4);
+    const gravity=t=>{const k=11,c=.57;const a=1/(1+Math.exp(k*c));const b=1/(1+Math.exp(-k*(1-c)));return clamp(((1/(1+Math.exp(-k*(t-c))))-a)/(b-a));};
+    function tween(ms,fn,ease=smooth){return new Promise(res=>{const st=performance.now();function fr(now){const t=clamp((now-st)/(ms*S));fn(ease(t),t);if(t<1)requestAnimationFrame(fr);else res();}requestAnimationFrame(fr);});}
+    function path(points){return 'M'+points.map((p,i)=>(i?'L':'')+p[0].toFixed(3)+' '+p[1].toFixed(3)).join(' ');}
+    function mixPoints(a,b,p){return a.map((v,i)=>[v[0]+(b[i][0]-v[0])*p,v[1]+(b[i][1]-v[1])*p]);}
+    function setD(el,pts){if(el)el.setAttribute('d',path(pts));}
+    function setBar(x){barBase.setAttribute('x',x);barShine.setAttribute('x',x);}
+    function setVB(v){svg.setAttribute('viewBox',v.map(n=>Number(n).toFixed(3)).join(' '));}
+    function mixVB(a,b,p){return a.map((v,i)=>v+(b[i]-v)*p);}
+    const l0=[[46,33.1],[40.4,33.1],[40.4,49.9],[46,49.9]];
+    const l1=[[71.5,34.5],[65.5,41.5],[65.5,41.5],[71.5,48.5]];
+    const r0=[[64,33.1],[69.6,33.1],[69.6,49.9],[64,49.9]];
+    const r1=[[82.5,34.5],[88.5,41.5],[88.5,41.5],[82.5,48.5]];
 
-      window.__cfStartHolo = function (how) {
-        if (mode !== 'idle') return;
-        mode = (how === 'ramp' || how === 'glitch') ? 'ramp' : 'stand';
+    /* ---------- statischer Endzustand aus CP2 v4 ---------- */
+    svg.setAttribute('viewBox','6 7.4 132 65.5');
+    try{svg.pauseAnimations()}catch(e){}
+    ompute.setAttribute('display','none'); reedom.setAttribute('display','none');
+    C.setAttribute('transform','translate(0 0)');
+    F.setAttribute('transform','translate(1.3 0)');
+    const L1='M71.500 34.500L65.500 41.500L65.500 41.500L71.500 48.500';
+    const R1='M82.500 34.500L88.500 41.500L88.500 41.500L82.500 48.500';
+    [lB,lS].forEach(e=>{e.setAttribute('d',L1);e.setAttribute('stroke-width','3')});
+    [rB,rS].forEach(e=>{e.setAttribute('d',R1);e.setAttribute('stroke-width','3')});
+    barBase.setAttribute('x','75.5'); barShine.setAttribute('x','75.5');
+    notch.setAttribute('d','M83.950 34.750L88.750 41.500L83.950 48.250');
+    notch.setAttribute('stroke-width','4.15');
+
+    /* ---------- Logo-Pixelkarte (Farbe+Struktur für Photonen-Sampling) ---------- */
+    let mapData=null, mapRect=null, mapW=0, mapH=0;
+    const logoXML=new XMLSerializer().serializeToString(svg); /* VOR Klonen serialisiert */
+    function buildLogoMap(){
+      const r = logoSvgEl.getBoundingClientRect();
+      const img = new Image();
+      img.onload = () => {
+        const oc = document.createElement('canvas');
+        /* etwas höhere Auflösung für bessere Kanten */
+        const scale = Math.min(2, window.devicePixelRatio || 1);
+        oc.width  = Math.max(2, Math.ceil(r.width  * scale));
+        oc.height = Math.max(2, Math.ceil(r.height * scale));
+        const octx = oc.getContext('2d', {willReadFrequently:true});
+        octx.drawImage(img, 0, 0, oc.width, oc.height);
+        mapData = octx.getImageData(0, 0, oc.width, oc.height).data;
+        mapRect = r;
+        mapW = oc.width;
+        mapH = oc.height;
       };
-      window.addEventListener('scroll', function () { glitter = 1; }, { passive: true });
+      const xml = logoXML.replace('<svg ', '<svg width="'+Math.ceil(r.width)+'" height="'+Math.ceil(r.height)+'" ');
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(xml);
+    }
+    function sampleLogo(x, y){
+      if (!mapData || !mapRect) return null;
+      if (x < mapRect.left || x >= mapRect.left + mapRect.width ||
+          y < mapRect.top  || y >= mapRect.top  + mapRect.height) return null;
+      const scaleX = mapW / mapRect.width;
+      const scaleY = mapH / mapRect.height;
+      const ix = ((y - mapRect.top) * scaleY | 0) * mapW * 4 +
+                 ((x - mapRect.left) * scaleX | 0) * 4;
+      if (ix < 0 || ix + 3 >= mapData.length) return null;
+      const a = mapData[ix + 3];
+      if (a < 35) return null;
+      return [mapData[ix], mapData[ix+1], mapData[ix+2], a];
+    }
 
-      var FALSE_COLS = ['#FF0033', '#00FFE0', '#39FF14', '#FFFFFF', '#2A64FF'];
+    /* ---------- Glas-Klone ---------- */
+    let cloneN=0;
+    function makeClone(fill,stroke,sw,useGlow){
+      const px='g'+(++cloneN)+'_';
+      const g=glyphs.cloneNode(true);
+      g.removeAttribute('id');
+      g.querySelectorAll('[id]').forEach(n=>n.setAttribute('id',px+n.getAttribute('id')));
+      g.querySelectorAll('[filter]').forEach(n=>n.remove());
+      g.querySelectorAll('[style]').forEach(n=>n.removeAttribute('style'));
+      g.querySelectorAll('path,rect,ellipse').forEach(n=>{
+        const f=n.getAttribute('fill');
+        if(f&&f!=='none'){n.setAttribute('fill',fill);
+          if(!n.getAttribute('stroke')){n.setAttribute('stroke',stroke);n.setAttribute('stroke-width',sw)}}
+        if(n.getAttribute('stroke')&&n.getAttribute('fill')==='none')n.setAttribute('stroke',stroke);
+      });
+      if(useGlow)g.setAttribute('filter','url(#holoGlow)');
+      g.setAttribute('style','mix-blend-mode:screen');
+      g.setAttribute('opacity','0');
+      svg.appendChild(g);
+      return g;
+    }
+    function makeGlassClone(paint,filterUrl,blend){
+      const px='g'+(++cloneN)+'_';
+      const g=glyphs.cloneNode(true);
+      g.removeAttribute('id');
+      g.querySelectorAll('[id]').forEach(n=>n.setAttribute('id',px+n.getAttribute('id')));
+      g.querySelectorAll('[filter]').forEach(n=>n.remove());
+      g.querySelectorAll('[style]').forEach(n=>n.removeAttribute('style'));
+      g.querySelectorAll('path,rect,ellipse').forEach(n=>{
+        const f=n.getAttribute('fill');
+        if(f&&f!=='none')n.setAttribute('fill',paint);
+        if(n.getAttribute('stroke'))n.setAttribute('stroke',paint);
+      });
+      if(filterUrl)g.setAttribute('filter',filterUrl);
+      if(blend)g.setAttribute('style','mix-blend-mode:screen');
+      g.setAttribute('opacity','0');
+      svg.appendChild(g);
+      return g;
+    }
+    /* Körper: deckende Füllung, Transparenz NUR über Gruppen-Opacity -> keine Teilpfad-Nähte */
+    const glassBody=makeGlassClone('url(#glassGradSolid)',null,false);
+    /* Tiefe: gerichtetes Kantenlicht — oben weiß (Lichteinfall), unten blau (Transmission) */
+    const glassTopE=makeGlassClone('#ffffff','url(#glassTop)',true);
+    const glassBotE=makeGlassClone('#ffffff','url(#glassBottom)',true);
+    /* Glanzzug: diagonales Highlight über die Union */
+    const glassGlint=makeGlassClone('#ffffff',null,true); glassGlint.setAttribute('mask','url(#glintMask)');
+    /* Brechungs-Doppelkante: versetzte Union-Kante */
+    const glassRim2=makeGlassClone('#bcd9ee','url(#glassRim)',true); glassRim2.setAttribute('transform','translate(0.65 0.95)');
+    /* Hauptkante: aus der Vereinigungs-Silhouette -> C, F, Linie und Winkel identisch */
+    const glassRim=makeGlassClone('#ffffff','url(#glassRim)',true);
+    /* Zonen-Lichtblätter: globales Schimmern je Buchstabe (C warm · Mitte neutral · F polarblau) */
+    function makeZoneClone(fill,keep){
+      const px='z'+(++cloneN)+'_';
+      const g=glyphs.cloneNode(true);
+      g.removeAttribute('id');
+      g.querySelectorAll('[id]').forEach(n=>n.setAttribute('id',px+n.getAttribute('id')));
+      g.querySelectorAll('[filter]').forEach(n=>n.remove());
+      g.querySelectorAll('[style]').forEach(n=>n.removeAttribute('style'));
+      ['letterC','ompute','reedom','sep','rightBracket','letterF'].forEach(id=>{
+        const n=g.querySelector('#'+px+id);
+        if(n&&!keep.includes(id))n.remove();
+      });
+      g.querySelectorAll('path,rect,ellipse').forEach(n=>{
+        const f=n.getAttribute('fill');
+        if(f&&f!=='none')n.setAttribute('fill',fill);
+        if(n.getAttribute('stroke'))n.setAttribute('stroke',fill);
+      });
+      g.setAttribute('filter','url(#holoGlow)');
+      g.setAttribute('style','mix-blend-mode:screen');
+      g.setAttribute('opacity','0');
+      svg.appendChild(g);
+      return g;
+    }
+    const zones = [
+      { edge: makeZoneClone('#ff9a3c', ['letterC']),               core: makeZoneClone('#ffe8c8', ['letterC']),               me: 'mskZ0e', mc: 'mskZ0c' },
+      { edge: makeZoneClone('#c8dcef', ['sep', 'rightBracket']),   core: makeZoneClone('#f4f9ff', ['sep', 'rightBracket']),   me: 'mskZ1e', mc: 'mskZ1c' },
+      { edge: makeZoneClone('#5bb8ff', ['letterF']),               core: makeZoneClone('#e0f2ff', ['letterF']),               me: 'mskZ2e', mc: 'mskZ2c' }
+    ];
+    zones.forEach((z,i)=>{
+      z.edge.setAttribute('mask','url(#'+z.me+')');
+      z.core.setAttribute('mask','url(#'+z.mc+')');
+      z.rE=svg.querySelector('#zr'+i+'e');
+      z.rC=svg.querySelector('#zr'+i+'c');
+      z.ph=Math.random()*6.28;
+      z.state='pause'; z.timer=0.4+i*0.9+Math.random()*0.8; z.bandY=95;
+    });
+    const sparks=[]; const prisms=[]; const prismCols=[]; let lastRefl=0; let holoSeeded=false;
 
-      // ── Das Zeichen auf Papier (v4.0) ──
-      // Die Farben bleiben, wie sie sind: #A8BCC7 (d) und #B85025 (p).
-      // Nachgemessen: das Problem auf hellem Grund war nie die Farbe, sondern die
-      // Deckung. Bei 4.5px-Punkten im 6px-Raster deckt das Zeichen nur ~24%; auf
-      // Tiefsee ist jede Lücke Dunkelheit und das Zeichen leuchtet, auf Papier ist
-      // jede Lücke PAPIER und wäscht die Farbe aus. Die Farbe kann das nicht
-      // ausgleichen — die Rechnung dafür ergibt einen negativen Rotwert.
-      // Also: auf Papier bekommt das Zeichen mehr Tinte statt anderer Farbe.
-      // Das Hologramm wird zum Halbtonraster. Was auf dem Schirm leuchtet, deckt
-      // auf Papier. Hierarchie bleibt: p trägt, d bleibt zurückgenommen.
-      var LIGHT = document.documentElement.getAttribute('data-theme') === 'light';
-      window.addEventListener('cf-theme', function(e){ LIGHT = (e.detail.theme === 'light'); });
+    /* ---------- Zeichenflaeche ----------
+       Der Kasten liegt irgendwo auf der Seite, sampleLogo() rechnet aber in
+       Fenster-Koordinaten. Also verschieben wir den Ursprung der Flaeche um die
+       Lage des Kastens: gezeichnet wird weiter in Fenster-Koordinaten, sichtbar
+       wird nur, was im Kasten liegt. */
+    const box=$('cfhBox'), cvH=$('cfhCanvas');
+    const xH=cvH.getContext('2d');
+    let W=0,H=0,DPR=1,gRect=null,rCr=null,rFr=null,boxRect=null;
+    function resize(){
+      DPR=Math.min(window.devicePixelRatio||1,2);
+      boxRect=box.getBoundingClientRect();
+      W=innerWidth; H=innerHeight;
+      cvH.width=Math.max(2,Math.round(boxRect.width*DPR));
+      cvH.height=Math.max(2,Math.round(boxRect.height*DPR));
+      cvH.style.width=boxRect.width+'px';
+      cvH.style.height=boxRect.height+'px';
+      xH.setTransform(DPR,0,0,DPR,-boxRect.left*DPR,-boxRect.top*DPR);
+      gRect=glyphs.getBoundingClientRect();
+      rCr=C.getBoundingClientRect(); rFr=F.getBoundingClientRect();
+      prismCols.length=0;
+      buildLogoMap();
+    }
+    addEventListener('resize',resize);
+    addEventListener('scroll',resize,{passive:true});
+    resize(); setTimeout(resize,200); setTimeout(resize,900);
+    /* Schriften und Bilder koennen die Lage noch verschieben. */
+    if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>setTimeout(resize,60));
 
-      // grow = wieviel jeder Punkt auf Papier wächst, base = Grundlast der Deckkraft.
-      // Mit grow 1.5 / base 0.80 steigt die Deckung von 24% auf 45%.
-      var INK = { grow: 1.5, base: 0.80 };
+    /* ---------- Regler: die Werte vom Ende der Sequenz ---------- */
+    const gain={pd:1.80,pt:1.06,ps:1.74,pb:0.32,pg:1.77};
 
-      var img = new Image();
-      img.onload = function () {
-        var oc = document.createElement('canvas'); oc.width = HW; oc.height = HH;
-        var o = oc.getContext('2d');
-        var ASPECT = 2357 / 2126.5, mh = 512, mw = mh * ASPECT, mx = (HW - mw) / 2, my = (HH - mh) / 2;
-        o.drawImage(img, mx, my, mw, mh);
-        var d = o.getImageData(0, 0, HW, HH).data;
-        var CELL = 6, rand = rng(531);
-        for (var y = 0; y < HH; y += CELL) {
-          for (var x = 0; x < HW; x += CELL) {
-            var idx = ((y + 3) * HW + (x + 3)) * 4, a = d[idx + 3];
-            if (a > 110) {
-              cells.push({
-                x: x + (rand() - 0.5) * 1.4, y: y + (rand() - 0.5) * 1.4,
-                col: 'rgb(' + d[idx] + ',' + d[idx + 1] + ',' + d[idx + 2] + ')',
-                base: 0.5 + rand() * 0.45, ph: rand() * Math.PI * 2, spd: 0.5 + rand() * 1.2,
-                spark: rand() < 0.16, sz: CELL - 1.5
-              });
+    /* ---------- Glas dauerhaft an ----------
+       In der Sequenz faehrt gT von 0 auf 1 hoch. Hier steht es von Anfang an
+       auf 1: das Zeichen IST Glas, und es bleibt Glas. */
+    glyphs.style.filter='brightness(0.94) saturate(0) grayscale(1)';
+    glyphs.setAttribute('opacity','0.08');
+    glassBody.setAttribute('opacity','0.32');
+    glassTopE.setAttribute('opacity','0.78');
+    glassBotE.setAttribute('opacity','0.58');
+    glassGlint.setAttribute('opacity','0.22');
+    glassRim2.setAttribute('opacity','0.35');
+    glassRim.setAttribute('opacity','0.62');
+    for(const z of zones){z.edge.setAttribute('opacity','0');z.core.setAttribute('opacity','0');}
+
+    /* ---------- Schleife ----------
+       Sie ruht, sobald der Kasten aus dem Bild gescrollt ist, und auch, wenn der
+       Besucher »weniger Bewegung« eingestellt hat: dann steht ein ruhiges Glas. */
+    let ruht=false, sichtbar=true;
+    try{
+      const mq=matchMedia('(prefers-reduced-motion: reduce)');
+      ruht=mq.matches;
+      mq.addEventListener&&mq.addEventListener('change',e=>{ruht=e.matches;});
+    }catch(e){}
+    try{
+      new IntersectionObserver(es=>{sichtbar=es[0].isIntersecting;},{rootMargin:'120px'}).observe(box);
+    }catch(e){}
+    addEventListener('visibilitychange',()=>{if(!document.hidden)last=performance.now();});
+
+    let last=performance.now();
+    const refl=1;
+    function frame(now){
+      requestAnimationFrame(frame);
+      const dt=Math.min(0.05,(now-last)/1000); last=now;
+      if(!sichtbar)return;
+      if(ruht){ if(prisms.length){prisms.length=0;sparks.length=0;xH.clearRect(0,0,innerWidth,innerHeight);} return; }
+      /* ---- Hologramm: Punktquellen mit asymmetrischer Form + Brechungsknick ---- */
+      function smoothstep(a, b, x) {
+        const t = Math.max(0, Math.min(1, (x - a) / (b - a)));
+        return t * t * (3 - 2 * t);
+      }
+      function buildCols(){
+        prismCols.length = 0;
+        if (!gRect || !mapRect) return;
+        for (let x = gRect.left + 2; x < gRect.right - 2; x += 2.2) {
+          let cov = 0;
+          for (let y = mapRect.top; y < mapRect.top + mapRect.height; y += 3) {
+            if (sampleLogo(x, y)) cov += 3;
+          }
+          if (cov >= 18) prismCols.push({x, cov});
+        }
+      }
+      function spawnPrism(randomY){
+        if (!prismCols.length) buildCols();
+        if (!prismCols.length) return;
+        // Spaltenauswahl: Roulette nach Deckung, C-Region (bes. C-Rücken) verstärkt
+        let total = 0;
+        for (const col of prismCols) {
+          const cWeight = (rCr && col.x <= rCr.right + 4) ? 2.4 : 1.0;
+          col._w = col.cov * cWeight;
+          total += col._w;
+        }
+        let rnd = Math.random() * total, c = prismCols[prismCols.length - 1];
+        for (const col of prismCols) { rnd -= col._w; if (rnd <= 0) { c = col; break; } }
+        const knickDir = Math.random() < 0.5 ? -1 : 1;
+        const knickAmt = (2.0 + Math.random() * 3.0) * (0.7 + 0.6 * gain.pb);
+        const vv = 34 + Math.random() * 30;                        // schneller -> durchläuft die Bahn
+        const yStart = randomY
+          ? mapRect.top + Math.random() * mapRect.height
+          : mapRect.top + mapRect.height + 8;
+        // Lebensdauer deckt die volle Bahn (Spawn -> oberer Rand) + kleiner Puffer ab
+        const travel = (yStart - (mapRect.top - 10)) / (vv * Math.max(0.3, gain.pt));
+        prisms.push({
+          x0: c.x + (Math.random() - 0.5) * 2.2,
+          x:  c.x + (Math.random() - 0.5) * 2.2,
+          y: yStart,
+          v: vv,
+          r: 5.5 + Math.random() * 4.5,
+          ph: Math.random() * 6.28,
+          life: 0,
+          maxLife: travel * 1.12 + 0.35,
+          trail: [],
+          enterY: null,
+          exitY:  null,
+          knickDir,
+          knickAmt
+        });
+      }
+      if (refl > 0 && mapRect && gRect) {
+        const target = Math.round(14 * gain.pd * refl);
+        while (prisms.length < target) spawnPrism(!holoSeeded);
+        holoSeeded = true;
+        if (Math.random() < dt * 3.5 * refl) {
+          for (let tries = 0; tries < 12; tries++) {
+            const sx = mapRect.left + Math.random() * mapRect.width;
+            const sy = mapRect.top  + Math.random() * mapRect.height;
+            if (sampleLogo(sx, sy) && !sampleLogo(sx, sy - 2.5)) {
+              sparks.push({x: sx, y: sy, life: 0, max: 0.4 + Math.random() * 0.5});
+              break;
             }
           }
         }
-        if (reduce) { drawMark(0, 1, 0, 0, null, true); return; }
-        requestAnimationFrame(loop);
-      };
-      img.src = dataUrl;
-
-      function drawMark(tt, alphaMul, dx, dy, colOverride, flat) {
-        var boost = glitter;
-        for (var i = 0; i < cells.length; i++) {
-          var c = cells[i], a = c.base, sz = c.sz;
-          if (!flat) {
-            var tw = Math.sin(tt * c.spd + c.ph);
-            var dz = Math.sin(tt * c.spd * 0.45 + c.ph * 1.7);
-            a = c.base * (0.64 + 0.36 * (0.5 + 0.5 * tw)) * (0.82 + 0.18 * (0.5 + 0.5 * dz));
-            sz = c.sz + dz * 0.4;
-            if (c.spark) {
-              var pop = Math.max(0, tw);
-              a = Math.min(1, a + pop * (0.5 + boost * 0.45));
-              sz += pop * (1.0 + boost * 1.2);
-            }
-          }
-          a *= alphaMul;
-          if (LIGHT) {
-            // ── Tinte statt Licht ──
-            // Auf Tiefsee ist jede Lücke Dunkelheit und das Zeichen leuchtet.
-            // Auf Papier ist jede Lücke PAPIER: bei 4.5px-Zellen im 6px-Raster
-            // deckt das Zeichen nur ~29% und wäscht sich zu 71% aus.
-            // Darum auf Papier: Punkte wachsen (Halbton-Raster statt Hologramm)
-            // und die Grundlast steigt. INK ist die Stellschraube.
-            a = INK.base + a * (1 - INK.base);
-            if (alphaMul < 1) a *= alphaMul;   // Ein-/Ausblenden trotzdem respektieren
-            sz += INK.grow;
-          }
-          hx.globalAlpha = a < 0 ? 0 : (a > 1 ? 1 : a);
-          hx.fillStyle = colOverride || c.col;
-          hx.fillRect(c.x + dx, c.y + dy, sz, sz);
-        }
-        hx.globalAlpha = 1;
       }
-
-      // One disturbance pose. g = intensity (0…1). Returns draw ops.
-      function makePose(g) {
-        var ops = [];
-        var roll = Math.random();
-        if (roll < 0.18 * g) return ops;                    // dropout: underexposure
-        if (roll < 0.5 * g) {                               // spark-over: displaced false-color stack
-          var n = 1 + ((Math.random() * 2) | 0);
-          for (var k = 0; k < n; k++) {
-            var dx = (Math.random() < 0.5 ? -1 : 1) * (0.5 + Math.random() * 0.3) * HW;
-            var dy = (Math.random() < 0.5 ? -1 : 1) * (0.5 + Math.random() * 0.3) * HH;
-            if (Math.random() < 0.5) dy = (Math.random() - 0.5) * 0.25 * HH;
-            ops.push({ a: 0.9, dx: dx, dy: dy, col: FALSE_COLS[(Math.random() * FALSE_COLS.length) | 0] });
-          }
-          if (Math.random() < 0.45) ops.push({ a: 1.6, dx: 0, dy: 0, col: '#FFFFFF' });
-          return ops;
-        }
-        var off = (3 + Math.random() * 10) * (0.4 + g);     // RGB-stacked, in place
-        ops.push({ a: 0.12 + 0.3 * g, dx: off, dy: 0, col: '#FF0033' });
-        ops.push({ a: 0.12 + 0.3 * g, dx: -off, dy: 0, col: '#00FFE0' });
-        ops.push({ a: 1 - 0.3 * g, dx: 0, dy: 0, col: null });
-        return ops;
+      xH.save(); xH.setTransform(1,0,0,1,0,0);
+      xH.clearRect(0, 0, cvH.width, cvH.height); xH.restore();
+      xH.globalCompositeOperation = 'lighter';
+      function palFor(x){
+        // C = warm/orange; alles ab C-Ende (Trennlinie, rechter Winkel, F) = polarblau (= Logo)
+        if (rCr && x <= rCr.right + 4) return { core:'255,155,70', mid:'255,200,140', halo:'255,120,40' };
+        return { core:'120,200,255', mid:'90,175,255', halo:'50,150,255' };
       }
-      function drawOps(tt, ops) {
-        for (var i = 0; i < ops.length; i++) {
-          drawMark(tt, ops[i].a, ops[i].dx, ops[i].dy, ops[i].col);
+      function glyphSpanAt(x) {
+        if (!mapRect) return null;
+        let top = null, bot = null;
+        const y0 = mapRect.top;
+        const y1 = mapRect.top + mapRect.height;
+        for (let y = y0; y <= y1; y += 2) {
+          if (sampleLogo(x, y)) {
+            if (top === null) top = y;
+            bot = y;
+          }
+        }
+        if (top === null || bot === null || bot - top < 6) return null;
+        return { top, bot };
+      }
+      for (let i = prisms.length - 1; i >= 0; i--) {
+        const p = prisms[i];
+        p.life += dt;
+        p.y   -= p.v * gain.pt * dt;
+        p.x = p.x0;
+        if (p.life > p.maxLife || p.y < mapRect.top - 35) {
+          prisms.splice(i, 1);
+          continue;
+        }
+        if (refl <= 0) continue;
+        const inside = !!(sampleLogo(p.x0, p.y) || sampleLogo(p.x0, p.y + 2) || sampleLogo(p.x0, p.y - 2));
+        if (!inside) {
+          p.enterY = null;
+          p.exitY  = null;
+          p.trail.push({x: p.x, y: p.y});
+          if (p.trail.length > 8) p.trail.shift();
+          continue;
+        }
+        const span = glyphSpanAt(p.x0);
+        if (!span) continue;
+        if (p.enterY === null) p.enterY = span.bot;
+        p.exitY = span.top;
+        const pathLen = Math.max(8, p.enterY - p.exitY);
+        let t = (p.enterY - p.y) / pathLen;
+        t = Math.max(0, Math.min(1, t));
+        const entryZone = 0.13;
+        const exitZone  = 0.32;
+        let shape;
+        if (t < entryZone) {
+          const u = t / entryZone;
+          shape = u * u * (3 - 2 * u);
+          shape = Math.pow(shape, 0.75);
+        } else if (t > 1 - exitZone) {
+          const u = (1 - t) / exitZone;
+          shape = smoothstep(0, 1, u);
+          shape = Math.pow(shape, 1.25);
+        } else {
+          shape = 1;
+        }
+        let knick = 0;
+        if (t < entryZone) {
+          const u = t / entryZone;
+          knick = Math.sin(u * Math.PI) * p.knickAmt * p.knickDir;
+        } else if (t > 1 - exitZone) {
+          const u = (t - (1 - exitZone)) / exitZone;
+          knick = Math.sin(u * Math.PI) * p.knickAmt * 0.7 * p.knickDir;
+        }
+        p.x = p.x0 + knick * gain.pb;
+        const sizeMul = 0.30 + 0.70 * shape;
+        const elong   = 1.0  + 2.1 * shape;
+        const radX    = p.r * sizeMul * (0.9 + 0.15 * gain.ps);
+        const radY    = radX * elong;
+        const born  = Math.min(1, p.life / 0.25);
+        const fade  = Math.min(1, Math.max(0, (p.y - (mapRect.top - 6)) / 22));  // erst ganz oben ausglimmen
+        const pulse = 0.84 + 0.16 * Math.sin(now * 0.003 + p.ph);
+        const a     = gain.pg * refl * born * fade * pulse * (0.55 + 0.45 * shape);
+        const pal = palFor(p.x0);
+        p.trail.push({x: p.x, y: p.y});
+        if (p.trail.length > 8) p.trail.shift();
+        xH.save();
+        xH.translate(p.x, p.y);
+        xH.scale(1, elong);
+        const g1 = xH.createRadialGradient(0, 0, 0, 0, 0, radX * 2.0);
+        g1.addColorStop(0,   `rgba(${pal.halo},${(0.20 * a).toFixed(3)})`);
+        g1.addColorStop(0.5, `rgba(${pal.mid},${(0.09 * a).toFixed(3)})`);
+        g1.addColorStop(1,   `rgba(${pal.halo},0)`);
+        xH.fillStyle = g1;
+        xH.beginPath();
+        xH.arc(0, 0, radX * 2.0, 0, Math.PI * 2);
+        xH.fill();
+        const g2 = xH.createRadialGradient(0, 0, 0, 0, 0, radX);
+        g2.addColorStop(0,   `rgba(${pal.core},${(0.52 * a).toFixed(3)})`);
+        g2.addColorStop(0.55,`rgba(${pal.mid},${(0.20 * a).toFixed(3)})`);
+        g2.addColorStop(1,   `rgba(${pal.core},0)`);
+        xH.fillStyle = g2;
+        xH.beginPath();
+        xH.arc(0, 0, radX, 0, Math.PI * 2);
+        xH.fill();
+        const g3 = xH.createRadialGradient(0, 0, 0, 0, 0, radX * 0.26);
+        g3.addColorStop(0,   `rgba(255,255,255,${(0.78 * a).toFixed(3)})`);
+        g3.addColorStop(1,   `rgba(${pal.core},0)`);
+        xH.fillStyle = g3;
+        xH.beginPath();
+        xH.arc(0, 0, radX * 0.26, 0, Math.PI * 2);
+        xH.fill();
+        xH.restore();
+        if (shape > 0.2 && p.trail.length > 2) {
+          for (let ti = 0; ti < p.trail.length - 1; ti++) {
+            const tr = p.trail[ti];
+            const u  = ti / (p.trail.length - 1);
+            if (!sampleLogo(tr.x, tr.y) && !sampleLogo(p.x0, tr.y)) continue;
+            const ta = a * 0.11 * u * shape;
+            const trR = radX * 0.32 * u;
+            const gt = xH.createRadialGradient(tr.x, tr.y, 0, tr.x, tr.y, trR);
+            gt.addColorStop(0, `rgba(${pal.mid},${ta.toFixed(3)})`);
+            gt.addColorStop(1, `rgba(${pal.mid},0)`);
+            xH.fillStyle = gt;
+            xH.beginPath();
+            xH.arc(tr.x, tr.y, trR, 0, Math.PI * 2);
+            xH.fill();
+          }
         }
       }
-
-      function loop(t) {
-        var tt = t / 1000;
-        glitter *= 0.94;
-        if (glitter < 0.01) glitter = 0;
-        hx.clearRect(0, 0, HW, HH);
-
-        if (mode === 'ramp') {
-          if (phaseStart === null) phaseStart = tt;
-          var pr = (tt - phaseStart) / RAMP;
-          if (pr >= 1) {
-            mode = 'stand';
-            burst.next = tt + 1.5 + Math.random() * 2.5;
-          } else {
-            // pose hold shrinks: ~160 ms (30% speed) → ~30 ms (full speed)
-            if (tt >= pose.until) {
-              pose.ops = makePose(1 - 0.45 * pr);
-              pose.until = tt + (0.16 - 0.13 * pr);
-            }
-            drawOps(tt, pose.ops);
-          }
-        }
-        if (mode === 'stand') {
-          if (burst.next === 0) burst.next = tt + 2 + Math.random() * 4;
-          if (tt >= burst.next) {
-            burst.until = tt + 0.08 + Math.random() * 0.3;
-            burst.next = tt + 3 + Math.random() * 6;
-            // Der Burst meldet sich nach oben: die Marke im Kopf zuckt im
-            // selben Moment (lebende Piktogramme, v40). Ein Ereignis, ein
-            // Takt — beide Zeichen gehören zum selben Organismus.
-            try { window.dispatchEvent(new CustomEvent('cf-holo-burst', { detail: { dur: Math.round((burst.until - tt) * 1000) } })); } catch (e) {}
-          }
-          if (tt < burst.until) {
-            drawOps(tt, makePose(1));                       // tzzzz — tZTZZZZ
-          } else {
-            var flick = 0.93 + Math.random() * 0.07;        // nervous, never at rest
-            if (Math.random() < 0.03) flick *= 0.55;        // single-frame stutter
-            if (Math.random() < 0.02) {                     // micro RGB fringe
-              var o2 = 2 + Math.random() * 5;
-              drawMark(tt, 0.16, o2, 0, '#FF0033');
-              drawMark(tt, 0.16, -o2, 0, '#00FFE0');
-            }
-            drawMark(tt, flick, 0, 0, null);
-          }
-        }
-        requestAnimationFrame(loop);
+      for (let i = sparks.length - 1; i >= 0; i--) {
+        const sp = sparks[i];
+        sp.life += dt;
+        if (sp.life > sp.max) { sparks.splice(i, 1); continue; }
+        const u = Math.sin(Math.PI * sp.life / sp.max);
+        xH.fillStyle = `rgba(255,255,255,${(0.55 * u).toFixed(3)})`;
+        xH.beginPath();
+        xH.arc(sp.x, sp.y, 1.1 + u * 1.6, 0, Math.PI * 2);
+        xH.fill();
       }
+    }
+    requestAnimationFrame(frame);
     })();
 
     // ── Async Formspree submit (Proton inbox) ──
@@ -3273,7 +3881,7 @@
   </script>
   <script>
   (function(){
-    var I18N = {"nav.horizon": "Horizon", "nav.principle": "Prinzip", "nav.mechanism": "Mechanismus", "nav.origin": "Ursprung", "nav.forum": "Forum", "nav.arepo": "AREPO", "nav.cta": "Mach mit", "tab.horizon": "<b>00</b>Horizon", "tab.principle": "<b>01</b>Das Prinzip", "tab.mechanism": "<b>02</b>Der Mechanismus", "tab.origin": "<b>03</b>Wer &amp; Warum", "tab.contact": "<b>04</b>Position beziehen", "tab.forum": "<b>05</b>Das Forum", "tab.arepo": "<b>06</b>AREPO", "ticker.track": "<span class=\"brk\"><b>● GENF HAT GETAGT</b> &nbsp; Erste Sitzung des Global Dialogue endet; das Wissenschaftspanel sagt, die Sicherheit an der Spitze <em>lässt sich nicht garantieren.</em> Als Nächstes: New York, Mai 2027.</span><span><b>Dekret, 2. Juni:</b> Washington nimmt sich 30 Tage Vorabzugang. <em>Die Öffentlichkeit wartet weiter.</em></span><span>The right to run. <em>The duty to restrain.</em></span><span>Offene Gewichte halten den Abstand zur Spitze bei Monaten. <b>Das Recht zu betreiben, ausgeübt.</b></span><span><b>00 · Horizon</b> — achtzig Jahre auf einer Linie, unten. <em>Er bewegt sich mit dem Kalender.</em></span><span><b>AGI</b><em>plus</em> — die Selbstregulierung endet, das Vertragsrecht beginnt.</span><span>If you don&apos;t run it, <em>you cannot control it.</em></span><span class=\"brk\"><b>● GENF HAT GETAGT</b> &nbsp; Erste Sitzung des Global Dialogue endet; das Wissenschaftspanel sagt, die Sicherheit an der Spitze <em>lässt sich nicht garantieren.</em> Als Nächstes: New York, Mai 2027.</span><span><b>Dekret, 2. Juni:</b> Washington nimmt sich 30 Tage Vorabzugang. <em>Die Öffentlichkeit wartet weiter.</em></span><span>The right to run. <em>The duty to restrain.</em></span><span>Offene Gewichte halten den Abstand zur Spitze bei Monaten. <b>Das Recht zu betreiben, ausgeübt.</b></span><span><b>00 · Horizon</b> — achtzig Jahre auf einer Linie, unten. <em>Er bewegt sich mit dem Kalender.</em></span><span><b>AGI</b><em>plus</em> — die Selbstregulierung endet, das Vertragsrecht beginnt.</span><span>If you don&apos;t run it, <em>you cannot control it.</em></span>", "hero.eyebrow": "Rechenhoheit · v42.0", "hero.lede": "Zwei rechtliche Pflichten: eine <b>untere</b> Grenze und eine <b>obere</b>. Lokale KI für die Bürgerin; ein bindender Vertrag für die Spitze.", "hero.btnPrimary": "Das Argument lesen →", "hero.btnGhost": "Position beziehen", "disp.label": "<span class=\"live-dot\"></span>Depesche · 13. Juli 2026", "disp.head": "Der Tisch steht. Jetzt kommt der Text.", "disp.body1": "Am 6. und 7. Juli hielt der <b>UN Global Dialogue on AI Governance</b> seine erste Sitzung in Genf: jeder Mitgliedstaat in einem Raum, eröffnet vom Generalsekretär und der Präsidentin der Vollversammlung. Guterres brachte vier Prioritäten zu Protokoll: gemeinsame Sicherheitsstandards, menschenrechtliche rote Linien, den Aufbau von Kapazitäten in Entwicklungsländern und Transparenz bei den Umweltfolgen. Autonome Waffen nannte er moralisch verwerflich.", "disp.body2": "Das schärfere Signal kam von den Wissenschaftlern. Das unabhängige Panel des Dialogs, vierzig Fachleute unter dem Vorsitz von <b>Yoshua Bengio</b> und <b>Maria Ressa</b>, legte seinen ersten Bericht Tage vor der Sitzung vor: die Wissenschaft <b>„kann nicht garantieren“</b>, dass KI an der Spitze katastrophalen Schaden vermeidet. Das ist die offizielle Beratungssprache genau des Gremiums, um dessen Rat jeder Staat gebeten hat, und sie bindet niemanden. Die zweite Sitzung tagt im Mai 2027 in New York: zehn Monate, in denen die Spitze im Wettbewerbstempo weiterliefert.", "disp.kicker": "Ein Vertrag braucht einen Tisch, bevor er einen Text braucht. Den Tisch gibt es jetzt. Der Horizont unten zählt, was die Spitze tut, während um den Text gerungen wird.", "disp.src": "UN Global Dialogue on AI Governance, Genf, 6.–7. Juli 2026 · Independent International Scientific Panel on AI, erster Bericht, 1. Juli 2026 · Öffentliche Berichterstattung, Juli 2026.", "head.horizon": "<span class=\"sec-num\">00 — Horizon</span><h2>Wohin das führt. Und woher wir kamen.</h2><p class=\"kicker\">Achtzig Jahre auf einer Linie. Vor uns: KI, <span style=\"color:var(--burnt-bright)\">AGI</span>, <span style=\"color:var(--burnt-bright)\">AGI</span><span style=\"color:var(--lightblue)\">plus</span>, <span style=\"color:var(--ultra-bright)\">ASI</span> — datiert von den Leuten, die beruflich Prognosen stellen. Hinter uns: die Maschinen, die uns großgezogen haben. Das Instrument bewegt sich mit dem Kalender; komm morgen wieder, und es ist von allein ein Stück vorgerückt. Zieh die Linie, wohin Du willst. Rückwärts ist die freundliche Richtung.</p>", "head.principle": "<span class=\"sec-num\">01 — Das Prinzip</span><h2>Zwei Schwellen. Eine Architektur.</h2><p class=\"kicker\">KI ist zu folgenreich, um in den Händen einiger weniger nicht rechenschaftspflichtiger Akteure zu bleiben, weder am Punkt des Zugangs noch am Punkt des Risikos.</p>", "head.mechanism": "<span class=\"sec-num\">02 — Der Mechanismus</span><h2>Zwei Pflichten. Eine Architektur.</h2><p class=\"kicker\">Die Schwellenpflicht sichert die untere Grenze: das Recht der Bürgerin auf eine Maschine, die sie wirklich kontrolliert. Die Vertragspflicht sichert die obere: das Recht der Gattung auf eine Stimme in Entscheidungen, die in ihrem Namen getroffen werden. Jede Pflicht für sich ist symbolisch. Zusammen sind sie eine Architektur.</p>", "head.origin": "<span class=\"sec-num\">03 — Wer &amp; Warum</span><h2>Warum ich Compute Freedom gebaut habe.</h2>", "head.contact": "<span class=\"sec-num\">04 — Position beziehen</span><h2>KI-Governance geschieht mit Dir oder ohne Dich.</h2><p class=\"kicker\">Diskutiere sie öffentlich, fordere sie heraus, teile sie, verbessere sie, überall dort, wo politische Gespräche tatsächlich stattfinden. Nutze das Formular für Zusammenarbeit, Interviews, politische Arbeit, Forschungsbeiträge oder ernste Einwände, die nicht in einem Kommentarstrang untergehen sollen.</p>", "head.forum": "<span class=\"sec-num\">05 — Das Forum</span><h2>Das Argument liegt offen. Nimm es auseinander.</h2><p class=\"kicker\">Ernsthafte Einwände machen das Argument besser. Poste sie hier, offen, wo sie gelesen, beantwortet und aufbewahrt werden können.</p>", "prin.card1tag": "Untere Grenze · Die Bürgerin", "prin.card1h3": "Die Schwellenpflicht", "prin.card1p": "Sobald KI eine definierte Fähigkeitsschwelle überschreitet, sollten Entwickler gesetzlich verpflichtet sein, eine Version anzubieten, die auf privater Hardware läuft, ohne Cloud-Abhängigkeit, ohne laufende Zugangsgebühren, ohne Überwachung. Das sichert das Recht der Bürgerin auf eine Maschine, die ihr antwortet.", "prin.card2tag": "Obere Grenze · Die Gattung", "prin.card2h3": "Die Vertragspflicht", "prin.card2p": "Sobald die Entwicklung an der Spitze in <span class=\"term-burnt\">AGI</span>, <span class=\"term-burnt\">AGI</span><span class=\"term-blue\">plus</span> und <span class=\"term-ultra\">ASI</span> übergeht, hat kein einzelnes Unternehmen und kein einzelner Staat das demokratische Mandat, allein weiterzugehen. Entscheidungen von Belang für die Gattung brauchen die Legitimation durch die Gattung, festgeschrieben in einem bindenden internationalen Vertrag, mit überprüfbaren Grenzen, Inspektionen auf IAEA-Niveau und gesetzlich verankerten Stopp-Mechanismen.", "prin.pull": "Open Source ist nicht dasselbe wie <em>Rechenhoheit.</em>", "prin.body1": "Modellgewichte freizugeben, die nur im großen Maßstab auf Hyperscaler-Infrastruktur funktionieren, ist eine förmliche Geste ohne funktionale Substanz. Der Code mag sichtbar sein; die Fähigkeit bleibt unerreichbar. Wer die Inferenz-Infrastruktur kontrolliert, kontrolliert das Wissen. Wenn dieses Wissen zur Grundlage von Medizin, Bildung, Recht und Regierung wird, ist seine Konzentration in drei bis fünf privaten Konzernen kein Marktergebnis, das wir stillschweigend hinnehmen sollten.", "prin.body2": "<strong>Das Muster ist alt. Nur der Maßstab ist neu.</strong>", "mech.sub1": "<span class=\"mini\">Untere Grenze</span>Die Schwellenpflicht", "mech.p1": "Die übliche Antwort auf Sorgen über KI-Konzentration ist eine Sprache der Offenheit: Aufsätze, Benchmarks, Model Cards, APIs und gelegentliche Gewichtsfreigaben. Doch diese Antwort verwechselt Sichtbarkeit mit Zugang und Zugang mit Hoheit.", "mech.p2": "Selbst wo Modellgewichte freigegeben werden, bleiben die fähigsten Systeme praktisch abhängig von Infrastruktur, die Hunderttausende oder Millionen Dollar kostet. Forscher können Teile des Stacks prüfen. Bürger könnten ihn theoretisch auditieren. Aber sie können Spitzenfähigkeit nicht eigenständig betreiben. Der Anschein von Offenheit bleibt; die Substanz der Kontrolle nicht.", "mech.p3": "Compute Freedom schlägt einen konkreten Mechanismus vor: Sobald ein KI-System eine definierte Fähigkeitsschwelle überschreitet, sollte sein Entwickler gesetzlich verpflichtet sein, eine komprimierte, lokal lauffähige Version anzubieten: auf Verbraucher-Hardware, offline-fähig, ohne verpflichtende Cloud-Anmeldung.", "mech.pull1": "Die Pflicht ist das Prinzip. <em>Die Schwelle ist die Verhandlung.</em>", "mech.p4": "Die genaue Fähigkeitsschwelle bleibt hier bewusst offen. Sie zu definieren ist eine technische und politische Frage, die in die öffentliche Beratung gehört, mit Beiträgen von Ingenieuren, Ethikern, Politikern und betroffenen Gemeinschaften. Wir laden dazu ein, diese Verhandlung zu beginnen.", "mech.spec1a": "<b>Spitzenmodelle lassen sich heute komprimieren</b>, sodass sie auf Verbraucher-Hardware mit mäßigem Fähigkeitsverlust laufen. Die technische Hürde ist nicht grundsätzlich.", "mech.spec1b": "<b>Der ökonomische Anreiz, lokale Nutzung zu verhindern, ist strukturell:</b> Cloud-Inferenz ist das Erlösmodell.", "mech.spec1c": "<b>Kein rechtlicher Rahmen erzwingt derzeit die Offenlegung</b>, ob Komprimierung machbar ist.", "mech.spec1d": "<b>Die Öffentlichkeit hat keinen Mechanismus, um</b> die Behauptungen der Industrie darüber zu prüfen, was möglich ist und was nicht.", "mech.p5": "Die pharmazeutische Parallele ist lehrreich. Arzneimittelentwickler müssen Zusammensetzungen offenlegen, sich der Zulassungsprüfung stellen und, nach einer Frist, Wirkstoffe für Generika öffnen. Wir akzeptieren, dass die Öffentlichkeit ein berechtigtes Interesse daran hat, lebenswichtiges Wissen nicht dauerhaft in privater Infrastruktur eingeschlossen zu sehen. <strong>KI wird zu lebenswichtigem Wissen. Das Argument ist dasselbe.</strong>", "mech.p6": "Dieses Argument lässt die kommerzielle KI-Entwicklung unangetastet. Was es hinzufügt, ist ein struktureller Boden darunter: eine Mindestbedingung an Rechenhoheit, die unabhängige Prüfung, akademische Forschung und demokratische Rechenschaft möglich hält.", "mech.sub2": "<span class=\"mini\">Obere Grenze</span>Die Vertragspflicht", "mech.p7": "Die untere Schwelle schützt die Bürgerin. Die obere Schwelle schützt die Gattung, und dazu haben wir zu lange geschwiegen.", "mech.p8": "Während Spitzensysteme sich der allgemeinen menschlichen Leistungsfähigkeit und darüber hinaus nähern, <span class=\"term-burnt\">AGI</span>, <span class=\"term-burnt\">AGI</span><span class=\"term-blue\">plus</span> und <span class=\"term-ultra\">ASI</span>, wird ihre Entwicklung zu einer Sache von Belang jenseits jedes einzelnen Staates und jedes einzelnen Konzerns. Die derzeitige Bahn hat weder ein demokratisches Mandat noch einen bindenden Vertrag. Stargate, Colossus, die Milliarden-Bauprogramme von OpenAI, Google und xAI, alle abhängig vom faktischen NVIDIA-Monopol auf Spitzen-Trainingssilizium, laufen im Wettbewerbstempo, rechenschaftspflichtig gegenüber Aktionären statt Bürgern.", "mech.p9": "Die physische Signatur dieses Rennens ist nicht mehr subtil. Wenn ein KI-Unternehmen ankündigt, es brauche <span class=\"term-burnt\">zehn neue Kernreaktoren</span>, um sein nächstes Modell zu trainieren, schuldet ein Verfassungsstaat seinen Bürgern vor jeder Bewunderung eine Frage: <strong>mit welcher Befugnis?</strong> Dass diese Frage kaum gestellt wurde, ist ein Versagen des heutigen politischen Denkens.", "mech.sub3": "<span class=\"mini\">Öffentliches Protokoll</span>Das Versagen der Selbstregulierung", "mech.p10": "Anthropic weigerte sich, Schutzvorkehrungen zu entfernen, die Claude vor dem Einsatz für autonome Waffenzielsteuerung oder für die Massenüberwachung im Inland bewahren. Das Pentagon reagierte, indem es das Unternehmen als <span class=\"term-burnt\">Lieferketten-Risiko</span> einstufte. OpenAI, Google und xAI sind unter weniger strengen Vereinbarungen in geheime Verteidigungseinsätze gegangen. Ohne Vertragsrecht werden freiwillige Sicherheitszusagen unter Druck zu Verhandlungsmasse.", "mech.rec1s": "Öffentliches Protokoll · Vereinte Nationen", "mech.rec1c": "Die erste Sitzung des UN Global Dialogue tagt in Genf; sein Wissenschaftspanel berichtet Tage zuvor, dass die Sicherheit an der Spitze nicht garantiert werden kann.", "mech.rec1w": "6.–7. Juli 2026", "mech.rec2s": "Öffentliches Protokoll · Weißes Haus", "mech.rec2c": "Ein Dekret gibt der US-Regierung 30 Tage Vorabzugang zu erfassten Spitzenmodellen vor der Freigabe.", "mech.rec2w": "2. Juni 2026", "mech.rec3s": "Öffentliches Protokoll", "mech.rec3c": "Das Pentagon stuft Anthropic wegen der Waffen-Schutzvorkehrungen als „Lieferketten-Risiko“ ein.", "mech.rec3w": "März 2026", "mech.rec4s": "Öffentliches Protokoll", "mech.rec4c": "OpenAI und xAI unterzeichnen weitreichende Verteidigungseinsätze, während das Rechenrennen sich beschleunigt.", "mech.rec4w": "Februar 2026", "mech.rec5s": "Öffentliches Protokoll", "mech.rec5c": "Der Spitzen-KI-Ausbau löst Zusagen für mehrere neue Kernreaktoren aus.", "mech.rec5w": "2025–2026", "mech.rec6s": "Öffentliche Erklärung · Center for AI Safety", "mech.rec6c": "Hinton, Bengio, Altman, Hassabis: KI-Risiko auf einer Stufe mit Pandemien und Atomkrieg.", "mech.rec6w": "Mai 2023", "mech.recnote": "Sinngemäße Zusammenfassungen öffentlicher Berichterstattung. Belege über den Kontaktkanal auf Anfrage.", "mech.treatyline": "Wir haben solche Verträge schon einmal geschlossen.", "mech.tr1": "Der Atomwaffensperrvertrag", "mech.tr2": "Die IAEA", "mech.tr3": "Das Biowaffenübereinkommen", "mech.tr4": "Das Montreal-Protokoll", "mech.p11": "Keiner war utopisch, als er vorgeschlagen wurde; alle funktionieren heute: unvollkommen, überwacht, real. Die Technologien, die sie regeln, sind nicht dualer oder global folgenreicher als KI an der Spitze. Die institutionelle Infrastruktur besteht. Nur der <span class=\"term-burnt\">Wille</span> fehlt.", "mech.p12": "Der Fall ist nicht allein unserer. Die Erklärung des Center for AI Safety von 2023, die das KI-Risiko auf dieselbe Achse wie Pandemien und Atomkrieg setzte, unterzeichneten <strong>Geoffrey Hinton</strong>, <strong>Yoshua Bengio</strong>, <strong>Sam Altman</strong> und <strong>Demis Hassabis</strong>. Zu den Unterzeichnern zählen genau die Führungskräfte, die derzeit die Spitze bauen. Von ihnen kommt die Warnung als <strong>ein Geständnis</strong>. Sie hat keine bindende Beschränkung ihres eigenen Verhaltens hervorgebracht, weil keine von ihnen verlangt wurde.", "mech.pull2": "20 € werden 200 €, 2.000 €, <em>oder in Deiner Preisklasse schlicht nicht verfügbar.</em>", "mech.p13": "Das Preismodell verschiebt sich allen unter den Füßen. Pauschale Abos weichen der abgerechneten Inferenz. Wird der Zugang zu Intelligenz zu einem getakteten Versorgungsgut, wird Verständnis zur Funktion des Budgets. Diese Schwellen sind eine Frage von Monaten. <strong>Wer jetzt nicht handelt, hat später keinen Hebel.</strong>", "mech.sub4": "<span class=\"mini\">Was die Vertragspflicht verlangt</span>Ein Mandat der Gattung", "mech.spec2a": "<b>Ein bindendes internationales Abkommen</b>, das die Fähigkeits- und Infrastrukturschwellen definiert, jenseits derer KI-Entwicklung eine multilaterale Genehmigung braucht.", "mech.spec2b": "<b>Überprüfbare Rechen- und Energiegrenzen</b> an der Spitze, überwacht unter einem Inspektionsregime, das dem der IAEA an Ernst gleichkommt.", "mech.spec2c": "<b>Im Vertragsrecht verankerte Stopp-Mechanismen</b> statt konzernaler Selbstbeschränkung, ausgelöst durch nachgewiesene Fähigkeit oder nachgewiesenes Risiko.", "mech.spec2d": "<b>Die Einbeziehung jedes spitzenfähigen Staates,</b> ausdrücklich einschließlich Chinas, dessen erklärte Bereitschaft zum internationalen Dialog über KI-Sicherheit substanzieller war, als der westliche Reflex zugibt.", "mech.spec2e": "<b>Öffentliche, bürgerzugängliche Berichterstattung</b> über die Entwicklung an der Spitze, die die Undurchsichtigkeit der konzernalen Selbsteinschätzung aufbricht, die derzeit als Governance durchgeht.", "mech.pull3": "Die Bürgerin unten. Die Gattung oben. <em>Der Konzern antwortet keiner von beiden.</em>", "orig.p1": "Ich baue Compute Freedom nicht als persönliche Plattform. Ich baue es, weil ich dieses Muster schon einmal gesehen habe. In der Wissenschaft kann Information öffentlich sein, während das Verständnis konzentriert bleibt. Daten werden geteilt. Aufsätze sind zugänglich. Methoden werden beschrieben. Doch die eigentliche Macht liegt in der Infrastruktur, die Information in Wissen verwandelt. <strong>Die Daten waren offen. Das Verständnis nicht.</strong>", "orig.p2": "Künstliche Intelligenz reproduziert jetzt dieselbe Struktur im zivilisatorischen Maßstab. Die Sprache der Offenheit bleibt, doch die Substanz der Kontrolle wandert in <span class=\"term-burnt\">zentralisierte Rechenleistung, zentralisierte Inferenz und zentralisierte Erlaubnis.</span>", "orig.p3": "Compute Freedom besteht, um diese Ordnung herauszufordern. Es sagt: Die Kontrolle über grundlegende Intelligenz darf nicht das Privileg einiger Firmen bleiben, auch nicht das <span class=\"term-blue\">zufällige Nebenprodukt</span> ihrer Geschäftsmodelle.", "orig.bioWho": "Der Initiator", "orig.bioP": "Ein translationaler Wissenschaftler und Professor für Translationale Genomik und Gentherapie in der Kinderheilkunde, mit einem Doktortitel in Biologie, einem früheren Starting Grant des Europäischen Forschungsrats, Veröffentlichungen in Zeitschriften wie Nature Biotechnology und dem Journal of Clinical Investigation und internationaler Anerkennung, darunter der Maurizio-Vignola-Preis.", "orig.pull": "Wird Intelligenz zur Infrastruktur, <em>kann ihre Steuerung nicht privat bleiben.</em>", "cont.pull": "Lesen. Teilen. <em>Melde Dich.</em>", "cont.lblSal": "Anrede", "cont.lblTitle": "Titel", "cont.lblName": "Name", "cont.lblEmail": "E-Mail", "cont.lblRole": "Hintergrund", "cont.lblMsg": "Nachricht", "cont.selSal": "<option value=\"\">—</option><option>Herr</option><option>Frau</option><option>Divers</option>", "cont.selTitle": "<option value=\"\">—</option><option>Dr.</option><option>Prof.</option><option>Prof. Dr.</option>", "cont.selRole": "<option value=\"\">— Auswählen —</option><option>Forschung / Wissenschaft</option><option>Politik / Regulierung</option><option>Technik / Entwicklung</option><option>Journalismus / Autorenschaft</option><option>Zivilgesellschaft / Aktivismus</option><option>Wirtschaft / Unternehmen</option><option>Studierende</option><option>Interessierte Bürgerin</option><option>Sonstiges</option>", "cont.submit": "Senden →", "cont.note": "Läuft über eine Proton-Mailbox via Formspree. Datenschutzfreundliche Statistik: nur aggregierte Seitenaufrufe. Keine Cookies. Kein persönliches Profiling. Keine Werbe-Tracker.", "forum.link": "Das ganze Forum auf GitHub öffnen →", "forum.note": "Die Kommentare laufen über GitHub Discussions via giscus. Zum Posten braucht es ein kostenloses GitHub-Konto; Lesen steht allen offen. Keine Tracker außer GitHub selbst.", "foot.about": "Über mich", "foot.impressum": "Impressum", "foot.privacy": "Datenschutz", "foot.copy": "© MMXXVI · Michael S. D. Kormann · Alle Rechte vorbehalten · #ComputeFreedom", "arepo.tagline": "KI wird die Welt mit Bildern überfluten. Aber Deine Unterschrift kann sie nicht fälschen.", "arepo.lede": "Gleiches Prinzip, ein anderes Problem: Wenn jeder jedes Bild erzeugen kann, wie beweist Du, dass ein Bild von Dir ist?", "arepo.pitch": "Mit AREPO bürgst Du für ein Bild. Du unterschreibst es, jeder kann die Unterschrift prüfen, und hält sie, dann kommt das Bild von Dir.", "arepo.status": "<b>In Arbeit.</b> Ein kurzer Film erklärt die Idee, das Werkzeug kommt danach.", "arepo.cta": "Schreib mir →", "hz.note": "<b>Wie das zu lesen ist.</b> Das AGI-Band <b>[Feb–Okt 2026]</b> folgt dem Lager, das sagt, universell einsetzbare KI sei bereits im Gange: <a href=\"https://www.noemamag.com/artificial-general-intelligence-is-already-here/\" target=\"_blank\" rel=\"noopener\">Agüera y Arcas &amp; Norvig</a> nannten die heutigen Modelle schon 2023 allgemeine Intelligenz, Tyler Cowen nannte o3 im April 2025 AGI, und Ethan Mollick beschreibt das Vorhandene als <a href=\"https://www.oneusefulthing.org/p/on-jagged-agi-o3-gemini-25-and-everything\" target=\"_blank\" rel=\"noopener\">jagged AGI</a>. Umfrage-Mediane setzen den Übergang noch Jahre später an, und die Breite des Bandes ist dieser Dissens. Die ASI-Daten stammen aus der <a href=\"https://www.metaculus.com/questions/5121/\" target=\"_blank\" rel=\"noopener\">Metaculus-Community-Prognose</a>, dem <a href=\"https://blog.aifutures.org/p/clarifying-how-our-ai-timelines-forecasts\" target=\"_blank\" rel=\"noopener\">AI Futures Project</a> und der <a href=\"https://forecastingresearch.substack.com/p/leap-wave-8-ai-timelines\" target=\"_blank\" rel=\"noopener\">LEAP-Expertenumfrage</a> (alle 2026). Die Vergangenheit auf dieser Linie ist echte Hardware, die man einmal kaufen konnte. Die Zukunft zwischen den Schwellen ist Szenario-Interpolation im Geist von <a href=\"https://ai-2027.com\" target=\"_blank\" rel=\"noopener\">ai-2027.com</a>, so skaliert, dass die heutige Spalte den heute veröffentlichten Zahlen entspricht. Die Fehlerbalken weiten sich von heute aus in beide Richtungen.", "mech.rec1": "<span class=\"src\">Öffentliches Protokoll · Vereinte Nationen</span><span class=\"claim\">Die erste Sitzung des UN Global Dialogue tagt in Genf; sein Wissenschaftspanel berichtet Tage zuvor, dass die Sicherheit an der Spitze nicht garantiert werden kann.</span><span class=\"when\">6.–7. Juli 2026</span>", "mech.rec2": "<span class=\"src\">Öffentliches Protokoll · Weißes Haus</span><span class=\"claim\">Ein Dekret gibt der US-Regierung 30 Tage Vorabzugang zu erfassten Spitzenmodellen vor der Freigabe.</span><span class=\"when\">2. Juni 2026</span>", "mech.rec3": "<span class=\"src\">Öffentliches Protokoll</span><span class=\"claim\">Das Pentagon stuft Anthropic wegen der Waffen-Schutzvorkehrungen als „Lieferketten-Risiko“ ein.</span><span class=\"when\">März 2026</span>", "mech.rec4": "<span class=\"src\">Öffentliches Protokoll</span><span class=\"claim\">OpenAI und xAI unterzeichnen weitreichende Verteidigungseinsätze, während das Rechenrennen sich beschleunigt.</span><span class=\"when\">Februar 2026</span>", "mech.rec5": "<span class=\"src\">Öffentliches Protokoll</span><span class=\"claim\">Der Spitzen-KI-Ausbau löst Zusagen für mehrere neue Kernreaktoren aus.</span><span class=\"when\">2025–2026</span>", "mech.rec6": "<span class=\"src\">Öffentliche Erklärung · Center for AI Safety</span><span class=\"claim\">Hinton, Bengio, Altman, Hassabis: KI-Risiko auf einer Stufe mit Pandemien und Atomkrieg.</span><span class=\"when\">Mai 2023</span>"};
+    var I18N = {"upd.label": "<span class=\"live-dot\"></span>Update · 25. Juli 2026", "upd.head": "Ein neues Zeichen, und eine Tür davor.", "upd.body1": "Das <b>p|d</b> hat von Anfang an getragen: das <b>p</b> aus Compute, das <b>d</b> aus Freedom, zwei Spiegelbuchstaben, die sich gesucht haben. Von heute an übergibt es an ein Zeichen, das näher am Namen sitzt: <b>C‹|›F</b>, gebaut in Fraunces, mit dem Trennstrich mittendurch und den Winkeln, die auf die Kerbe im F zulaufen.", "upd.body2": "Oben rechts steht dieses Zeichen in Glas. Licht wandert hindurch und kommt nie ganz zur Ruhe — derselbe Zustand, auf dem die Spezialausgabe endet. Kupfer im C und im rechten Winkel, Polarblau im Trennstrich, im linken Winkel und im F.", "upd.linkIntro": "Die Spezialausgabe noch einmal sehen →", "upd.linkContact": "Position beziehen →", "mail.head": "Email-Optionen", "mail.joinHead": "Auf der Liste", "mail.join1": "Die Spezialausgabe — das neue Zeichen und sein Hologramm, wie sie entstehen.", "mail.join2": "Was sich an der Spitze wirklich bewegt. Selten, und nur wenn es zählt.", "mail.join3": "Deine Adresse bleibt hier. Kein Tracking, keine dritte Partei.", "mail.joinCta": "Setz mich auf die Liste &#8594;", "leave.head": "Von der Liste herunter", "leave.body": "Adresse eintragen, dann schicken wir Dir einen einzigen Link. Öffnest Du ihn, ist Deine Adresse weg — sofort und endgültig. Wir führen keine Liste, in der man Dich nachschlagen könnte; genau deshalb muss der Link zu Dir gehen: so kann niemand jemand anderen austragen.", "leave.btn": "Link schicken", "nav.horizon": "Horizon", "nav.principle": "Prinzip", "nav.mechanism": "Mechanismus", "nav.origin": "Ursprung", "nav.forum": "Forum", "nav.arepo": "AREPO", "nav.cta": "Mach mit", "tab.horizon": "<b>00</b>Horizon", "tab.principle": "<b>01</b>Das Prinzip", "tab.mechanism": "<b>02</b>Der Mechanismus", "tab.origin": "<b>03</b>Wer &amp; Warum", "tab.contact": "<b>04</b>Position beziehen", "tab.forum": "<b>05</b>Das Forum", "tab.arepo": "<b>06</b>AREPO", "ticker.track": "<span class=\"brk\"><b>● GENF HAT GETAGT</b> &nbsp; Erste Sitzung des Global Dialogue endet; das Wissenschaftspanel sagt, die Sicherheit an der Spitze <em>lässt sich nicht garantieren.</em> Als Nächstes: New York, Mai 2027.</span><span><b>Dekret, 2. Juni:</b> Washington nimmt sich 30 Tage Vorabzugang. <em>Die Öffentlichkeit wartet weiter.</em></span><span>The right to run. <em>The duty to restrain.</em></span><span>Offene Gewichte halten den Abstand zur Spitze bei Monaten. <b>Das Recht zu betreiben, ausgeübt.</b></span><span><b>00 · Horizon</b> — achtzig Jahre auf einer Linie, unten. <em>Er bewegt sich mit dem Kalender.</em></span><span><b>AGI</b><em>plus</em> — die Selbstregulierung endet, das Vertragsrecht beginnt.</span><span>If you don&apos;t run it, <em>you cannot control it.</em></span><span class=\"brk\"><b>● GENF HAT GETAGT</b> &nbsp; Erste Sitzung des Global Dialogue endet; das Wissenschaftspanel sagt, die Sicherheit an der Spitze <em>lässt sich nicht garantieren.</em> Als Nächstes: New York, Mai 2027.</span><span><b>Dekret, 2. Juni:</b> Washington nimmt sich 30 Tage Vorabzugang. <em>Die Öffentlichkeit wartet weiter.</em></span><span>The right to run. <em>The duty to restrain.</em></span><span>Offene Gewichte halten den Abstand zur Spitze bei Monaten. <b>Das Recht zu betreiben, ausgeübt.</b></span><span><b>00 · Horizon</b> — achtzig Jahre auf einer Linie, unten. <em>Er bewegt sich mit dem Kalender.</em></span><span><b>AGI</b><em>plus</em> — die Selbstregulierung endet, das Vertragsrecht beginnt.</span><span>If you don&apos;t run it, <em>you cannot control it.</em></span>", "hero.eyebrow": "Rechenhoheit · v43.0", "hero.lede": "Zwei rechtliche Pflichten: eine <b>untere</b> Grenze und eine <b>obere</b>. Lokale KI für die Bürgerin; ein bindender Vertrag für die Spitze.", "hero.btnPrimary": "Das Argument lesen →", "hero.btnGhost": "Position beziehen", "disp.label": "<span class=\"live-dot\"></span>Depesche · 13. Juli 2026", "disp.head": "Der Tisch steht. Jetzt kommt der Text.", "disp.body1": "Am 6. und 7. Juli hielt der <b>UN Global Dialogue on AI Governance</b> seine erste Sitzung in Genf: jeder Mitgliedstaat in einem Raum, eröffnet vom Generalsekretär und der Präsidentin der Vollversammlung. Guterres brachte vier Prioritäten zu Protokoll: gemeinsame Sicherheitsstandards, menschenrechtliche rote Linien, den Aufbau von Kapazitäten in Entwicklungsländern und Transparenz bei den Umweltfolgen. Autonome Waffen nannte er moralisch verwerflich.", "disp.body2": "Das schärfere Signal kam von den Wissenschaftlern. Das unabhängige Panel des Dialogs, vierzig Fachleute unter dem Vorsitz von <b>Yoshua Bengio</b> und <b>Maria Ressa</b>, legte seinen ersten Bericht Tage vor der Sitzung vor: die Wissenschaft <b>„kann nicht garantieren“</b>, dass KI an der Spitze katastrophalen Schaden vermeidet. Das ist die offizielle Beratungssprache genau des Gremiums, um dessen Rat jeder Staat gebeten hat, und sie bindet niemanden. Die zweite Sitzung tagt im Mai 2027 in New York: zehn Monate, in denen die Spitze im Wettbewerbstempo weiterliefert.", "disp.kicker": "Ein Vertrag braucht einen Tisch, bevor er einen Text braucht. Den Tisch gibt es jetzt. Der Horizont unten zählt, was die Spitze tut, während um den Text gerungen wird.", "disp.src": "UN Global Dialogue on AI Governance, Genf, 6.–7. Juli 2026 · Independent International Scientific Panel on AI, erster Bericht, 1. Juli 2026 · Öffentliche Berichterstattung, Juli 2026.", "head.horizon": "<span class=\"sec-num\">00 — Horizon</span><h2>Wohin das führt. Und woher wir kamen.</h2><p class=\"kicker\">Achtzig Jahre auf einer Linie. Vor uns: KI, <span style=\"color:var(--burnt-bright)\">AGI</span>, <span style=\"color:var(--burnt-bright)\">AGI</span><span style=\"color:var(--lightblue)\">plus</span>, <span style=\"color:var(--ultra-bright)\">ASI</span> — datiert von den Leuten, die beruflich Prognosen stellen. Hinter uns: die Maschinen, die uns großgezogen haben. Das Instrument bewegt sich mit dem Kalender; komm morgen wieder, und es ist von allein ein Stück vorgerückt. Zieh die Linie, wohin Du willst. Rückwärts ist die freundliche Richtung.</p>", "head.principle": "<span class=\"sec-num\">01 — Das Prinzip</span><h2>Zwei Schwellen. Eine Architektur.</h2><p class=\"kicker\">KI ist zu folgenreich, um in den Händen einiger weniger nicht rechenschaftspflichtiger Akteure zu bleiben, weder am Punkt des Zugangs noch am Punkt des Risikos.</p>", "head.mechanism": "<span class=\"sec-num\">02 — Der Mechanismus</span><h2>Zwei Pflichten. Eine Architektur.</h2><p class=\"kicker\">Die Schwellenpflicht sichert die untere Grenze: das Recht der Bürgerin auf eine Maschine, die sie wirklich kontrolliert. Die Vertragspflicht sichert die obere: das Recht der Gattung auf eine Stimme in Entscheidungen, die in ihrem Namen getroffen werden. Jede Pflicht für sich ist symbolisch. Zusammen sind sie eine Architektur.</p>", "head.origin": "<span class=\"sec-num\">03 — Wer &amp; Warum</span><h2>Warum ich Compute Freedom gebaut habe.</h2>", "head.contact": "<span class=\"sec-num\">04 — Position beziehen</span><h2>KI-Governance geschieht mit Dir oder ohne Dich.</h2><p class=\"kicker\">Diskutiere sie öffentlich, fordere sie heraus, teile sie, verbessere sie, überall dort, wo politische Gespräche tatsächlich stattfinden. Nutze das Formular für Zusammenarbeit, Interviews, politische Arbeit, Forschungsbeiträge oder ernste Einwände, die nicht in einem Kommentarstrang untergehen sollen.</p>", "head.forum": "<span class=\"sec-num\">05 — Das Forum</span><h2>Das Argument liegt offen. Nimm es auseinander.</h2><p class=\"kicker\">Ernsthafte Einwände machen das Argument besser. Poste sie hier, offen, wo sie gelesen, beantwortet und aufbewahrt werden können.</p>", "prin.card1tag": "Untere Grenze · Die Bürgerin", "prin.card1h3": "Die Schwellenpflicht", "prin.card1p": "Sobald KI eine definierte Fähigkeitsschwelle überschreitet, sollten Entwickler gesetzlich verpflichtet sein, eine Version anzubieten, die auf privater Hardware läuft, ohne Cloud-Abhängigkeit, ohne laufende Zugangsgebühren, ohne Überwachung. Das sichert das Recht der Bürgerin auf eine Maschine, die ihr antwortet.", "prin.card2tag": "Obere Grenze · Die Gattung", "prin.card2h3": "Die Vertragspflicht", "prin.card2p": "Sobald die Entwicklung an der Spitze in <span class=\"term-burnt\">AGI</span>, <span class=\"term-burnt\">AGI</span><span class=\"term-blue\">plus</span> und <span class=\"term-ultra\">ASI</span> übergeht, hat kein einzelnes Unternehmen und kein einzelner Staat das demokratische Mandat, allein weiterzugehen. Entscheidungen von Belang für die Gattung brauchen die Legitimation durch die Gattung, festgeschrieben in einem bindenden internationalen Vertrag, mit überprüfbaren Grenzen, Inspektionen auf IAEA-Niveau und gesetzlich verankerten Stopp-Mechanismen.", "prin.pull": "Open Source ist nicht dasselbe wie <em>Rechenhoheit.</em>", "prin.body1": "Modellgewichte freizugeben, die nur im großen Maßstab auf Hyperscaler-Infrastruktur funktionieren, ist eine förmliche Geste ohne funktionale Substanz. Der Code mag sichtbar sein; die Fähigkeit bleibt unerreichbar. Wer die Inferenz-Infrastruktur kontrolliert, kontrolliert das Wissen. Wenn dieses Wissen zur Grundlage von Medizin, Bildung, Recht und Regierung wird, ist seine Konzentration in drei bis fünf privaten Konzernen kein Marktergebnis, das wir stillschweigend hinnehmen sollten.", "prin.body2": "<strong>Das Muster ist alt. Nur der Maßstab ist neu.</strong>", "mech.sub1": "<span class=\"mini\">Untere Grenze</span>Die Schwellenpflicht", "mech.p1": "Die übliche Antwort auf Sorgen über KI-Konzentration ist eine Sprache der Offenheit: Aufsätze, Benchmarks, Model Cards, APIs und gelegentliche Gewichtsfreigaben. Doch diese Antwort verwechselt Sichtbarkeit mit Zugang und Zugang mit Hoheit.", "mech.p2": "Selbst wo Modellgewichte freigegeben werden, bleiben die fähigsten Systeme praktisch abhängig von Infrastruktur, die Hunderttausende oder Millionen Dollar kostet. Forscher können Teile des Stacks prüfen. Bürger könnten ihn theoretisch auditieren. Aber sie können Spitzenfähigkeit nicht eigenständig betreiben. Der Anschein von Offenheit bleibt; die Substanz der Kontrolle nicht.", "mech.p3": "Compute Freedom schlägt einen konkreten Mechanismus vor: Sobald ein KI-System eine definierte Fähigkeitsschwelle überschreitet, sollte sein Entwickler gesetzlich verpflichtet sein, eine komprimierte, lokal lauffähige Version anzubieten: auf Verbraucher-Hardware, offline-fähig, ohne verpflichtende Cloud-Anmeldung.", "mech.pull1": "Die Pflicht ist das Prinzip. <em>Die Schwelle ist die Verhandlung.</em>", "mech.p4": "Die genaue Fähigkeitsschwelle bleibt hier bewusst offen. Sie zu definieren ist eine technische und politische Frage, die in die öffentliche Beratung gehört, mit Beiträgen von Ingenieuren, Ethikern, Politikern und betroffenen Gemeinschaften. Wir laden dazu ein, diese Verhandlung zu beginnen.", "mech.spec1a": "<b>Spitzenmodelle lassen sich heute komprimieren</b>, sodass sie auf Verbraucher-Hardware mit mäßigem Fähigkeitsverlust laufen. Die technische Hürde ist nicht grundsätzlich.", "mech.spec1b": "<b>Der ökonomische Anreiz, lokale Nutzung zu verhindern, ist strukturell:</b> Cloud-Inferenz ist das Erlösmodell.", "mech.spec1c": "<b>Kein rechtlicher Rahmen erzwingt derzeit die Offenlegung</b>, ob Komprimierung machbar ist.", "mech.spec1d": "<b>Die Öffentlichkeit hat keinen Mechanismus, um</b> die Behauptungen der Industrie darüber zu prüfen, was möglich ist und was nicht.", "mech.p5": "Die pharmazeutische Parallele ist lehrreich. Arzneimittelentwickler müssen Zusammensetzungen offenlegen, sich der Zulassungsprüfung stellen und, nach einer Frist, Wirkstoffe für Generika öffnen. Wir akzeptieren, dass die Öffentlichkeit ein berechtigtes Interesse daran hat, lebenswichtiges Wissen nicht dauerhaft in privater Infrastruktur eingeschlossen zu sehen. <strong>KI wird zu lebenswichtigem Wissen. Das Argument ist dasselbe.</strong>", "mech.p6": "Dieses Argument lässt die kommerzielle KI-Entwicklung unangetastet. Was es hinzufügt, ist ein struktureller Boden darunter: eine Mindestbedingung an Rechenhoheit, die unabhängige Prüfung, akademische Forschung und demokratische Rechenschaft möglich hält.", "mech.sub2": "<span class=\"mini\">Obere Grenze</span>Die Vertragspflicht", "mech.p7": "Die untere Schwelle schützt die Bürgerin. Die obere Schwelle schützt die Gattung, und dazu haben wir zu lange geschwiegen.", "mech.p8": "Während Spitzensysteme sich der allgemeinen menschlichen Leistungsfähigkeit und darüber hinaus nähern, <span class=\"term-burnt\">AGI</span>, <span class=\"term-burnt\">AGI</span><span class=\"term-blue\">plus</span> und <span class=\"term-ultra\">ASI</span>, wird ihre Entwicklung zu einer Sache von Belang jenseits jedes einzelnen Staates und jedes einzelnen Konzerns. Die derzeitige Bahn hat weder ein demokratisches Mandat noch einen bindenden Vertrag. Stargate, Colossus, die Milliarden-Bauprogramme von OpenAI, Google und xAI, alle abhängig vom faktischen NVIDIA-Monopol auf Spitzen-Trainingssilizium, laufen im Wettbewerbstempo, rechenschaftspflichtig gegenüber Aktionären statt Bürgern.", "mech.p9": "Die physische Signatur dieses Rennens ist nicht mehr subtil. Wenn ein KI-Unternehmen ankündigt, es brauche <span class=\"term-burnt\">zehn neue Kernreaktoren</span>, um sein nächstes Modell zu trainieren, schuldet ein Verfassungsstaat seinen Bürgern vor jeder Bewunderung eine Frage: <strong>mit welcher Befugnis?</strong> Dass diese Frage kaum gestellt wurde, ist ein Versagen des heutigen politischen Denkens.", "mech.sub3": "<span class=\"mini\">Öffentliches Protokoll</span>Das Versagen der Selbstregulierung", "mech.p10": "Anthropic weigerte sich, Schutzvorkehrungen zu entfernen, die Claude vor dem Einsatz für autonome Waffenzielsteuerung oder für die Massenüberwachung im Inland bewahren. Das Pentagon reagierte, indem es das Unternehmen als <span class=\"term-burnt\">Lieferketten-Risiko</span> einstufte. OpenAI, Google und xAI sind unter weniger strengen Vereinbarungen in geheime Verteidigungseinsätze gegangen. Ohne Vertragsrecht werden freiwillige Sicherheitszusagen unter Druck zu Verhandlungsmasse.", "mech.rec1s": "Öffentliches Protokoll · Vereinte Nationen", "mech.rec1c": "Die erste Sitzung des UN Global Dialogue tagt in Genf; sein Wissenschaftspanel berichtet Tage zuvor, dass die Sicherheit an der Spitze nicht garantiert werden kann.", "mech.rec1w": "6.–7. Juli 2026", "mech.rec2s": "Öffentliches Protokoll · Weißes Haus", "mech.rec2c": "Ein Dekret gibt der US-Regierung 30 Tage Vorabzugang zu erfassten Spitzenmodellen vor der Freigabe.", "mech.rec2w": "2. Juni 2026", "mech.rec3s": "Öffentliches Protokoll", "mech.rec3c": "Das Pentagon stuft Anthropic wegen der Waffen-Schutzvorkehrungen als „Lieferketten-Risiko“ ein.", "mech.rec3w": "März 2026", "mech.rec4s": "Öffentliches Protokoll", "mech.rec4c": "OpenAI und xAI unterzeichnen weitreichende Verteidigungseinsätze, während das Rechenrennen sich beschleunigt.", "mech.rec4w": "Februar 2026", "mech.rec5s": "Öffentliches Protokoll", "mech.rec5c": "Der Spitzen-KI-Ausbau löst Zusagen für mehrere neue Kernreaktoren aus.", "mech.rec5w": "2025–2026", "mech.rec6s": "Öffentliche Erklärung · Center for AI Safety", "mech.rec6c": "Hinton, Bengio, Altman, Hassabis: KI-Risiko auf einer Stufe mit Pandemien und Atomkrieg.", "mech.rec6w": "Mai 2023", "mech.recnote": "Sinngemäße Zusammenfassungen öffentlicher Berichterstattung. Belege über den Kontaktkanal auf Anfrage.", "mech.treatyline": "Wir haben solche Verträge schon einmal geschlossen.", "mech.tr1": "Der Atomwaffensperrvertrag", "mech.tr2": "Die IAEA", "mech.tr3": "Das Biowaffenübereinkommen", "mech.tr4": "Das Montreal-Protokoll", "mech.p11": "Keiner war utopisch, als er vorgeschlagen wurde; alle funktionieren heute: unvollkommen, überwacht, real. Die Technologien, die sie regeln, sind nicht dualer oder global folgenreicher als KI an der Spitze. Die institutionelle Infrastruktur besteht. Nur der <span class=\"term-burnt\">Wille</span> fehlt.", "mech.p12": "Der Fall ist nicht allein unserer. Die Erklärung des Center for AI Safety von 2023, die das KI-Risiko auf dieselbe Achse wie Pandemien und Atomkrieg setzte, unterzeichneten <strong>Geoffrey Hinton</strong>, <strong>Yoshua Bengio</strong>, <strong>Sam Altman</strong> und <strong>Demis Hassabis</strong>. Zu den Unterzeichnern zählen genau die Führungskräfte, die derzeit die Spitze bauen. Von ihnen kommt die Warnung als <strong>ein Geständnis</strong>. Sie hat keine bindende Beschränkung ihres eigenen Verhaltens hervorgebracht, weil keine von ihnen verlangt wurde.", "mech.pull2": "20 € werden 200 €, 2.000 €, <em>oder in Deiner Preisklasse schlicht nicht verfügbar.</em>", "mech.p13": "Das Preismodell verschiebt sich allen unter den Füßen. Pauschale Abos weichen der abgerechneten Inferenz. Wird der Zugang zu Intelligenz zu einem getakteten Versorgungsgut, wird Verständnis zur Funktion des Budgets. Diese Schwellen sind eine Frage von Monaten. <strong>Wer jetzt nicht handelt, hat später keinen Hebel.</strong>", "mech.sub4": "<span class=\"mini\">Was die Vertragspflicht verlangt</span>Ein Mandat der Gattung", "mech.spec2a": "<b>Ein bindendes internationales Abkommen</b>, das die Fähigkeits- und Infrastrukturschwellen definiert, jenseits derer KI-Entwicklung eine multilaterale Genehmigung braucht.", "mech.spec2b": "<b>Überprüfbare Rechen- und Energiegrenzen</b> an der Spitze, überwacht unter einem Inspektionsregime, das dem der IAEA an Ernst gleichkommt.", "mech.spec2c": "<b>Im Vertragsrecht verankerte Stopp-Mechanismen</b> statt konzernaler Selbstbeschränkung, ausgelöst durch nachgewiesene Fähigkeit oder nachgewiesenes Risiko.", "mech.spec2d": "<b>Die Einbeziehung jedes spitzenfähigen Staates,</b> ausdrücklich einschließlich Chinas, dessen erklärte Bereitschaft zum internationalen Dialog über KI-Sicherheit substanzieller war, als der westliche Reflex zugibt.", "mech.spec2e": "<b>Öffentliche, bürgerzugängliche Berichterstattung</b> über die Entwicklung an der Spitze, die die Undurchsichtigkeit der konzernalen Selbsteinschätzung aufbricht, die derzeit als Governance durchgeht.", "mech.pull3": "Die Bürgerin unten. Die Gattung oben. <em>Der Konzern antwortet keiner von beiden.</em>", "orig.p1": "Ich baue Compute Freedom nicht als persönliche Plattform. Ich baue es, weil ich dieses Muster schon einmal gesehen habe. In der Wissenschaft kann Information öffentlich sein, während das Verständnis konzentriert bleibt. Daten werden geteilt. Aufsätze sind zugänglich. Methoden werden beschrieben. Doch die eigentliche Macht liegt in der Infrastruktur, die Information in Wissen verwandelt. <strong>Die Daten waren offen. Das Verständnis nicht.</strong>", "orig.p2": "Künstliche Intelligenz reproduziert jetzt dieselbe Struktur im zivilisatorischen Maßstab. Die Sprache der Offenheit bleibt, doch die Substanz der Kontrolle wandert in <span class=\"term-burnt\">zentralisierte Rechenleistung, zentralisierte Inferenz und zentralisierte Erlaubnis.</span>", "orig.p3": "Compute Freedom besteht, um diese Ordnung herauszufordern. Es sagt: Die Kontrolle über grundlegende Intelligenz darf nicht das Privileg einiger Firmen bleiben, auch nicht das <span class=\"term-blue\">zufällige Nebenprodukt</span> ihrer Geschäftsmodelle.", "orig.bioWho": "Der Initiator", "orig.bioP": "Ein translationaler Wissenschaftler und Professor für Translationale Genomik und Gentherapie in der Kinderheilkunde, mit einem Doktortitel in Biologie, einem früheren Starting Grant des Europäischen Forschungsrats, Veröffentlichungen in Zeitschriften wie Nature Biotechnology und dem Journal of Clinical Investigation und internationaler Anerkennung, darunter der Maurizio-Vignola-Preis.", "orig.pull": "Wird Intelligenz zur Infrastruktur, <em>kann ihre Steuerung nicht privat bleiben.</em>", "cont.pull": "Lesen. Teilen. <em>Melde Dich.</em>", "cont.lblSal": "Anrede", "cont.lblTitle": "Titel", "cont.lblName": "Name", "cont.lblEmail": "E-Mail", "cont.lblRole": "Hintergrund", "cont.lblMsg": "Nachricht", "cont.selSal": "<option value=\"\">—</option><option>Herr</option><option>Frau</option><option>Divers</option>", "cont.selTitle": "<option value=\"\">—</option><option>Dr.</option><option>Prof.</option><option>Prof. Dr.</option>", "cont.selRole": "<option value=\"\">— Auswählen —</option><option>Forschung / Wissenschaft</option><option>Politik / Regulierung</option><option>Technik / Entwicklung</option><option>Journalismus / Autorenschaft</option><option>Zivilgesellschaft / Aktivismus</option><option>Wirtschaft / Unternehmen</option><option>Studierende</option><option>Interessierte Bürgerin</option><option>Sonstiges</option>", "cont.submit": "Senden →", "cont.note": "Läuft über eine Proton-Mailbox via Formspree. Datenschutzfreundliche Statistik: nur aggregierte Seitenaufrufe. Keine Cookies. Kein persönliches Profiling. Keine Werbe-Tracker.", "forum.link": "Das ganze Forum auf GitHub öffnen →", "forum.note": "Die Kommentare laufen über GitHub Discussions via giscus. Zum Posten braucht es ein kostenloses GitHub-Konto; Lesen steht allen offen. Keine Tracker außer GitHub selbst.", "foot.about": "Über mich", "foot.impressum": "Impressum", "foot.privacy": "Datenschutz", "foot.copy": "© MMXXVI · Michael S. D. Kormann · Alle Rechte vorbehalten · #ComputeFreedom", "arepo.tagline": "KI wird die Welt mit Bildern überfluten. Aber Deine Unterschrift kann sie nicht fälschen.", "arepo.lede": "Gleiches Prinzip, ein anderes Problem: Wenn jeder jedes Bild erzeugen kann, wie beweist Du, dass ein Bild von Dir ist?", "arepo.pitch": "Mit AREPO bürgst Du für ein Bild. Du unterschreibst es, jeder kann die Unterschrift prüfen, und hält sie, dann kommt das Bild von Dir.", "arepo.status": "<b>In Arbeit.</b> Ein kurzer Film erklärt die Idee, das Werkzeug kommt danach.", "arepo.cta": "Schreib mir →", "hz.note": "<b>Wie das zu lesen ist.</b> Das AGI-Band <b>[Feb–Okt 2026]</b> folgt dem Lager, das sagt, universell einsetzbare KI sei bereits im Gange: <a href=\"https://www.noemamag.com/artificial-general-intelligence-is-already-here/\" target=\"_blank\" rel=\"noopener\">Agüera y Arcas &amp; Norvig</a> nannten die heutigen Modelle schon 2023 allgemeine Intelligenz, Tyler Cowen nannte o3 im April 2025 AGI, und Ethan Mollick beschreibt das Vorhandene als <a href=\"https://www.oneusefulthing.org/p/on-jagged-agi-o3-gemini-25-and-everything\" target=\"_blank\" rel=\"noopener\">jagged AGI</a>. Umfrage-Mediane setzen den Übergang noch Jahre später an, und die Breite des Bandes ist dieser Dissens. Die ASI-Daten stammen aus der <a href=\"https://www.metaculus.com/questions/5121/\" target=\"_blank\" rel=\"noopener\">Metaculus-Community-Prognose</a>, dem <a href=\"https://blog.aifutures.org/p/clarifying-how-our-ai-timelines-forecasts\" target=\"_blank\" rel=\"noopener\">AI Futures Project</a> und der <a href=\"https://forecastingresearch.substack.com/p/leap-wave-8-ai-timelines\" target=\"_blank\" rel=\"noopener\">LEAP-Expertenumfrage</a> (alle 2026). Die Vergangenheit auf dieser Linie ist echte Hardware, die man einmal kaufen konnte. Die Zukunft zwischen den Schwellen ist Szenario-Interpolation im Geist von <a href=\"https://ai-2027.com\" target=\"_blank\" rel=\"noopener\">ai-2027.com</a>, so skaliert, dass die heutige Spalte den heute veröffentlichten Zahlen entspricht. Die Fehlerbalken weiten sich von heute aus in beide Richtungen.", "mech.rec1": "<span class=\"src\">Öffentliches Protokoll · Vereinte Nationen</span><span class=\"claim\">Die erste Sitzung des UN Global Dialogue tagt in Genf; sein Wissenschaftspanel berichtet Tage zuvor, dass die Sicherheit an der Spitze nicht garantiert werden kann.</span><span class=\"when\">6.–7. Juli 2026</span>", "mech.rec2": "<span class=\"src\">Öffentliches Protokoll · Weißes Haus</span><span class=\"claim\">Ein Dekret gibt der US-Regierung 30 Tage Vorabzugang zu erfassten Spitzenmodellen vor der Freigabe.</span><span class=\"when\">2. Juni 2026</span>", "mech.rec3": "<span class=\"src\">Öffentliches Protokoll</span><span class=\"claim\">Das Pentagon stuft Anthropic wegen der Waffen-Schutzvorkehrungen als „Lieferketten-Risiko“ ein.</span><span class=\"when\">März 2026</span>", "mech.rec4": "<span class=\"src\">Öffentliches Protokoll</span><span class=\"claim\">OpenAI und xAI unterzeichnen weitreichende Verteidigungseinsätze, während das Rechenrennen sich beschleunigt.</span><span class=\"when\">Februar 2026</span>", "mech.rec5": "<span class=\"src\">Öffentliches Protokoll</span><span class=\"claim\">Der Spitzen-KI-Ausbau löst Zusagen für mehrere neue Kernreaktoren aus.</span><span class=\"when\">2025–2026</span>", "mech.rec6": "<span class=\"src\">Öffentliche Erklärung · Center for AI Safety</span><span class=\"claim\">Hinton, Bengio, Altman, Hassabis: KI-Risiko auf einer Stufe mit Pandemien und Atomkrieg.</span><span class=\"when\">Mai 2023</span>"};
     function apply(lang){
       window.CFLANG = lang;
       document.documentElement.lang = lang;

@@ -1,0 +1,11 @@
+{
+  "name": "cf-mailing-backend",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "ComputeFreedom C|F Mailing-Anmeldung: Honeypot + Zeitfalle + C|F-Fader + ALTCHA + MX-Pruefung + Double-Opt-In per HMAC-Link. Versand ueber ProtonMail (Vercel Serverless).",
+  "dependencies": {
+    "altcha-lib": "^2.3.1",
+    "nodemailer": "^6.9.14"
+  }
+}

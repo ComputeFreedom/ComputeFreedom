@@ -1,0 +1,43 @@
+/* Marken-Collage als Sektions-Hintergrund.
+   Einbau: der Sektion die Klasse "cf-bg" geben — sonst nichts. Kein Umbau,
+   kein zusaetzliches Element, der Vordergrund bleibt unberuehrt.
+   Staerke ueber --cf-bg-op steuern (Vorgabe 0.5; ueber Text lieber 0.35). */
+.cf-bg{position:relative;isolation:isolate}
+.cf-bg::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:url("bg_collage.svg") center/cover no-repeat;
+  opacity:var(--cf-bg-op,.5);
+  -webkit-mask-image:radial-gradient(ellipse 92% 78% at 50% 50%,#000 42%,transparent 100%);
+          mask-image:radial-gradient(ellipse 92% 78% at 50% 50%,#000 42%,transparent 100%);
+}
+/* Wechselnde Ausschnitte, damit nicht jede Sektion gleich aussieht */
+.cf-bg.pos-l::before{background-position:12% 50%}
+.cf-bg.pos-r::before{background-position:88% 50%}
+.cf-bg.pos-t::before{background-position:50% 14%}
+.cf-bg.quiet{--cf-bg-op:.32}
+.cf-bg.loud{--cf-bg-op:.7}
+@media (max-width:760px){ .cf-bg{--cf-bg-op:.3} }
+
+/* Der Hero traegt jetzt selbst ein C|F Hologramm. Damit sich das nicht mit
+   dem C|F der Collage doppelt, bekommt er einen anderen Ausschnitt: naeher
+   heran und links, sodass nur die Konstruktion des alten p|d dahinter steht. */
+.cf-bg.hero-cut::before{
+  background-size:200% auto;
+  background-position:0% 27%;
+}
+@media (max-width:760px){
+  /* Auf dem Handy steht das Hologramm gross ueber dem Text — die Collage
+     zieht sich weiter zurueck, sonst wird es unter dem Zeichen unruhig. */
+  .cf-bg.hero-cut::before{background-size:340% auto;background-position:0% 18%;--cf-bg-op:.2}
+}
+
+/* ── Helles Thema ──
+   Die Collage ist mit Polar Grey auf Tiefsee gezeichnet: auf Papier waere sie
+   unsichtbar. Umgekehrt gilt aber genau das Richtige — eine Konstruktions-
+   zeichnung gehoert als dunkle Linie auf hellen Grund. invert() dreht sie um
+   und macht aus dem Nachtbild eine Blaupause. Deutlich zurueckgenommen,
+   weil dunkle Linien auf Papier viel mehr Gewicht haben als helle im Dunkeln. */
+[data-theme="light"] .cf-bg::before{
+  filter:invert(1);
+  opacity:calc(var(--cf-bg-op,.5) * .34);
+}

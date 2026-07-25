@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ComputeFreedom · Special Edition · Entrance</title>
+<meta name="description" content="See the newest special edition of ComputeFreedom.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="logo_pd_favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="fonts.css">
+<script async defer src="altcha.min.js" type="module"></script>
+<script>
+/* Sprachwahl wie in index.html: ?lang= schlaegt localStorage schlaegt Vorgabe (en).
+   Derselbe Schluessel cf-lang, damit die Wahl ueber beide Seiten traegt. */
+window.CFLANG=(function(){try{var p=new URLSearchParams(location.search).get('lang');if(p==='de'||p==='en'){localStorage.setItem('cf-lang',p);return p;}var s=localStorage.getItem('cf-lang');return s==='de'?'de':'en';}catch(e){return 'en';}})();
+document.documentElement.lang=window.CFLANG;
+</script>
+<style>
+  /* Kontraste gegen den Hintergrund in der Blattmitte (#0B1826) nachgerechnet:
+     h1 15.6:1 · lead 10.8:1 · Hinweis 9.6:1 · Vertrauenstext 7.4:1 · Nebenlink 5.7:1 · Skala 6.1:1 */
+  :root{
+    --bg:#020308; --ink:#e6f1fa; --ink-2:#b6ccdd; --ink-3:#a9c1d4; --ink-4:#93aabd;
+    --burnt:#B85025; --burnt-bright:#DD7740; --lightblue:#A8BCC7;
+    --green:#7BD69A; --green-dim:#3E7A55; 
+    --c64-border:#7869C4; --c64-screen:#40318D; --c64-text:#B4A9FF; --c64-ok:#EAE4FF;
+  }
+  :root{ --amber:#E9A84C; }
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);
+    font-family:'IBM Plex Sans',ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+  body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px;
+    background:radial-gradient(ellipse 60% 44% at 50% 32%,rgba(14,30,52,.92) 0%,rgba(5,9,19,.72) 54%,rgba(2,3,8,1) 100%)}
+  .card{width:min(620px,100%);text-align:center}
+
+  /* ---- Sprachschalter: DE | EN mit dem Trennstrich der Marke ---- */
+  .langbar{display:inline-flex;align-items:center;gap:12px;margin:0 auto 30px;padding:5px 4px;user-select:none}
+  .langbar button{appearance:none;background:none;border:0;padding:2px 4px;cursor:pointer;
+     font-family:inherit;font-size:13.5px;font-weight:500;letter-spacing:.20em;
+     color:#7d94a8;transition:color .25s ease,text-shadow .25s ease}
+  .langbar button:hover{color:#b6ccdd}
+  .langbar button[aria-pressed="true"]{color:var(--ink);text-shadow:0 0 14px rgba(168,188,199,.45)}
+  .langbar button:focus-visible{outline:1px solid rgba(140,205,251,.7);outline-offset:3px;border-radius:3px}
+  .langbar .rule{width:2px;height:17px;border-radius:1px;background:var(--lightblue);opacity:.55;
+     transition:opacity .25s ease,box-shadow .25s ease}
+  .langbar:hover .rule{opacity:.85;box-shadow:0 0 10px rgba(168,188,199,.5)}
+
+  h1{font-family:'Fraunces',Georgia,serif;font-weight:340;font-size:clamp(30px,5.2vw,46px);
+     line-height:1.14;margin:0 0 16px;letter-spacing:.004em;color:var(--ink)}
+  .lead{color:var(--ink-2);font-size:clamp(17px,2.5vw,20px);line-height:1.55;margin:0 auto 4px;max-width:44ch;font-weight:300}
+
+  .capwrap{margin:26px auto 6px}
+  .caphint{color:var(--ink-3);font-size:14.5px;letter-spacing:.01em;margin-bottom:18px;line-height:1.55;min-height:22px}
+  .caphint .tC{color:var(--burnt-bright);font-weight:600}
+  .caphint .tF{color:var(--lightblue);font-weight:600}
+
+  .cf{position:relative;display:flex;align-items:center;justify-content:center;gap:min(7vw,44px);
+      height:222px;user-select:none;touch-action:none}
+  .bloom{position:absolute;left:50%;top:50%;width:360px;height:240px;transform:translate(-50%,-50%);
+      pointer-events:none;opacity:0;border-radius:50%}
+  .cf.flash .bloom{animation:bloom .7s ease-out}
+  @keyframes bloom{
+    0%{opacity:0}
+    30%{opacity:1;background:radial-gradient(ellipse at 34% 50%,rgba(221,119,64,.5),transparent 62%),
+                       radial-gradient(ellipse at 66% 50%,rgba(168,188,199,.5),transparent 62%)}
+    100%{opacity:0}}
+  /* Buchstaben sind die Konturen aus logo_cf_master.svg, keine gesetzte Schrift.
+     Keine Kontur darauf: das F besteht aus Teilstuecken, deren innere Kanten sonst durchschlagen. */
+  .glyph{display:block;height:124px;width:auto;overflow:visible}
+  .glyph path{fill:rgba(188,204,224,.20)}
+
+  /* ---- Kanalzug ---- */
+  .fader{position:relative;display:flex;align-items:stretch;gap:9px;height:198px}
+  .scale{position:relative;width:30px}
+  .scale-spacer{width:7px;flex:none}
+  .scale .tick{position:absolute;right:0;transform:translateY(50%);display:flex;align-items:center;gap:5px;
+     font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.02em;color:#8399ab;white-space:nowrap}
+  .scale .tick i{display:block;width:7px;height:1px;background:#55697b}
+  .scale .tick.unity{color:var(--green);font-weight:600}
+  .scale .tick.unity i{width:11px;height:1.5px;background:var(--green)}
+  .slot{position:relative;width:15px;border-radius:8px;cursor:grab;
+     background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.35));
+     box-shadow:inset 0 0 0 1px rgba(215,231,244,.16),inset 0 2px 5px rgba(0,0,0,.7)}
+  .slot:active{cursor:grabbing}
+  .slot::before{content:"";position:absolute;left:50%;top:7px;bottom:7px;width:2px;margin-left:-1px;
+     border-radius:1px;background:rgba(0,0,0,.7)}
+  .zone{position:absolute;left:50%;transform:translateX(-50%);width:31px;border-radius:3px;
+     border-top:1.5px solid rgba(123,214,154,.55);border-bottom:1.5px solid rgba(123,214,154,.55);
+     background:rgba(123,214,154,.10);pointer-events:none;transition:.22s}
+  .zone.hot{border-color:rgba(123,214,154,.98);background:rgba(123,214,154,.22);box-shadow:0 0 16px rgba(123,214,154,.5)}
+  .fill{position:absolute;left:3px;right:3px;bottom:4px;border-radius:5px;height:0%;
+     background:linear-gradient(to top,var(--burnt-bright),#cfd6e0 52%,var(--lightblue));opacity:0}
+  .cap{position:absolute;left:50%;bottom:0;width:40px;height:21px;transform:translate(-50%,50%);
+     border-radius:4px;cursor:grab;z-index:2;
+     background:linear-gradient(#e8eef5 0%,#b8c6d4 22%,#7f8f9f 48%,#5d6b79 52%,#95a5b4 78%,#cfd9e3 100%);
+     box-shadow:0 0 0 1px rgba(255,255,255,.35),0 7px 18px rgba(0,0,0,.6)}
+  .cap::after{content:"";position:absolute;left:3px;right:3px;top:50%;height:2px;margin-top:-1px;border-radius:1px;
+     background:linear-gradient(90deg,rgba(255,255,255,.25),#f4f8fc,rgba(255,255,255,.25))}
+  .cap:focus-visible{outline:1px solid rgba(140,205,251,.9);outline-offset:3px}
+
+  .meterrow{text-align:center}
+  .meter{display:inline-flex;align-items:baseline;gap:6px;margin-top:16px;padding:5px 13px;border-radius:7px;
+     background:rgba(0,0,0,.42);box-shadow:inset 0 0 0 1px rgba(215,231,244,.12)}
+  .meter .lcd{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:17px;font-weight:500;
+     letter-spacing:.04em;color:#7f95a8;min-width:5.2ch;text-align:right;transition:color .2s,text-shadow .2s}
+  .meter .lcd.on{color:var(--green);text-shadow:0 0 12px rgba(123,214,154,.6)}
+  .meter .lcd.over{color:var(--amber);text-shadow:0 0 12px rgba(233,168,76,.6)}
+  .meter .unit{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11.5px;color:#7f95a8;letter-spacing:.08em}
+
+  /* ============ Verwandlung: Regler wird Trennstrich ============
+     Maße aus dem Masterraum gerechnet (1 Einheit = 2,8004 px bei 124 px Buchstabenhöhe):
+     Strich 8,40 × 140,02 px, überragt die Buchstaben oben um 19,13 px und endet
+     3,11 px über der Unterkante → Versatz −11,12 px gegen die Mitte
+     ((19,13 + 3,11) / 2, nicht die Differenz — erst nachgemessen, dann korrigiert).
+     Luft C→Strich 18,37 px, Strich→F 12,88 px (die echte Asymmetrie der Marke). */
+  .cf{transition:gap .8s cubic-bezier(.22,.9,.24,1)}
+  .cf.locked{gap:0}
+  .fader{transition:height .8s cubic-bezier(.22,.9,.24,1),transform .8s cubic-bezier(.22,.9,.24,1),
+         margin .8s cubic-bezier(.22,.9,.24,1),gap .8s ease}
+  .cf.locked .fader{height:140.02px;transform:translateY(-11.12px);gap:0;
+     margin:0 12.88px 0 18.37px}
+  .scale{transition:opacity .35s ease,width .8s cubic-bezier(.22,.9,.24,1);overflow:hidden}
+  .cf.locked .scale{opacity:0;width:0}
+  .scale-spacer{transition:width .8s cubic-bezier(.22,.9,.24,1)}
+  .cf.locked .scale-spacer{width:0}
+  .slot{transition:width .8s cubic-bezier(.22,.9,.24,1),background .8s ease,box-shadow .8s ease,
+        border-radius .8s ease}
+  .cf.locked .slot{width:8.40px;border-radius:4.2px;cursor:default;
+     background:var(--lightblue);
+     box-shadow:0 0 18px rgba(168,188,199,.45)}
+  .cf.locked .slot::before{opacity:0;transition:opacity .3s}
+  .cf.locked .zone,.cf.locked .fill,.cf.locked .cap{opacity:0;transition:opacity .3s ease}
+  .cf.locked .cap{pointer-events:none}
+  /* Anzeige, Notiz und die Regler-Anleitung verschwinden mit */
+  .meterrow,.glow-note,.caphint{transition:opacity .4s ease,max-height .7s ease,margin .7s ease}
+  .cf-done .meterrow,.cf-done .glow-note{opacity:0;max-height:0;margin:0;overflow:hidden;pointer-events:none}
+  .cf-done .caphint{opacity:0;max-height:0;margin:0;overflow:hidden}
+
+  .glow-note{height:19px;margin-top:12px;font-size:13px;letter-spacing:.16em;text-transform:uppercase;
+     color:var(--ink-3);opacity:0;transition:opacity .3s,color .3s}
+  .glow-note.on{opacity:1;color:var(--green)}
+  .glow-note.over{opacity:1;color:var(--amber)}
+
+  /* ============ Das beleuchtete Email-Feld ============
+     Tritt an die Stelle, die der Regler freigibt. Eigener Lichthof dahinter,
+     helle Kante, groessere Schrift — es ist ab hier das einzige Angebot. */
+  #reveal{position:relative;min-height:150px;opacity:0;visibility:hidden;
+     transform:translateY(10px);transition:opacity .5s ease .25s,transform .6s cubic-bezier(.22,.9,.24,1) .25s;
+     margin:14px auto 0;max-width:460px}
+  #reveal.show{opacity:1;visibility:visible;transform:none}
+  #reveal::before{content:"";position:absolute;left:50%;top:26px;width:118%;height:120px;
+     transform:translate(-50%,-50%);pointer-events:none;opacity:0;transition:opacity .8s ease .3s;
+     background:radial-gradient(ellipse 60% 58% at 50% 50%,rgba(168,188,199,.22),transparent 70%),
+                radial-gradient(ellipse 34% 46% at 22% 50%,rgba(221,119,64,.16),transparent 72%)}
+  #reveal.show::before{opacity:1}
+  .row{display:flex;gap:8px;position:relative}
+  input[type=email]{flex:1;background:linear-gradient(rgba(255,255,255,.10),rgba(255,255,255,.05));
+     border:1.5px solid rgba(190,214,234,.55);
+     color:var(--ink);border-radius:11px;padding:16px 18px;font-size:18px;outline:none;font-family:inherit;
+     letter-spacing:.01em;text-align:center;
+     box-shadow:0 0 0 1px rgba(255,255,255,.06) inset,0 0 26px rgba(168,188,199,.20),
+                0 10px 30px rgba(0,0,0,.45);
+     transition:border-color .25s ease,box-shadow .25s ease}
+  input[type=email]::placeholder{color:#9db3c6;letter-spacing:.02em}
+  input[type=email]:focus{border-color:rgba(220,236,250,.92);
+     box-shadow:0 0 0 1px rgba(255,255,255,.10) inset,0 0 34px rgba(168,188,199,.34),
+                0 10px 30px rgba(0,0,0,.45)}
+  .hp{position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;overflow:hidden}
+  altcha-widget{display:none}   /* rechnet unsichtbar, kein Klickzwang */
+  .go{margin-top:16px;display:inline-block;background:transparent;color:#c3d6e6;
+     border:1px solid rgba(150,185,215,.45);border-radius:10px;padding:12px 24px;font-size:15.5px;
+     letter-spacing:.03em;cursor:not-allowed;opacity:.55;transition:.3s;font-family:inherit}
+  .go.ready{cursor:pointer;opacity:1;color:#0a1420;border-color:transparent;font-weight:500;
+     background:linear-gradient(100deg,var(--burnt-bright),#e7eef6 52%,var(--lightblue));box-shadow:0 8px 26px rgba(168,188,199,.22)}
+  .err{color:#f0b3b3;font-size:13.5px;min-height:18px;margin-top:9px}
+  /* Jeder Satz eine eigene Zeile, in sich ausgewogen umbrochen — kein Wort faellt allein.
+     „Kein Tracking." bleibt als Einheit stehen, das ist der wichtigste Halbsatz. */
+  /* ============ Was die Adresse wert ist ============
+     Vier Zeilen, die nicht drohen und nicht betteln, sondern sagen, was
+     drin ist. Sie kommen erst nach dem Feld — das Feld bleibt der Hauptsatz. */
+  .perks{max-width:520px;margin:0 auto;text-align:left;opacity:0;height:0;overflow:hidden;
+     transform:translateY(8px);transition:opacity .6s ease .55s,transform .7s cubic-bezier(.22,.9,.24,1) .55s}
+  .perks.show{opacity:1;transform:none;height:auto;overflow:visible;margin:26px auto 0}
+  .perks h2{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-4);
+     font-weight:400;margin:0 0 12px;text-align:center}
+  .perks ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+  .perks li{position:relative;padding-left:22px;color:var(--ink-3);font-size:14.5px;line-height:1.62;
+     text-wrap:pretty}
+  .perks li::before{content:"";position:absolute;left:4px;top:.62em;width:7px;height:7px;border-radius:50%;
+     background:linear-gradient(120deg,var(--burnt-bright),var(--lightblue));
+     box-shadow:0 0 9px rgba(168,188,199,.45)}
+  .perks li b{color:#dcebf7;font-weight:500}
+
+  /* Der Weg vorbei. Leise, aber auffindbar — wer nur schauen will, soll
+     schauen duerfen; die Homepage ist kein verschlossener Raum. */
+  .bypass{margin:26px auto 0;text-align:center;font-size:13.5px;line-height:1.6}
+  .bypass a{color:var(--ink-4);text-decoration:none;border-bottom:1px solid rgba(150,185,215,.22);
+     padding-bottom:2px;transition:color .25s,border-color .25s}
+  .bypass a:hover,.bypass a:focus-visible{color:#cfe0ee;border-color:rgba(190,214,234,.6);outline:none}
+  .bypass .nw{white-space:nowrap}
+
+  .trust{color:var(--ink-4);font-size:14px;line-height:1.72;margin:22px auto 0;max-width:64ch}
+  .trust > span{display:block;text-wrap:balance}
+  .trust .nw{white-space:nowrap}
+  .trust b{color:#cfe0ee;font-weight:500;white-space:nowrap}
+
+  .c64ov{position:fixed;inset:0;background:rgba(2,3,8,.88);display:none;align-items:center;justify-content:center;padding:24px;z-index:40}
+  .c64ov.show{display:flex}
+  .c64{width:min(680px,96vw);background:var(--c64-border);border-radius:14px;padding:26px 24px;box-shadow:0 24px 70px rgba(0,0,0,.6)}
+  .screen{position:relative;background:var(--c64-screen);border-radius:6px;padding:22px 20px;min-height:300px;overflow:hidden}
+  .screen::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:6px;
+     background:repeating-linear-gradient(to bottom,rgba(0,0,0,.16) 0,rgba(0,0,0,.16) 1px,transparent 2px,transparent 3px);mix-blend-mode:multiply}
+  pre{margin:0;color:var(--c64-text);font-family:'JetBrains Mono',"Courier New",ui-monospace,monospace;
+     font-size:clamp(12.5px,2vw,16px);line-height:1.5;letter-spacing:.05em;white-space:pre-wrap;word-break:break-word;text-shadow:0 0 6px rgba(180,169,255,.5)}
+  .ok{color:var(--c64-ok);text-shadow:0 0 9px rgba(234,228,255,.7)}
+  .bad{color:#FFB27A;text-shadow:0 0 9px rgba(255,178,122,.65)}
+  .cur{display:inline-block;width:.6em;height:1em;vertical-align:-2px;background:var(--c64-text);box-shadow:0 0 8px rgba(180,169,255,.7);animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .weiter{display:none;margin:18px auto 0;background:linear-gradient(100deg,var(--burnt-bright),#e7eef6 52%,var(--lightblue));
+     color:#0a1420;border:none;border-radius:10px;padding:13px 28px;font-size:16px;letter-spacing:.03em;cursor:pointer;
+     box-shadow:0 8px 26px rgba(168,188,199,.25);font-family:inherit;font-weight:500}
+  .weiter.nochmal{background:transparent;color:#CFE0EE;border:1px solid rgba(190,214,234,.5);box-shadow:none;font-weight:400}
+  .weiter.show{display:block;animation:rise .5s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+  @media (max-width:520px){
+    .cf{gap:min(9vw,34px);height:214px}
+    .glyph{height:104px}
+    .fader{height:176px}
+    .scale-spacer{width:5px}
+    .scale{width:26px}
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+
+    <div class="langbar" role="group" aria-label="Language" data-i18n-aria="a11y.lang">
+      <button type="button" data-lang="de" lang="de" aria-pressed="false">DE</button>
+      <span class="rule" aria-hidden="true"></span>
+      <button type="button" data-lang="en" lang="en" aria-pressed="true">EN</button>
+    </div>
+
+    <h1 data-i18n="hero.h1">See the newest special edition of ComputeFreedom.</h1>
+    <p class="lead" data-i18n="hero.lead">Push the fader up until the level sits in the green.</p>
+
+    <div class="capwrap">
+      <div class="caphint" data-i18n="cap.hint">First the <b class="tF">F</b> lights up, then the <b class="tC">C</b> — and at 0 dB both together.</div>
+      <div class="cf" id="cf">
+        <div class="bloom"></div>
+        <svg class="glyph" id="gC" viewBox="9.54 18.83 37.40 44.28" aria-hidden="true"><path d="M46.945 51.17Q46.945 53.24 45.805 55.34Q44.665 57.44 42.519999999999996 59.195Q40.375 60.95 37.315 62.03Q34.254999999999995 63.11 30.384999999999998 63.11Q23.935 63.11 19.27 60.305Q14.605 57.5 12.07 52.58Q9.535 47.66 9.535 41.269999999999996Q9.535 36.44 11.035 32.375Q12.535 28.310000000000002 15.25 25.310000000000002Q17.965 22.310000000000002 21.625 20.645000000000003Q25.285 18.980000000000004 29.605 18.980000000000004Q32.665 18.980000000000004 34.56999999999999 19.595000000000002Q36.474999999999994 20.21 37.56999999999999 20.84Q38.665 21.47 39.265 21.47Q40.015 21.47 40.36 20.93Q40.705 20.39 41.08 19.865000000000002Q41.455 19.340000000000003 42.175 19.340000000000003Q42.655 19.340000000000003 42.985 19.640000000000004Q43.315 19.940000000000005 43.525 20.690000000000005L46.705 30.950000000000003Q46.915 31.61 46.599999999999994 32.105000000000004Q46.285 32.6 45.625 32.72Q44.995 32.81 44.485 32.555Q43.975 32.3 43.705 31.67Q42.055 28.07 40.06 25.925Q38.065 23.78 35.71 22.835Q33.355000000000004 21.89 30.565 21.89Q27.775 21.89 25.42 23.135Q23.065 24.380000000000003 21.355 26.69Q19.645 29.0 18.685000000000002 32.24Q17.725 35.480000000000004 17.725 39.5Q17.725 45.620000000000005 19.69 49.88Q21.655 54.14 25.03 56.36Q28.405 58.58 32.724999999999994 58.58Q36.925 58.58 39.97 56.614999999999995Q43.015 54.65 44.635 51.11Q44.964999999999996 50.480000000000004 45.325 50.255Q45.685 50.03 46.135 50.120000000000005Q46.555 50.18 46.75 50.45Q46.945 50.72 46.945 51.17Z"/></svg>
+        <div class="fader">
+          <div class="scale" id="scale" aria-hidden="true"></div>
+          <div class="slot" id="track">
+            <div class="zone" id="zone"></div>
+            <div class="fill" id="fill"></div>
+            <div class="cap" id="knob" role="slider" aria-label="Level fader: pull up to 0 dB, into the green"
+                 data-i18n-aria="a11y.slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"
+                 aria-valuetext="minus infinity decibel" tabindex="0"></div>
+          </div>
+          <div class="scale-spacer" aria-hidden="true"></div>
+        </div>
+        <svg class="glyph" id="gF" viewBox="61.10 18.83 31.56 44.28" aria-hidden="true"><path d="M84.055 20.0Q85.135 20.0 85.825 19.7Q86.515 19.4 87.07 19.115Q87.625 18.83 88.225 18.83Q89.065 18.83 89.485 19.25Q89.905 19.67 90.205 20.690000000000005L92.575 29.39Q92.785 30.05 92.455 30.47Q92.125 30.89 91.495 31.01Q90.92500000000001 31.1 90.44500000000001 30.89Q89.965 30.68 89.635 29.990000000000002Q88.225 26.9 87.00999999999999 25.355Q85.795 23.810000000000002 84.445 23.270000000000003Q83.095 22.730000000000004 81.235 22.730000000000004H73.795V57.38Q73.795 58.01 74.155 58.459999999999994Q74.515 58.91 75.295 59.03L78.145 59.39Q78.83500000000001 59.51 79.15 59.84Q79.465 60.17 79.465 60.77Q79.465 61.31 79.075 61.655Q78.685 62.0 77.815 62.0H62.755Q61.915 62.0 61.510000000000005 61.655Q61.105000000000004 61.31 61.105000000000004 60.77Q61.105000000000004 59.75 62.305 59.39L64.165 59.03Q64.885 58.85 65.275 58.43Q65.665 58.01 65.665 57.38V24.620000000000005Q65.665 23.990000000000002 65.275 23.57Q64.885 23.15 64.165 22.97L62.305 22.61Q61.105000000000004 22.25 61.105000000000004 21.230000000000004Q61.105000000000004 20.660000000000004 61.510000000000005 20.330000000000002Q61.915 20.0 62.755 20.0ZM70.435 40.64H80.455Q82.345 40.64 83.11 39.92Q83.875 39.2 84.265 37.04Q84.415 36.41 84.73 36.125Q85.045 35.84 85.525 35.81Q86.66499999999999 35.72 86.965 36.92L89.155 45.74Q89.33500000000001 46.43 89.14 46.82Q88.945 47.21 88.405 47.39Q87.86500000000001 47.54 87.4 47.36Q86.935 47.18 86.515 46.61Q85.765 45.29 85.12 44.57Q84.475 43.85 83.65 43.58Q82.825 43.31 81.535 43.31H70.435Z"/></svg>
+      </div>
+      <div class="meterrow">
+        <div class="meter" aria-live="off" data-i18n-aria="a11y.meter" aria-label="Level">
+          <span class="lcd" id="db">&#8722;&#8734;</span><span class="unit">dB</span>
+        </div>
+      </div>
+      <div class="glow-note" id="glowNote"><span id="noteTxt" data-i18n="cap.lit">C|F glows</span></div>
+    </div>
+
+    <form id="form" autocomplete="off" novalidate>
+      <div id="reveal">
+        <div class="row">
+          <input type="email" id="email" placeholder="your@email.com" data-de-ph="deine@email.de"
+                 aria-label="Email address" data-i18n-aria="a11y.email">
+        </div>
+        <div class="hp" aria-hidden="true">
+          <label data-i18n="form.hp">Website (please leave empty)<input type="text" id="website" name="website" tabindex="-1" autocomplete="off"></label>
+        </div>
+        <altcha-widget id="altcha" challengeurl="/api/altcha-challenge" name="altcha"
+                       auto="onload" hidefooter hidelogo></altcha-widget>
+        <input type="hidden" id="cf_human" name="cf_human" value="">
+        <input type="hidden" id="t_start" name="t_start" value="">
+        <div class="err" id="err"></div>
+        <button type="submit" class="go" id="go" data-i18n="form.go">Let&#8217;s go</button>
+      </div>
+    </form>
+
+    <section class="perks" id="perks" aria-labelledby="perksHead">
+      <h2 id="perksHead" data-i18n="perk.head">What your address is worth</h2>
+      <ul>
+        <li data-i18n="perk.1"><b>The special edition.</b> Watch the new mark and its hologram come into being out of nothing — the whole sequence.</li>
+        <li data-i18n="perk.2"><b>What actually moved.</b> Anthropic, OpenAI, the treaty table. Rarely, and only when it counts.</li>
+        <li data-i18n="perk.3"><b>The forum.</b> Where the argument gets taken apart in the open, and answered.</li>
+        <li data-i18n="perk.4"><b>A hand in it.</b> Compute sovereignty is being settled right now. Have a say.</li>
+      </ul>
+    </section>
+
+    <p class="trust">
+      <span data-i18n="trust.1">Your address stays with us and is never passed on. <b>No tracking.</b></span>
+      <span data-i18n="trust.2">We write rarely, and only when there is genuinely something new.</span>
+      <span data-i18n="trust.3">And if you change your mind, you leave with <span class="nw">one click</span>: your address is deleted at once and for good.</span>
+    </p>
+
+    <p class="bypass">
+      <a href="index.html" id="bypass" data-i18n="bypass">Rather look around first? <span class="nw">Go to the homepage without an email</span> &#8594;</a>
+    </p>
+  </div>
+
+  <div class="c64ov" id="c64ov">
+    <div>
+      <div class="c64"><div class="screen"><pre id="scr"></pre></div></div>
+      <button class="weiter" id="weiter" data-i18n="c64.next">Let&#8217;s go &#9654;</button>
+      <button class="weiter nochmal" id="nochmal" data-i18n="c64.retry">Correct the address</button>
+    </div>
+  </div>
+
+<script>
+/* ============================ Sprache ============================ */
+(function(){
+  var I18N = {"doc.title": "ComputeFreedom · Spezialausgabe · Eingang", "hero.h1": "Erlebe die neueste Spezialausgabe von ComputeFreedom.", "hero.lead": "Zieh den Regler auf, bis der Pegel im grünen Bereich steht.", "hero.lead2": "Deine Email genügt.", "cap.hint": "Erst leuchtet das <b class=\"tF\">F</b>, dann das <b class=\"tC\">C</b> — und bei 0 dB beide zusammen.", "cap.lit": "C|F leuchtet", "cap.hot": "Übersteuert — nimm zurück", "a11y.bar": "C|F — der Trennstrich", "form.go": "Weiter geht’s", "form.hp": "Webseite (bitte leer lassen)", "trust.1": "Deine Adresse bleibt bei uns und wird nicht weitergegeben. <b>Kein Tracking.</b>", "trust.2": "Wir melden uns selten, nur wenn es wirklich etwas Neues gibt.", "trust.3": "Und wenn Du nicht mehr magst, gehst Du mit <span class=\"nw\">einem Klick</span>: Deine Email wird sofort und restlos gelöscht.", "perk.head": "Was Deine Adresse wert ist", "perk.1": "<b>Die Spezialausgabe.</b> Sieh zu, wie das neue Zeichen und sein Hologramm aus dem Nichts entstehen — die ganze Sequenz.", "perk.2": "<b>Was sich wirklich bewegt.</b> Anthropic, OpenAI, der Verhandlungstisch. Selten, und nur wenn es zählt.", "perk.3": "<b>Das Forum.</b> Wo das Argument offen auseinandergenommen und beantwortet wird.", "perk.4": "<b>Eine Hand daran.</b> Compute-Souveränität wird gerade entschieden. Rede mit.", "bypass": "Lieber erst umsehen? <span class=\"nw\">Zur Homepage ohne Email</span> &#8594;", "c64.next": "Weiter geht’s ▶", "c64.retry": "Adresse ändern", "anim.head": "Spezialausgabe startet…", "anim.note": "Hier läuft die Animation (ComputeFreedom_Sequenz_v3): Vorspiel p|d → Formation → Hologramm.", "a11y.slider": "Pegelregler: auf 0 dB in den grünen Bereich ziehen", "a11y.email": "Email-Adresse", "a11y.lang": "Sprache", "a11y.meter": "Pegelanzeige"};
+  var MSG  = {"en": {"errSlider": "Hold the fader in the green band, at 0 dB.", "errEmail": "Please enter a valid email address.", "errSend": "Something went wrong on our side. Please try again in a moment.", "c64Title": "    **** COMPUTE FREEDOM 64 ****", "c64Motto": " FREEDOM LIMITED ONLY BY ITSELF", "c64Load": "LOAD \"C|F-LIST\",8,1", "c64Hp": "HONEYPOT CHECK ", "c64Alt": "ALTCHA CHECK ", "c64Cf": "C|F CHECK ", "c64Mail": "E-MAIL ", "c64Ok": "OK", "c64Saved": "SAVED", "c64Welcome": "WELCOME. YOU ARE IN."}, "de": {"errSlider": "Halte den Regler im grünen Bereich, bei 0 dB.", "errEmail": "Bitte eine gültige Email eingeben.", "errSend": "Bei uns ist etwas schiefgegangen. Bitte gleich noch einmal versuchen.", "c64Title": "    **** COMPUTE FREEDOM 64 ****", "c64Motto": " FREIHEIT NUR DURCH SICH SELBST BEGRENZT", "c64Load": "LOAD \"C|F-LISTE\",8,1", "c64Hp": "HONEYPOT-CHECK ", "c64Alt": "ALTCHA-CHECK ", "c64Cf": "C|F-CHECK ", "c64Mail": "E-MAIL ", "c64Ok": "OK", "c64Saved": "GESPEICHERT", "c64Welcome": "WILLKOMMEN. DU BIST DABEI."}};
+  window.CFMSG = function(k){ return (MSG[window.CFLANG] || MSG.en)[k]; };
+  window.CFI18N = I18N;
+
+  function apply(lang){
+    window.CFLANG = lang;
+    document.documentElement.lang = lang;
+    try{ localStorage.setItem('cf-lang', lang); }catch(e){}
+
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var k = el.getAttribute('data-i18n');
+      if (el.__en == null) el.__en = el.innerHTML;
+      el.innerHTML = (lang === 'de' && I18N[k] != null) ? I18N[k] : el.__en;
+    });
+    document.querySelectorAll('[data-i18n-aria]').forEach(function(el){
+      var k = el.getAttribute('data-i18n-aria');
+      if (el.__enAria == null) el.__enAria = el.getAttribute('aria-label') || '';
+      el.setAttribute('aria-label', (lang === 'de' && I18N[k] != null) ? I18N[k] : el.__enAria);
+    });
+    document.querySelectorAll('[data-de-ph]').forEach(function(el){
+      if (el.__enph == null) el.__enph = el.getAttribute('placeholder') || '';
+      el.setAttribute('placeholder', lang === 'de' ? el.getAttribute('data-de-ph') : el.__enph);
+    });
+    if (document.__enTitle == null) document.__enTitle = document.title;
+    document.title = (lang === 'de' && I18N['doc.title']) ? I18N['doc.title'] : document.__enTitle;
+
+    document.querySelectorAll('.langbar button').forEach(function(b){
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-lang') === lang));
+    });
+    if (window.__cfRelabel) window.__cfRelabel();
+  }
+  window.__cfApplyLang = apply;
+  document.querySelectorAll('.langbar button').forEach(function(b){
+    b.addEventListener('click', function(){ apply(b.getAttribute('data-lang')); });
+  });
+  apply(window.CFLANG || 'en');
+})();
+
+/* ============================ Fader, Formular, C64 ============================ */
+(()=>{
+  const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+  const lerp=(a,b,t)=>a+(b-a)*t;
+  const smooth=t=>{t=clamp(t,0,1);return t*t*(3-2*t);};
+  const ramp=(v,a,b)=>smooth((v-a)/(b-a));
+
+  /* ---- Fader-Kennlinie: Weg (0..1) auf dB. Stuetzstellen wie an einem
+     Kanalzug: unten sehr gestaucht, oben fein aufgeloest. ---- */
+  const TAPER=[[0.06,-60],[0.18,-40],[0.32,-30],[0.46,-20],[0.60,-10],[0.70,-5],[0.79,0],[1.00,10]];
+  const P_SILENT=0.06;
+  function pToDb(p){
+    if(p<=P_SILENT) return -Infinity;
+    for(let i=0;i<TAPER.length-1;i++){
+      const [p0,d0]=TAPER[i],[p1,d1]=TAPER[i+1];
+      if(p<=p1) return d0+(d1-d0)*(p-p0)/(p1-p0);
+    }
+    return TAPER[TAPER.length-1][1];
+  }
+  function dbToP(db){
+    for(let i=0;i<TAPER.length-1;i++){
+      const [p0,d0]=TAPER[i],[p1,d1]=TAPER[i+1];
+      if(db<=d1) return p0+(p1-p0)*(db-d0)/(d1-d0);
+    }
+    return 1;
+  }
+  /* Der gruene Bereich ist 0 dB plus/minus 3 dB. */
+  const BAND_DB_LO=-3, BAND_DB_HI=3;
+  const BAND_LO=dbToP(BAND_DB_LO), BAND_HI=dbToP(BAND_DB_HI), BAND_CENTER=dbToP(0);
+
+  const gC=document.getElementById('gC'), gF=document.getElementById('gF'), cf=document.getElementById('cf');
+  const pC=gC.querySelector('path'), pF=gF.querySelector('path');
+  const track=document.getElementById('track'), fill=document.getElementById('fill'), knob=document.getElementById('knob'),
+        zone=document.getElementById('zone'), scale=document.getElementById('scale'),
+        glowNote=document.getElementById('glowNote'), noteTxt=document.getElementById('noteTxt'),
+        dbEl=document.getElementById('db'), reveal=document.getElementById('reveal');
+  const email=document.getElementById('email'), go=document.getElementById('go'), err=document.getElementById('err'),
+        form=document.getElementById('form'), website=document.getElementById('website'),
+        cfHumanEl=document.getElementById('cf_human'), tStartEl=document.getElementById('t_start');
+
+  tStartEl.value = Date.now();
+
+  /* Gruenen Bereich und Skala aus der Kennlinie aufbauen — eine Quelle, keine doppelten Zahlen. */
+  zone.style.bottom = (BAND_LO*100).toFixed(2)+'%';
+  zone.style.height = ((BAND_HI-BAND_LO)*100).toFixed(2)+'%';
+  [[10,'+10'],[5,'+5'],[0,'0'],[-5,'−5'],[-10,'−10'],[-20,'−20'],[-30,'−30'],[-40,'−40']]
+    .forEach(([db,lab])=>{
+      const t=document.createElement('div');
+      t.className='tick'+(db===0?' unity':'');
+      t.style.bottom=(dbToP(db)*100).toFixed(2)+'%';
+      t.innerHTML='<span>'+lab+'</span><i></i>';
+      scale.appendChild(t);
+    });
+  const inf=document.createElement('div');
+  inf.className='tick'; inf.style.bottom='0%';
+  inf.innerHTML='<span>−∞</span><i></i>'; scale.appendChild(inf);
+
+  let progress=0, wasBand=false, cfHuman=false, dragging=false;
+
+  /* Marken-Grundfarben: C in Burnt Bright (auf Tiefsee), F in Polar Grey */
+  const GLASS=[188,204,224], BURNT=[221,119,64], POLAR=[168,188,199], WHITE=[255,255,255];
+  function mix(a,b,t){ return [Math.round(lerp(a[0],b[0],t)),Math.round(lerp(a[1],b[1],t)),Math.round(lerp(a[2],b[2],t))]; }
+  function rgba(c,a){ return 'rgba('+c[0]+','+c[1]+','+c[2]+','+a+')'; }
+
+  function fmtDb(db){
+    if(db===-Infinity) return '−∞';
+    const v=Math.abs(db).toFixed(1);
+    if(db>0.049) return '+'+v;
+    if(db<-0.049) return '−'+v;
+    return '0.0';
+  }
+
+  function render(){
+    const p=progress, db=pToDb(p);
+    const fi = db===-Infinity?0:ramp(db,-26,-13);
+    const ci = db===-Infinity?0:ramp(db,-16,-4);
+    const hot = p>BAND_HI ? ramp(db,BAND_DB_HI,10) : 0;   /* uebersteuert: waescht nach Weiss aus */
+
+    const cCol = mix(mix(GLASS,BURNT,ci),WHITE,hot*0.75);
+    const fCol = mix(mix(GLASS,POLAR,fi),WHITE,hot*0.75);
+    pC.style.fill = rgba(cCol, lerp(.20,1,ci));
+    pF.style.fill = rgba(fCol, lerp(.20,1,fi));
+    gC.style.filter = ci>0.01 ? 'drop-shadow(0 0 '+(4+18*ci+22*hot)+'px rgba(221,119,64,'+(0.75*ci+0.2*hot)+'))' : 'none';
+    gF.style.filter = fi>0.01 ? 'drop-shadow(0 0 '+(4+18*fi+22*hot)+'px rgba(168,188,199,'+(0.75*fi+0.2*hot)+'))' : 'none';
+
+    fill.style.height=(p*100)+'%';
+    if(!locked) fill.style.opacity=String(0.2+0.65*Math.max(fi,ci));
+    knob.style.bottom=(p*100)+'%';
+    knob.setAttribute('aria-valuenow',Math.round(p*100));
+    knob.setAttribute('aria-valuetext', fmtDb(db).replace('−','-').replace('∞','inf')+' dB');
+
+    dbEl.textContent=fmtDb(db);
+    const inBand = p>=BAND_LO && p<=BAND_HI;
+    dbEl.classList.toggle('on', inBand);
+    dbEl.classList.toggle('over', p>BAND_HI);
+
+    if(inBand && !wasBand) enterBand();
+    if(!inBand && wasBand) leaveBand();
+    wasBand=inBand;
+    zone.classList.toggle('hot',inBand);
+    glowNote.classList.toggle('on',inBand);
+    glowNote.classList.toggle('over',!inBand && p>BAND_HI);
+    if(!locked) setNote(inBand ? 'cap.lit' : (p>BAND_HI ? 'cap.hot' : 'cap.lit'));
+    updateGo();
+  }
+
+  const NOTE_EN={'cap.lit':'C|F glows','cap.hot':'Too hot — bring it down'};
+  let noteKey='cap.lit';
+  function setNote(k){
+    noteKey=k;
+    noteTxt.setAttribute('data-i18n',k);
+    noteTxt.__en=NOTE_EN[k];
+    noteTxt.innerHTML = (window.CFLANG==='de' && window.CFI18N[k]) ? window.CFI18N[k] : NOTE_EN[k];
+  }
+
+  /* Einrasten ist EINMALIG: wer 0 dB getroffen hat, hat es getroffen.
+     Der Regler verwandelt sich in den Trennstrich, das ganze Messwerk verschwindet,
+     und an seine Stelle tritt das Email-Feld. Zurueck geht es nicht. */
+  let locked=false;
+  function enterBand(){
+    if(locked) return;
+    locked=true;
+    cfHuman=true; cfHumanEl.value='CF-OK';
+    cf.classList.remove('flash'); void cf.offsetWidth; cf.classList.add('flash');
+    setProgress(BAND_CENTER);                 /* exakt auf 0 dB stellen */
+    cf.classList.add('locked');
+    fill.style.opacity='0';           /* inline setzen, sonst gewinnt der alte Inline-Wert */
+    document.querySelector('.capwrap').classList.add('cf-done');
+    track.style.cursor='default';
+    knob.setAttribute('tabindex','-1');
+    knob.removeAttribute('role');
+    track.setAttribute('role','img');
+    track.setAttribute('aria-label', (window.CFLANG==='de' && window.CFI18N['a11y.bar'])
+        ? window.CFI18N['a11y.bar'] : 'C|F — the divider');
+    /* Vorspann tauschen: ab hier geht es nur noch um die Email */
+    var lead=document.querySelector('.lead');
+    lead.setAttribute('data-i18n','hero.lead2');
+    lead.__en='Your email is enough.';
+    lead.innerHTML = (window.CFLANG==='de' && window.CFI18N['hero.lead2'])
+        ? window.CFI18N['hero.lead2'] : lead.__en;
+    setTimeout(function(){
+      reveal.classList.add('show');
+      var pk=document.getElementById('perks'); if(pk)pk.classList.add('show');
+      email.focus({preventScroll:true});
+    }, 420);
+  }
+  function leaveBand(){ /* nach dem Einrasten gibt es kein Zurueck */ }
+  function setProgress(p){ progress=clamp(p,0,1); render(); }
+  function frei(){ return !locked; }
+
+  function yToProgress(clientY){ const r=track.getBoundingClientRect(); return clamp((r.bottom-clientY)/r.height,0,1); }
+  function down(e){ if(locked) return; dragging=true; move(e); e.preventDefault(); }
+  function move(e){ if(locked||!dragging)return; const y=(e.touches?e.touches[0].clientY:e.clientY); setProgress(yToProgress(y)); }
+  function up(){ if(!dragging)return; dragging=false;
+    if(!locked && progress>=BAND_LO && progress<=BAND_HI){ setProgress(BAND_CENTER); } }  /* sanft auf 0 dB rasten */
+  knob.addEventListener('pointerdown',down); track.addEventListener('pointerdown',down);
+  window.addEventListener('pointermove',move); window.addEventListener('pointerup',up);
+  knob.addEventListener('keydown',(e)=>{
+    if(locked) return;
+    const step = e.shiftKey ? 0.005 : 0.02;
+    if(e.key==='ArrowUp'||e.key==='ArrowRight'){ setProgress(progress+step); e.preventDefault(); }
+    if(e.key==='ArrowDown'||e.key==='ArrowLeft'){ setProgress(progress-step); e.preventDefault(); }
+    if(e.key==='Home'){ setProgress(0); e.preventDefault(); }
+    if(e.key==='End'){ setProgress(BAND_CENTER); e.preventDefault(); }   /* End = auf 0 dB */
+  });
+
+  function emailOK(){ return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value.trim()); }
+  function updateGo(){ const ready=cfHuman && emailOK(); go.classList.toggle('ready',ready); go.style.cursor=ready?'pointer':'not-allowed'; }
+  email.addEventListener('input',()=>{ clearErr(); updateGo(); });
+
+  window.__cfRelabel = function(){
+    setNote(noteKey);
+    if (err.dataset.key) err.textContent = window.CFMSG(err.dataset.key);
+  };
+  function showErr(key){ err.dataset.key = key; err.textContent = window.CFMSG(key); }
+  function clearErr(){ delete err.dataset.key; err.textContent=''; }
+
+  form.addEventListener('submit', (e)=>{
+    e.preventDefault(); clearErr();
+    if(website.value.trim()!==''){ return; }
+    if(!cfHuman){ showErr('errSlider'); return; }
+    if(!emailOK()){ showErr('errEmail'); return; }
+    runC64();
+  });
+
+  const ov=document.getElementById('c64ov'), scr=document.getElementById('scr'),
+        weiter=document.getElementById('weiter'), nochmal=document.getElementById('nochmal');
+  const CUR='<span class="cur"></span>'; const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+  let buf='';
+  function draw(x){ scr.innerHTML=buf+(x||'')+CUR; }
+  async function typeLine(t){ let l=''; for(const ch of t){ l+=ch; draw(l); await sleep(15+Math.random()*20);} buf+=l+'\n'; draw(''); await sleep(55);}
+  function dots(l){ let x=l; while(x.length<30)x+='.'; return x+' '; }
+  /* Michaels Wunsch: kleine Pause vor dem OK — eine halbe Sekunde, damit man
+     dem Rechner beim Denken zusieht. Der MX-Check darf laenger brauchen, das ist
+     eine echte Anfrage ins Netz. */
+  async function check(l,r,fehler,lang){
+    buf+=dots(l); draw('');
+    await sleep((lang?820:500)+Math.random()*120);
+    buf+='<span class="'+(fehler?'bad':'ok')+'">'+r+'</span>\n'; draw(''); await sleep(180);
+  }
+  async function typeErr(t){ let l=''; for(const ch of t){ l+=ch; draw('<span class="bad">'+l+'</span>'); await sleep(16+Math.random()*18);} buf+='<span class="bad">'+l+'</span>\n'; draw(''); await sleep(70); }
+  /* Der C64 ist Ladestation UND Pruefstand. Er zeigt, was der Server wirklich
+     geantwortet hat, und darf abbrechen — sonst waere er Theater.
+     ANIM_URL anpassen, sobald die Animationsseite ihren endgueltigen Namen hat. */
+  const ANIM_URL='spezialausgabe.html';
+  function vorladen(){
+    try{
+      if(document.getElementById('cfPrefetch')) return;
+      const l=document.createElement('link');
+      l.id='cfPrefetch'; l.rel='prefetch'; l.as='document'; l.href=ANIM_URL;
+      document.head.appendChild(l);
+    }catch(e){}
+  }
+
+  const C64ERR = {
+    en:{ syntax:['?SYNTAX  ERROR','THAT IS NOT AN ADDRESS.'],
+         kein_mx:['?DOMAIN  ERROR','$D CANNOT RECEIVE MAIL.'],
+         dns_timeout:['?DEVICE NOT PRESENT ERROR','$D DID NOT ANSWER. TRY AGAIN.'],
+         wegwerf:['?ILLEGAL DEVICE NUMBER','THROWAWAY ADDRESSES DO NOT COUNT.'],
+         rolle:['?ILLEGAL QUANTITY ERROR','WE NEED A PERSON, NOT A ROLE.'],
+         zu_viele:['?TOO MANY FILES','TOO MANY TRIES. WAIT A FEW MINUTES.'],
+         zu_schnell:['?VERIFY ERROR','THAT WAS TOO FAST.'],
+         cf:['?VERIFY ERROR','THE FADER WAS NOT AT 0 DB.'],
+         altcha:['?VERIFY ERROR','THE PROOF DID NOT CHECK OUT.'],
+         versand:['?DEVICE NOT PRESENT ERROR','WE COULD NOT SEND. TRY AGAIN SHORTLY.'],
+         netz:['?DEVICE NOT PRESENT ERROR','NO CONNECTION. TRY AGAIN SHORTLY.'],
+         kein_confirm_key:['?FILE NOT FOUND','A KEY IS MISSING ON OUR SIDE.'] },
+    de:{ syntax:['?SYNTAX  ERROR','DAS IST KEINE ADRESSE.'],
+         kein_mx:['?DOMAIN  ERROR','$D KANN KEINE POST EMPFANGEN.'],
+         dns_timeout:['?DEVICE NOT PRESENT ERROR','$D HAT NICHT GEANTWORTET. NOCH EINMAL.'],
+         wegwerf:['?ILLEGAL DEVICE NUMBER','WEGWERF-ADRESSEN ZAEHLEN NICHT.'],
+         rolle:['?ILLEGAL QUANTITY ERROR','WIR BRAUCHEN EINEN MENSCHEN, KEINE ROLLE.'],
+         zu_viele:['?TOO MANY FILES','ZU VIELE VERSUCHE. EIN PAAR MINUTEN WARTEN.'],
+         zu_schnell:['?VERIFY ERROR','DAS WAR ZU SCHNELL.'],
+         cf:['?VERIFY ERROR','DER REGLER STAND NICHT AUF 0 DB.'],
+         altcha:['?VERIFY ERROR','DER NACHWEIS GING NICHT AUF.'],
+         versand:['?DEVICE NOT PRESENT ERROR','WIR KONNTEN NICHT SENDEN. GLEICH NOCH EINMAL.'],
+         netz:['?DEVICE NOT PRESENT ERROR','KEINE VERBINDUNG. GLEICH NOCH EINMAL.'],
+         kein_confirm_key:['?FILE NOT FOUND','BEI UNS FEHLT EIN SCHLUESSEL.'] }
+  };
+  const C64LBL = {
+    en:{ hp:'HONEYPOT CHECK', alt:'ALTCHA CHECK', cf:'C|F CHECK', syn:'ADDRESS CHECK',
+         mx:'DOMAIN CHECK (MX)', snd:'CONFIRMATION', ok:'OK', fail:'FAILED', sent:'SENT',
+         inbox:'CHECK YOUR MAILBOX.', dial:'DIALLING '+'…' },
+    de:{ hp:'HONEYPOT-CHECK', alt:'ALTCHA-CHECK', cf:'C|F-CHECK', syn:'ADRESS-CHECK',
+         mx:'DOMAIN-CHECK (MX)', snd:'BESTAETIGUNG', ok:'OK', fail:'FEHLER', sent:'GESENDET',
+         inbox:'SCHAU IN DEIN POSTFACH.', dial:'WAEHLE '+'…' }
+  };
+  function L(k){ return (C64LBL[window.CFLANG]||C64LBL.en)[k]; }
+
+  async function runC64(){
+    const M=window.CFMSG;
+    vorladen();
+    ov.classList.add('show'); weiter.classList.remove('show'); nochmal.classList.remove('show');
+    buf=''; draw('');
+
+    /* Die Anfrage laeuft, waehrend der Kopf getippt wird. */
+    const anfrage = sendeAnmeldung();
+
+    await typeLine(M('c64Title'));
+    await typeLine(M('c64Motto'));
+    await typeLine(''); await typeLine('READY.'); await sleep(240);
+    await typeLine(M('c64Load')); await typeLine('RUN'); await typeLine('');
+
+    let a;
+    try{ a = await anfrage; }
+    catch(e){ a = { ok:false, error:'netz', pruefungen:{} }; }
+    const p = a.pruefungen || {};
+
+    /* Reihenfolge wie auf dem Server. Jede Zeile zeigt, was er geantwortet hat. */
+    const folge = [['hp','honeypot'],['alt','altcha'],['cf','cf'],['syn','syntax'],['mx','mx'],['snd','versand']];
+    for (const [lbl,key] of folge){
+      const w = p[key];
+      if (w == null) break;                       /* so weit kam der Server nicht */
+      const gut = (w === 'OK');
+      const wort = gut ? L('ok') : L('fail');
+      await check(L(lbl)+' ', wort, !gut, key==='mx');
+      if (!gut) break;
+    }
+
+    if (a.ok && !a.still){
+      await typeLine('');
+      await typeLine(L('inbox'));
+      await typeLine('READY.');
+      weiter.classList.add('show');
+    } else if (a.still){
+      await typeLine(''); await typeLine('READY.');
+      weiter.classList.add('show');
+    } else {
+      const tab = C64ERR[window.CFLANG] || C64ERR.en;
+      const e = tab[a.error] || tab.netz;
+      await typeLine('');
+      await typeErr(e[0]);
+      await typeErr(' '+e[1].replace('$D',(a.domain||'').toUpperCase()));
+      await typeLine('READY.');
+      nochmal.classList.add('show');
+    }
+  }
+
+  async function sendeAnmeldung(){
+    const w = document.getElementById('altcha');
+    let altWert = '';
+    try{
+      altWert = (w && w.value) || '';
+      if(!altWert && w){ const i = w.querySelector('input[name=altcha]'); if(i) altWert = i.value || ''; }
+    }catch(e){}
+    const payload = {
+      email: email.value.trim(),
+      website: website.value,
+      altcha: altWert,
+      cf_human: cfHumanEl.value,
+      t_start: tStartEl.value,
+    };
+    const r = await fetch('/api/subscribe', {
+      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
+    });
+    return r.json();
+  }
+
+  /* Wer vorbeigeht, hat den Eingang trotzdem gesehen — sonst landet er beim
+     naechsten Aufruf wieder hier. Derselbe Merker, dieselbe Ablage. */
+  (function(){
+    var by=document.getElementById('bypass');
+    if(!by)return;
+    by.addEventListener('click',function(){
+      try{ localStorage.setItem('cf-seen','1'); }catch(e){}
+    });
+  })();
+
+  weiter.addEventListener('click',startAnimation);
+  nochmal.addEventListener('click',function(){
+    ov.classList.remove('show'); nochmal.classList.remove('show');
+    email.focus({preventScroll:true}); email.select();
+  });
+  function startAnimation(){
+    /* Ab hier hat der Besucher den Eingang gesehen. Der Merker liegt in
+       localStorage — kein Cookie, keine Kennung, nichts verlaesst das Geraet.
+       index.html liest ihn und schickt Wiederkehrer direkt auf die Homepage. */
+    try{ localStorage.setItem('cf-seen','1'); }catch(e){}
+    ov.classList.remove('show');
+    /* Die Spezialausgabe ist seit dem Seitenaufbau vorgeladen — sie startet
+       ohne Ruckeln. Der C64 war die Ladestation. */
+    location.href = ANIM_URL;
+  }
+  render();
+})();
+</script>
+</body>
+</html>
