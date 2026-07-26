@@ -82,6 +82,22 @@ document.documentElement.lang=window.CFLANG;
      color:var(--lightblue);letter-spacing:.006em}
   .lead{color:var(--ink-2);font-size:clamp(17px,2.5vw,20px);line-height:1.55;margin:0 auto 4px;max-width:44ch;font-weight:300}
 
+
+  /* ── „Kein Tracking*. Keine Cookies." ─────────────────────────────────
+     Michael, 26.07.2026: Fast jede Seite lässt ihre Besucher Cookies
+     wegklicken. Wir setzen keine — das ist das beste Argument, das diese
+     Seite hat, und es gehört nicht ins Kleingedruckte. Das Sternchen sagt
+     dann ehrlich, was doch passiert: wir zählen, wie viele kommen. */
+  .noco{display:flex;gap:13px;justify-content:center;align-items:center;flex-wrap:wrap;
+     margin:0 auto 8px;font-family:ui-monospace,'JetBrains Mono',monospace;
+     font-size:13.5px;letter-spacing:.07em;color:var(--ink)}
+  .noco b{font-weight:500}
+  .noco-bar{width:2px;height:14px;border-radius:1px;background:var(--lightblue);
+     opacity:.55;display:inline-block}
+  .noco-fuss{max-width:56ch;margin:0 auto;font-size:12.5px;line-height:1.62;
+     color:var(--ink-4,#93aabd);opacity:.92}
+  .noco-fuss a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+  @media (max-width:420px){ .noco{font-size:12.5px;gap:10px} }
   .capwrap{margin:26px auto 6px}
   /* Auf dem Handy zaehlt jeder Pixel: der Regler muss ohne Scrollen sichtbar
      sein, sonst weiss niemand, was er tun soll. (gemessen 26.07.2026) */
@@ -384,8 +400,10 @@ document.documentElement.lang=window.CFLANG;
       </ul>
     </section>
 
+        <p class="noco"><b data-i18n="noco.1">No tracking*.</b><i class="noco-bar" aria-hidden="true"></i><b data-i18n="noco.2">No cookies.</b></p>
+        <p class="noco-fuss" data-i18n="noco.fuss">* We count page views: anonymously, without cookies, without a profile, without passing anything on. We want to know how many people come and from where. Nothing more. <a href="datenschutz.html#messung">You can switch it off.</a></p>
     <p class="trust">
-      <span data-i18n="trust.1">Your address stays with us and is never passed on. <b>No tracking.</b></span>
+      <span data-i18n="trust.1">Your address stays with us and is never passed on.</span>
       <span data-i18n="trust.2">We write rarely, and only when there is genuinely something new.</span>
       <span data-i18n="trust.3">And if you change your mind, you leave with <span class="nw">one click</span>: your address is deleted at once and for good.</span>
     </p>
@@ -411,7 +429,7 @@ document.documentElement.lang=window.CFLANG;
 <script>
 /* ============================ Sprache ============================ */
 (function(){
-  var I18N = {"doc.title": "ComputeFreedom · Spezialausgabe · Eingang", "hero.h1": "Sieh Dir die neueste Spezialausgabe von ComputeFreedom an.", "hero.lead": "Zieh den Regler auf 0 dB hoch: das Lauteste, was ein Signal sein kann, ohne sich zu verlieren. Alles darüber verzerrt.", "hero.lead2": "Deine Email genügt.", "cap.hint": "Erst leuchtet das <b class=\"tF\">F</b>, dann das <b class=\"tC\">C</b> — und bei 0 dB beide zusammen.", "cap.lit": "C|F leuchtet", "cap.hot": "Übersteuert — nimm zurück", "a11y.bar": "C|F — der Trennstrich", "form.go": "Weiter geht’s", "form.hp": "Webseite (bitte leer lassen)", "trust.1": "Deine Adresse bleibt bei uns und wird nicht weitergegeben. <b>Kein Tracking.</b>", "trust.2": "Wir melden uns selten, nur wenn es wirklich etwas Neues gibt.", "trust.3": "Und wenn Du nicht mehr willst, gehst Du mit <span class=\"nw\">einem Klick</span>: Deine Email wird sofort und restlos gelöscht.", "perk.head": "Was Deine Adresse wert ist", "perk.1": "<b>Die Spezialausgabe.</b> Sieh zu, wie das neue Zeichen und sein Hologramm aus dem Nichts entstehen. Die ganze Sequenz.", "perk.2": "<b>Was sich wirklich bewegt.</b> Anthropic, OpenAI, der Verhandlungstisch. Selten, und nur wenn es zählt.", "perk.3": "<b>Das Forum.</b> Wo das Argument offen auseinandergenommen und beantwortet wird.", "perk.4": "<b>Mit am Tisch.</b> Rechenhoheit wird gerade entschieden. Rede mit.", "bypass": "Lieber erst umsehen? <span class=\"nw\">Zur Homepage ohne Email</span> &#8594;", "post.head": "Schau jetzt in Dein Postfach.", "post.body1": "Wir haben eine Email an <span class=\"adr\" id=\"postAdr\"></span> geschickt. Ein Klick auf den Link darin, und Du bist auf der Liste.", "post.body2": "Bis Du klickst, ist nichts gespeichert: Deine Adresse liegt nirgends. Keine Email da? Sieh im Spam-Ordner nach, beim ersten Mal landet sie manchmal dort.", "c64.next": "Zur Spezialausgabe ▶", "c64.retry": "Adresse ändern", "anim.head": "Spezialausgabe startet…", "anim.note": "Hier läuft die Animation (ComputeFreedom_Sequenz_v3): Vorspiel p|d → Formation → Hologramm.", "a11y.slider": "Pegelregler: auf 0 dB ziehen, in den grünen Bereich", "a11y.email": "Email-Adresse", "a11y.lang": "Sprache", "a11y.meter": "Pegelanzeige", "hero.frage": "Wie laut soll Freiheit sein?", "demo.flag": "Vorführung · es wird nichts gesendet und nichts gespeichert"};
+  var I18N = {"doc.title": "ComputeFreedom · Spezialausgabe · Eingang", "hero.h1": "Sieh Dir die neueste Spezialausgabe von ComputeFreedom an.", "hero.lead": "Zieh den Regler auf 0 dB hoch: das Lauteste, was ein Signal sein kann, ohne sich zu verlieren. Alles darüber verzerrt.", "hero.lead2": "Deine Email genügt.", "cap.hint": "Erst leuchtet das <b class=\"tF\">F</b>, dann das <b class=\"tC\">C</b> — und bei 0 dB beide zusammen.", "cap.lit": "C|F leuchtet", "cap.hot": "Übersteuert — nimm zurück", "a11y.bar": "C|F — der Trennstrich", "form.go": "Weiter geht’s", "form.hp": "Webseite (bitte leer lassen)", "trust.1": "Deine Adresse bleibt bei uns und wird nicht weitergegeben.", "trust.2": "Wir melden uns selten, nur wenn es wirklich etwas Neues gibt.", "trust.3": "Und wenn Du nicht mehr willst, gehst Du mit <span class=\"nw\">einem Klick</span>: Deine Email wird sofort und restlos gelöscht.", "perk.head": "Was Deine Adresse wert ist", "perk.1": "<b>Die Spezialausgabe.</b> Sieh zu, wie das neue Zeichen und sein Hologramm aus dem Nichts entstehen. Die ganze Sequenz.", "perk.2": "<b>Was sich wirklich bewegt.</b> Anthropic, OpenAI, der Verhandlungstisch. Selten, und nur wenn es zählt.", "perk.3": "<b>Das Forum.</b> Wo das Argument offen auseinandergenommen und beantwortet wird.", "perk.4": "<b>Mit am Tisch.</b> Rechenhoheit wird gerade entschieden. Rede mit.", "bypass": "Lieber erst umsehen? <span class=\"nw\">Zur Homepage ohne Email</span> &#8594;", "post.head": "Schau jetzt in Dein Postfach.", "post.body1": "Wir haben eine Email an <span class=\"adr\" id=\"postAdr\"></span> geschickt. Ein Klick auf den Link darin, und Du bist auf der Liste.", "post.body2": "Bis Du klickst, ist nichts gespeichert: Deine Adresse liegt nirgends. Keine Email da? Sieh im Spam-Ordner nach, beim ersten Mal landet sie manchmal dort.", "c64.next": "Zur Spezialausgabe ▶", "c64.retry": "Adresse ändern", "anim.head": "Spezialausgabe startet…", "anim.note": "Hier läuft die Animation (ComputeFreedom_Sequenz_v3): Vorspiel p|d → Formation → Hologramm.", "a11y.slider": "Pegelregler: auf 0 dB ziehen, in den grünen Bereich", "a11y.email": "Email-Adresse", "a11y.lang": "Sprache", "a11y.meter": "Pegelanzeige", "hero.frage": "Wie laut soll Freiheit sein?", "demo.flag": "Vorführung · es wird nichts gesendet und nichts gespeichert", "noco.1": "Kein Tracking*.", "noco.2": "Keine Cookies.", "noco.fuss": "* Wir zählen Seitenaufrufe: anonym, ohne Cookies, ohne Profil, ohne Weitergabe. Wir wollen wissen, wie viele Menschen kommen und von wo. Mehr nicht. <a href=\"datenschutz.html#messung\">Du kannst das abschalten.</a>"};
   var MSG  = {"en": {"errSlider": "Hold the fader in the green band, at 0 dB.", "errEmail": "Please enter a valid email address.", "errSend": "Something went wrong on our side. Please try again in a moment.", "c64Title": "    **** COMPUTE FREEDOM 64 ****", "c64Motto": " FREEDOM LIMITED ONLY BY ITSELF", "c64Load": "LOAD \"C|F-LIST\",8,1", "c64Hp": "HONEYPOT CHECK ", "c64Alt": "ALTCHA CHECK ", "c64Cf": "C|F CHECK ", "c64Mail": "E-MAIL ", "c64Ok": "OK", "c64Saved": "SAVED", "c64Welcome": "WELCOME. YOU ARE IN."}, "de": {"errSlider": "Halte den Regler im grünen Bereich, bei 0 dB.", "errEmail": "Bitte eine gültige Email eingeben.", "errSend": "Bei uns ist etwas schiefgegangen. Bitte gleich noch einmal versuchen.", "c64Title": "    **** COMPUTE FREEDOM 64 ****", "c64Motto": " FREIHEIT NUR DURCH SICH SELBST BEGRENZT", "c64Load": "LOAD \"C|F-LISTE\",8,1", "c64Hp": "HONEYPOT-CHECK ", "c64Alt": "ALTCHA-CHECK ", "c64Cf": "C|F-CHECK ", "c64Mail": "E-MAIL ", "c64Ok": "OK", "c64Saved": "GESPEICHERT", "c64Welcome": "WILLKOMMEN. DU BIST DABEI."}};
   window.CFMSG = function(k){ return (MSG[window.CFLANG] || MSG.en)[k]; };
   window.CFI18N = I18N;
@@ -966,31 +984,9 @@ document.documentElement.lang=window.CFLANG;
 
   <!-- ░░ BESUCHERZAHLEN UND LADEZEITEN ░░  (26.07.2026)
        Vercel Web Analytics und Speed Insights, beide im Projekt eingeschaltet.
-       Keine Cookies, nichts wird auf dem Gerät abgelegt oder von dort gelesen;
-       der Besucher wird über einen Hash aus der Anfrage erkannt, der nach
-       24 Stunden verfällt. Erfasst: Zeitpunkt, Seite, Referrer, Land/Region/
-       Stadt, Browser, Betriebssystem, Gerätetyp — und die Web Vitals.
-
-       Wer im Browser „Do Not Track" gesetzt hat, wird NICHT gezählt: die Seite
-       verspricht an drei Stellen „Kein Tracking", da halten wir uns daran.
-       Eine Zeile weniger, und die Messung liefe für alle — aber dann stimmte
-       das Versprechen nicht mehr.
-
-       Steht in der Datenschutzerklärung, Abschnitt 07. -->
-  <script>
-  (function(){
-    try{
-      if (navigator.doNotTrack === '1' || window.doNotTrack === '1' ||
-          navigator.msDoNotTrack === '1' || navigator.globalPrivacyControl === true) return;
-    }catch(e){}
-    window.va = window.va || function(){ (window.vaq = window.vaq || []).push(arguments); };
-    window.si = window.si || function(){ (window.siq = window.siq || []).push(arguments); };
-    ['/_vercel/insights/script.js', '/_vercel/speed-insights/script.js'].forEach(function(src){
-      var s = document.createElement('script');
-      s.defer = true; s.src = src;
-      document.head.appendChild(s);
-    });
-  })();
-  </script>
+       Keine Cookies, nichts wird auf dem Gerät abgelegt oder von dort gelesen.
+       Wer „Do Not Track" gesetzt hat, wird gar nicht erst gezählt — und in der
+       Fußzeile steht für alle ein Schalter. Die ganze Logik in zaehlung.js. -->
+  <script defer src="zaehlung.js"></script>
 </body>
 </html>

@@ -81,6 +81,12 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;col
  opacity:0;transform:translateY(7px);
  transition:opacity .55s ease,transform .75s cubic-bezier(.22,.9,.24,1)}
 #off .zeile.on{opacity:1;transform:none}
+/* Michael, 26.07.2026: „Dann bleibt ‚Now give it light' stehen und es passiert
+   trotzdem etwas." Genau an dieser einen Stelle stehen zwei Zeilen zugleich —
+   die erste tritt zurueck (halbe Deckung), die zweite kommt darunter dazu.
+   Ueberall sonst gilt weiter: eine Zeile, dann die naechste. */
+#off .zeile.zwei{margin-top:.5em}
+#off .zeile.on.leise{opacity:.5}
 /* Weicher Schatten hinter dem Erzaehler. Ohne ihn verliert er sich, sobald
    das leuchtende Gitter des Bildes darunter liegt. Kein Kasten, ein Hauch:
    die Ellipse laeuft nach allen Seiten auf null aus. */
@@ -133,6 +139,13 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;col
 
 @media (prefers-reduced-motion: reduce){
   #skip{opacity:.62}
+  /* Das stille Schlussbild soll wirklich still sein: auch die Ein- und
+     Ausblendungen des Erzählers und des Schlusstextes fallen weg. Was steht,
+     steht sofort. (26.07.2026, gemessen: sonst arbeitet die Seite noch rund
+     fünf Sekunden an Überblendungen, obwohl der Loop längst hält.) */
+  #off .zeile{transition:none}
+  #claim > div{transition:none}
+  #vorhang{transition:none}
 }
 </style>
 </head>
@@ -267,7 +280,7 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;col
   <div id="claim"><div data-de="Neues Zeichen.">New mark.</div><div data-de="Neues Licht.">New light.</div><div data-de="Neue Möglichkeiten.">New possibilities.</div><div class="uebergang">The right to run. The duty to restrain.</div></div>
 </div>
 <button id="skip" type="button">Skip &#9654;</button>
-<div id="off" aria-live="off"><div class="zeile" id="offZ"></div></div>
+<div id="off" aria-live="off"><div class="zeile" id="offZ"></div><div class="zeile zwei" id="offZ2"></div></div>
 <div id="vorhang" aria-hidden="true"></div>
 <div id="warte" aria-hidden="true"></div>
 <div class="caption" hidden>ComputeFreedom · Sequenz</div>
@@ -324,7 +337,18 @@ const contact=$('contactGlow');
 const leftBase=lB, leftShine=lS, rightBase=rB, rightShine=rS;
 let worldT=0;
 const FULL=[-245,6,592,68], OVER=[9.0,8.5,126,63], HERO=[6.0,7.4,132,65.5];
-const S=2.414;   /* 70 % Tempo — Lesezeit fuer den Erzaehler (war 1.69) */
+/* d) Wer im Betriebssystem weniger Bewegung eingestellt hat, bekommt die
+      Sequenz nicht vorgefuehrt, sondern ihr Ergebnis: das Zeichen in Glas,
+      der Schlusstext, und der Weg weiter. Gebaut wird dasselbe Bild wie sonst
+      — nur mit der Uhr auf null. Danach haelt der Loop an, und es steht still.
+      (Michael, 26.07.2026: „Dann inkludiere ein stilles Schlussbild.") */
+let LEISE=false;
+try{ LEISE = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+
+/* S dehnt Vorspiel, Formation und Weltwerdung. In der stillen Fassung steht
+   die Uhr praktisch still, damit dieselbe Kette dieselbe Geometrie baut —
+   nur eben in einem Wimpernschlag statt in fuenfzehn Sekunden. */
+let S=LEISE?0.0004:2.414;   /* 70 % Tempo — Lesezeit fuer den Erzaehler (war 1.69) */
 const sleep=ms=>new Promise(r=>setTimeout(r,ms*S));
 const clamp=x=>Math.max(0,Math.min(1,x));
 const smooth=t=>t*t*(3-2*t);
@@ -522,6 +546,8 @@ function setBtns(){document.querySelectorAll('[data-ph]').forEach(b=>b.classList
 function applyPhase(n,soft){
   phase=n; phT=0; if(!soft)auto=false;
   if(!soft)[xB,xT].forEach(x=>{x.save();x.setTransform(1,0,0,1,0,0);x.clearRect(0,0,99999,99999);x.restore();});
+  if(n===1)off2(10);    /* Aktivierung: die Photonen erwachen — „Jetzt gib ihm
+                           Licht." bleibt stehen, die elfte Zeile tritt darunter */
   if(n===2)off(7);      /* Extraktion: die Photonen tragen das Zeichen */
   if(n===3)off(8);      /* Glas: das Metall laesst los */
   if(n===4)off(9);      /* Hologramm: die Pointe */
@@ -642,7 +668,12 @@ const OFF={
     'Now give it light.',
     'Every particle that passes through takes a little of it along.',
     'Then the metal lets go, and glass remains.',
-    'A mark you can see through. That is the whole point.'
+    'A mark you can see through. That is the whole point.',
+    /* 10 · die elfte Zeile. Sie steht UNTER Zeile 7, waehrend die Photonen
+       erwachen — die einzige Stelle des Stuecks, an der zwei Zeilen zugleich
+       stehen. Sie sagt, was auf dem Schirm passiert, und nebenbei das, worum
+       es auf der ganzen Seite geht. */
+    'It does not come from outside. It wakes within.'
   ],
   de:[
     'Compute. Freedom. Ein Wort, weil es nie zwei waren.',
@@ -654,13 +685,33 @@ const OFF={
     'Jetzt gib ihm Licht.',
     'Jedes Teilchen, das hindurchgeht, nimmt etwas davon mit.',
     'Dann l\u00e4sst das Metall los, und Glas bleibt.',
-    'Ein Zeichen, durch das man hindurchsieht. Genau darum geht es.'
+    'Ein Zeichen, durch das man hindurchsieht. Genau darum geht es.',
+    'Es kommt nicht von au\u00dfen. Es wacht darin auf.'
   ]
 };
 const offEl=document.getElementById('offZ');
-let offN=-1;
+const offEl2=document.getElementById('offZ2');
+let offN=-1, offN2=-1;
+/* Die zweite Zeile tritt hinzu, ohne die erste anzufassen. Nur hier. */
+function off2(i){
+  if(!offEl2||i===offN2)return;
+  offN2=i;
+  const t=(OFF[LANG]||OFF.en)[i];
+  if(!t)return;
+  offEl.classList.add('leise');          /* die erste tritt zurueck */
+  offEl2.innerHTML=t;
+  requestAnimationFrame(()=>offEl2.classList.add('on'));
+}
+function off2Weg(){
+  if(!offEl2)return;
+  offN2=-1;
+  offEl2.classList.remove('on');
+  offEl.classList.remove('leise');
+}
+
 function off(i){
   if(!offEl||i===offN)return;
+  off2Weg();                             /* eine neue Zeile raeumt die zweite ab */
   offN=i;
   offEl.classList.remove('on');
   if(i===null||i===undefined)return;
@@ -716,10 +767,18 @@ document.getElementById('skip').addEventListener('click',uebergabe);
 addEventListener('keydown',e=>{if(e.key==='Escape')uebergabe();});
 /* Der Knopf erscheint erst, wenn die Formation laeuft — vorher stoert er nur. */
 setTimeout(()=>{const sk=document.getElementById('skip');if(sk&&!uebergeben)sk.classList.add('on');},2600);
+/* In der stillen Fassung ueberspringt der Knopf nichts — er fuehrt weiter. */
+if(LEISE){
+  const sk=document.getElementById('skip');
+  if(sk) sk.innerHTML = (LANG==='de') ? 'Zur Homepage &#9654;' : 'To the homepage &#9654;';
+}
 
 /* ---------- Haupt-Loop ---------- */
 let gT=0; /* Glas-Übergang 0..1 */
+let stillFrames=-1;   /* >0: noch so viele Bilder, dann steht es still */
 function frame(now){
+  if(stillFrames===0) return;          /* angehalten — kein rAF mehr */
+  if(stillFrames>0) stillFrames--;
   const dt=Math.min(0.05,(now-last)/1000); last=now; phT+=dt*1000;
   let p=DUR[phase]===Infinity?1:Math.min(1,phT/DUR[phase]);
   if(auto&&phase>=1&&phase<5&&phT>=DUR[phase]){applyPhase(phase+1,true);p=0;}
@@ -735,7 +794,7 @@ function frame(now){
   else if(phase===5){rate=30;drain=1;rim=0.12;gT=1;refl=1;txt=1;
     /* Die drei Zeilen stehen nach 400 + 2*650 + 900 = 2600 ms vollstaendig.
        Danach bekommen sie Standzeit, dann uebergibt die Seite an die Homepage. */
-    if(phT>=SCHLUSS_MS)uebergabe();}
+    if(phT>=SCHLUSS_MS && !LEISE)uebergabe();}
   if(phase<2){gT=0;drain=0;}
   if(phase===0){rate=0;}
 
@@ -1103,7 +1162,24 @@ async function intro(){
   gRect=glyphs.getBoundingClientRect(); rCr=C.getBoundingClientRect(); rFr=F.getBoundingClientRect();
   prismCols.length=0;
   // — in die Cryo-Solar-Bloom-Phasen —
+  if(LEISE){ stillesSchlussbild(); return; }
   applyPhase(1); auto=true;
+}
+
+/* Das Bild wird gebaut wie immer, dann angehalten. Kein Vorhang von selbst,
+   keine Weiterleitung nach acht Sekunden: wer weniger Bewegung will, will
+   auch nicht ungefragt weitergeschoben werden. Der Knopf steht sofort da. */
+function stillesSchlussbild(){
+  worldT=1; world.style.opacity='1';
+  applyPhase(5);                 /* Glas, Reflexe, Schlusstext */
+  auto=false; gT=1;
+  phT=2800;                      /* alle drei Schlusszeilen stehen (400+2*650+900) */
+  off(null);
+  const sk=document.getElementById('skip');
+  if(sk){ sk.classList.add('on'); }
+  /* Rund neunzig Bilder, damit die Photonen das Feld gefuellt haben und die
+     Reflexe aufgebaut sind — dann haelt der Loop an. Was dann steht, steht. */
+  stillFrames=90;
 }
 setBtns();
 requestAnimationFrame(frame);
@@ -1113,31 +1189,9 @@ intro();
 
   <!-- ░░ BESUCHERZAHLEN UND LADEZEITEN ░░  (26.07.2026)
        Vercel Web Analytics und Speed Insights, beide im Projekt eingeschaltet.
-       Keine Cookies, nichts wird auf dem Gerät abgelegt oder von dort gelesen;
-       der Besucher wird über einen Hash aus der Anfrage erkannt, der nach
-       24 Stunden verfällt. Erfasst: Zeitpunkt, Seite, Referrer, Land/Region/
-       Stadt, Browser, Betriebssystem, Gerätetyp — und die Web Vitals.
-
-       Wer im Browser „Do Not Track" gesetzt hat, wird NICHT gezählt: die Seite
-       verspricht an drei Stellen „Kein Tracking", da halten wir uns daran.
-       Eine Zeile weniger, und die Messung liefe für alle — aber dann stimmte
-       das Versprechen nicht mehr.
-
-       Steht in der Datenschutzerklärung, Abschnitt 07. -->
-  <script>
-  (function(){
-    try{
-      if (navigator.doNotTrack === '1' || window.doNotTrack === '1' ||
-          navigator.msDoNotTrack === '1' || navigator.globalPrivacyControl === true) return;
-    }catch(e){}
-    window.va = window.va || function(){ (window.vaq = window.vaq || []).push(arguments); };
-    window.si = window.si || function(){ (window.siq = window.siq || []).push(arguments); };
-    ['/_vercel/insights/script.js', '/_vercel/speed-insights/script.js'].forEach(function(src){
-      var s = document.createElement('script');
-      s.defer = true; s.src = src;
-      document.head.appendChild(s);
-    });
-  })();
-  </script>
+       Keine Cookies, nichts wird auf dem Gerät abgelegt oder von dort gelesen.
+       Wer „Do Not Track" gesetzt hat, wird gar nicht erst gezählt — und in der
+       Fußzeile steht für alle ein Schalter. Die ganze Logik in zaehlung.js. -->
+  <script defer src="zaehlung.js"></script>
 </body>
 </html>
