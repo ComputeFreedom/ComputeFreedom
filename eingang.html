@@ -11,7 +11,12 @@
 <script>
 /* Sprachwahl wie in index.html: ?lang= schlaegt localStorage schlaegt Vorgabe (en).
    Derselbe Schluessel cf-lang, damit die Wahl ueber beide Seiten traegt. */
-window.CFLANG=(function(){try{var p=new URLSearchParams(location.search).get('lang');if(p==='de'||p==='en'){localStorage.setItem('cf-lang',p);return p;}var s=localStorage.getItem('cf-lang');return s==='de'?'de':'en';}catch(e){return 'en';}})();
+/* CFGEWAEHLT haelt fest, ob die Sprache WIRKLICH einmal gewaehlt wurde —
+   per ?lang= oder frueher per Klick. Nur dann darf die Sprachwahl-Maske
+   ausbleiben. (Vorher hat apply() beim Seitenaufbau selbst cf-lang gesetzt;
+   damit galt jeder Erstbesucher sofort als „hat gewaehlt".) */
+window.CFGEWAEHLT=false;
+window.CFLANG=(function(){try{var p=new URLSearchParams(location.search).get('lang');if(p==='de'||p==='en'){localStorage.setItem('cf-lang',p);window.CFGEWAEHLT=true;return p;}var s=localStorage.getItem('cf-lang');if(s==='de'||s==='en'){window.CFGEWAEHLT=true;return s;}return 'en';}catch(e){return 'en';}})();
 document.documentElement.lang=window.CFLANG;
 </script>
 <style>
@@ -31,6 +36,33 @@ document.documentElement.lang=window.CFLANG;
     background:radial-gradient(ellipse 60% 44% at 50% 32%,rgba(14,30,52,.92) 0%,rgba(5,9,19,.72) 54%,rgba(2,3,8,1) 100%)}
   .card{width:min(620px,100%);text-align:center}
 
+  /* ---- Sprachwahl, bevor irgendetwas anderes passiert ----
+     Michael, 26.07.2026: Englisch ist die Vorgabe, und viele Deutsche suchen
+     gar nicht erst nach einem Umschalter. Also nicht suchen lassen — fragen.
+     Zwei Woerter, ausgeschrieben, jedes in seiner eigenen Sprache. Wer schon
+     einmal gewaehlt hat, sieht das hier nie wieder. */
+  #sprachwahl{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;
+     padding:28px;background-color:#03050C;
+     background-image:radial-gradient(ellipse 60% 44% at 50% 42%,rgba(14,30,52,.92) 0%,rgba(5,9,19,.72) 54%,rgba(2,3,8,1) 100%);
+     opacity:1;transition:opacity .5s ease}
+  #sprachwahl.weg{opacity:0;pointer-events:none}
+  .sw-inner{text-align:center;max-width:440px}
+  .sw-mark{font-family:'Fraunces',Georgia,serif;font-weight:500;font-size:34px;letter-spacing:.02em;
+     color:var(--lightblue);opacity:.5;margin-bottom:26px}
+  .sw-head{font-family:'Fraunces',Georgia,serif;font-weight:340;font-size:clamp(21px,3.4vw,27px);
+     color:var(--ink);margin:0 0 30px;line-height:1.25}
+  .sw-head span{color:var(--lightblue);opacity:.6;padding:0 .28em}
+  .sw-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .sw-btns button{appearance:none;cursor:pointer;font-family:inherit;font-size:17px;font-weight:400;
+     letter-spacing:.03em;color:var(--ink);background:rgba(11,24,38,.72);
+     border:1px solid rgba(168,188,199,.30);border-radius:5px;padding:15px 30px;min-width:150px;
+     min-height:52px;transition:border-color .22s ease,background .22s ease,color .22s ease}
+  .sw-btns button:hover{border-color:rgba(168,188,199,.72);background:rgba(17,34,52,.9)}
+  .sw-btns button:focus-visible{outline:1px solid rgba(140,205,251,.8);outline-offset:3px}
+  .sw-note{margin:28px 0 0;font-size:12.5px;color:#728799;line-height:1.6}
+  @media (max-width:420px){ .sw-btns button{min-width:100%} }
+  @media (prefers-reduced-motion: reduce){ #sprachwahl{transition:none} }
+
   /* ---- Sprachschalter: DE | EN mit dem Trennstrich der Marke ---- */
   .langbar{display:inline-flex;align-items:center;gap:12px;margin:0 auto 30px;padding:5px 4px;user-select:none}
   .langbar button{appearance:none;background:none;border:0;padding:2px 4px;cursor:pointer;
@@ -45,9 +77,21 @@ document.documentElement.lang=window.CFLANG;
 
   h1{font-family:'Fraunces',Georgia,serif;font-weight:340;font-size:clamp(30px,5.2vw,46px);
      line-height:1.14;margin:0 0 16px;letter-spacing:.004em;color:var(--ink)}
+  .frage{font-family:'Fraunces',Georgia,serif;font-weight:340;font-style:italic;
+     font-size:clamp(19px,2.9vw,24px);line-height:1.35;margin:0 auto 12px;max-width:30ch;
+     color:var(--lightblue);letter-spacing:.006em}
   .lead{color:var(--ink-2);font-size:clamp(17px,2.5vw,20px);line-height:1.55;margin:0 auto 4px;max-width:44ch;font-weight:300}
 
   .capwrap{margin:26px auto 6px}
+  /* Auf dem Handy zaehlt jeder Pixel: der Regler muss ohne Scrollen sichtbar
+     sein, sonst weiss niemand, was er tun soll. (gemessen 26.07.2026) */
+  @media (max-width:520px){
+    h1{font-size:27px;margin-bottom:12px}
+    .frage{font-size:18px;margin-bottom:9px}
+    .lead{font-size:15.5px;line-height:1.5}
+    .capwrap{margin:14px auto 4px}
+    .caphint{font-size:13.5px;margin-bottom:11px}
+  }
   .caphint{color:var(--ink-3);font-size:14.5px;letter-spacing:.01em;margin-bottom:18px;line-height:1.55;min-height:22px}
   .caphint .tC{color:var(--burnt-bright);font-weight:600}
   .caphint .tF{color:var(--lightblue);font-weight:600}
@@ -252,6 +296,21 @@ document.documentElement.lang=window.CFLANG;
 </style>
 </head>
 <body>
+  <!-- Die Sprachwahl liegt vor allem anderen. Sie verschwindet nach dem Klick
+       und kommt nur wieder, wenn noch nie gewaehlt wurde — oder in der
+       Vorfuehrung (?demo=1), weil dort der ganze Ablauf gezeigt wird. -->
+  <div id="sprachwahl" role="dialog" aria-modal="true" aria-label="Sprache · Language">
+    <div class="sw-inner">
+      <div class="sw-mark" aria-hidden="true">C|F</div>
+      <p class="sw-head">Sprache <span aria-hidden="true">·</span> Language</p>
+      <div class="sw-btns">
+        <button type="button" data-lang="de" lang="de">Deutsch</button>
+        <button type="button" data-lang="en" lang="en">English</button>
+      </div>
+      <p class="sw-note" lang="en">You can switch at any time.<br><span lang="de">Du kannst jederzeit wechseln.</span></p>
+    </div>
+  </div>
+
   <div class="card">
 
     <div class="langbar" role="group" aria-label="Language" data-i18n-aria="a11y.lang">
@@ -261,7 +320,12 @@ document.documentElement.lang=window.CFLANG;
     </div>
 
     <h1 data-i18n="hero.h1">See the newest special edition of ComputeFreedom.</h1>
-    <p class="lead" data-i18n="hero.lead">Push the fader up until the level sits in the green.</p>
+    <!-- Michael, 26.07.2026: die Reglerbewegung braucht einen Grund. Am Pult
+         ist 0 dB das Lauteste, das ein Signal sein kann, ohne sich zu
+         verlieren — darueber verzerrt alles. Genau darum geht es auf dieser
+         Seite. Erst die Frage, dann der Handgriff. -->
+    <p class="frage" data-i18n="hero.frage">How loud should freedom be?</p>
+    <p class="lead" data-i18n="hero.lead">Pull the fader up to 0 dB — the most a signal can be without losing itself. Everything above it distorts.</p>
 
     <div class="capwrap">
       <div class="caphint" data-i18n="cap.hint">First the <b class="tF">F</b> lights up, then the <b class="tC">C</b> — and at 0 dB both together.</div>
@@ -347,15 +411,16 @@ document.documentElement.lang=window.CFLANG;
 <script>
 /* ============================ Sprache ============================ */
 (function(){
-  var I18N = {"doc.title": "ComputeFreedom · Spezialausgabe · Eingang", "hero.h1": "Erlebe die neueste Spezialausgabe von ComputeFreedom.", "hero.lead": "Zieh den Regler auf, bis der Pegel im grünen Bereich steht.", "hero.lead2": "Deine Email genügt.", "cap.hint": "Erst leuchtet das <b class=\"tF\">F</b>, dann das <b class=\"tC\">C</b> — und bei 0 dB beide zusammen.", "cap.lit": "C|F leuchtet", "cap.hot": "Übersteuert — nimm zurück", "a11y.bar": "C|F — der Trennstrich", "form.go": "Weiter geht’s", "form.hp": "Webseite (bitte leer lassen)", "trust.1": "Deine Adresse bleibt bei uns und wird nicht weitergegeben. <b>Kein Tracking.</b>", "trust.2": "Wir melden uns selten, nur wenn es wirklich etwas Neues gibt.", "trust.3": "Und wenn Du nicht mehr magst, gehst Du mit <span class=\"nw\">einem Klick</span>: Deine Email wird sofort und restlos gelöscht.", "perk.head": "Was Deine Adresse wert ist", "perk.1": "<b>Die Spezialausgabe.</b> Sieh zu, wie das neue Zeichen und sein Hologramm aus dem Nichts entstehen — die ganze Sequenz.", "perk.2": "<b>Was sich wirklich bewegt.</b> Anthropic, OpenAI, der Verhandlungstisch. Selten, und nur wenn es zählt.", "perk.3": "<b>Das Forum.</b> Wo das Argument offen auseinandergenommen und beantwortet wird.", "perk.4": "<b>Eine Hand daran.</b> Compute-Souveränität wird gerade entschieden. Rede mit.", "bypass": "Lieber erst umsehen? <span class=\"nw\">Zur Homepage ohne Email</span> &#8594;", "post.head": "Schau jetzt in Dein Postfach.", "post.body1": "Wir haben eine Email an <span class=\"adr\" id=\"postAdr\"></span> geschickt. Ein Klick auf den Link darin, und Du bist auf der Liste.", "post.body2": "Bis Du klickst, ist nichts gespeichert — Deine Adresse liegt nirgends. Keine Email da? Sieh im Spam-Ordner nach, beim ersten Mal landet sie manchmal dort.", "c64.next": "Zur Spezialausgabe ▶", "c64.retry": "Adresse ändern", "anim.head": "Spezialausgabe startet…", "anim.note": "Hier läuft die Animation (ComputeFreedom_Sequenz_v3): Vorspiel p|d → Formation → Hologramm.", "a11y.slider": "Pegelregler: auf 0 dB in den grünen Bereich ziehen", "a11y.email": "Email-Adresse", "a11y.lang": "Sprache", "a11y.meter": "Pegelanzeige"};
+  var I18N = {"doc.title": "ComputeFreedom · Spezialausgabe · Eingang", "hero.h1": "Sieh Dir die neueste Spezialausgabe von ComputeFreedom an.", "hero.lead": "Zieh den Regler auf 0 dB hoch: das Lauteste, was ein Signal sein kann, ohne sich zu verlieren. Alles darüber verzerrt.", "hero.lead2": "Deine Email genügt.", "cap.hint": "Erst leuchtet das <b class=\"tF\">F</b>, dann das <b class=\"tC\">C</b> — und bei 0 dB beide zusammen.", "cap.lit": "C|F leuchtet", "cap.hot": "Übersteuert — nimm zurück", "a11y.bar": "C|F — der Trennstrich", "form.go": "Weiter geht’s", "form.hp": "Webseite (bitte leer lassen)", "trust.1": "Deine Adresse bleibt bei uns und wird nicht weitergegeben. <b>Kein Tracking.</b>", "trust.2": "Wir melden uns selten, nur wenn es wirklich etwas Neues gibt.", "trust.3": "Und wenn Du nicht mehr willst, gehst Du mit <span class=\"nw\">einem Klick</span>: Deine Email wird sofort und restlos gelöscht.", "perk.head": "Was Deine Adresse wert ist", "perk.1": "<b>Die Spezialausgabe.</b> Sieh zu, wie das neue Zeichen und sein Hologramm aus dem Nichts entstehen. Die ganze Sequenz.", "perk.2": "<b>Was sich wirklich bewegt.</b> Anthropic, OpenAI, der Verhandlungstisch. Selten, und nur wenn es zählt.", "perk.3": "<b>Das Forum.</b> Wo das Argument offen auseinandergenommen und beantwortet wird.", "perk.4": "<b>Mit am Tisch.</b> Rechenhoheit wird gerade entschieden. Rede mit.", "bypass": "Lieber erst umsehen? <span class=\"nw\">Zur Homepage ohne Email</span> &#8594;", "post.head": "Schau jetzt in Dein Postfach.", "post.body1": "Wir haben eine Email an <span class=\"adr\" id=\"postAdr\"></span> geschickt. Ein Klick auf den Link darin, und Du bist auf der Liste.", "post.body2": "Bis Du klickst, ist nichts gespeichert: Deine Adresse liegt nirgends. Keine Email da? Sieh im Spam-Ordner nach, beim ersten Mal landet sie manchmal dort.", "c64.next": "Zur Spezialausgabe ▶", "c64.retry": "Adresse ändern", "anim.head": "Spezialausgabe startet…", "anim.note": "Hier läuft die Animation (ComputeFreedom_Sequenz_v3): Vorspiel p|d → Formation → Hologramm.", "a11y.slider": "Pegelregler: auf 0 dB ziehen, in den grünen Bereich", "a11y.email": "Email-Adresse", "a11y.lang": "Sprache", "a11y.meter": "Pegelanzeige", "hero.frage": "Wie laut soll Freiheit sein?", "demo.flag": "Vorführung · es wird nichts gesendet und nichts gespeichert"};
   var MSG  = {"en": {"errSlider": "Hold the fader in the green band, at 0 dB.", "errEmail": "Please enter a valid email address.", "errSend": "Something went wrong on our side. Please try again in a moment.", "c64Title": "    **** COMPUTE FREEDOM 64 ****", "c64Motto": " FREEDOM LIMITED ONLY BY ITSELF", "c64Load": "LOAD \"C|F-LIST\",8,1", "c64Hp": "HONEYPOT CHECK ", "c64Alt": "ALTCHA CHECK ", "c64Cf": "C|F CHECK ", "c64Mail": "E-MAIL ", "c64Ok": "OK", "c64Saved": "SAVED", "c64Welcome": "WELCOME. YOU ARE IN."}, "de": {"errSlider": "Halte den Regler im grünen Bereich, bei 0 dB.", "errEmail": "Bitte eine gültige Email eingeben.", "errSend": "Bei uns ist etwas schiefgegangen. Bitte gleich noch einmal versuchen.", "c64Title": "    **** COMPUTE FREEDOM 64 ****", "c64Motto": " FREIHEIT NUR DURCH SICH SELBST BEGRENZT", "c64Load": "LOAD \"C|F-LISTE\",8,1", "c64Hp": "HONEYPOT-CHECK ", "c64Alt": "ALTCHA-CHECK ", "c64Cf": "C|F-CHECK ", "c64Mail": "E-MAIL ", "c64Ok": "OK", "c64Saved": "GESPEICHERT", "c64Welcome": "WILLKOMMEN. DU BIST DABEI."}};
   window.CFMSG = function(k){ return (MSG[window.CFLANG] || MSG.en)[k]; };
   window.CFI18N = I18N;
 
-  function apply(lang){
+  function apply(lang, merken){
     window.CFLANG = lang;
     document.documentElement.lang = lang;
-    try{ localStorage.setItem('cf-lang', lang); }catch(e){}
+    /* Nur eine echte Wahl wird gemerkt. Der Seitenaufbau merkt sich nichts. */
+    if(merken){ try{ localStorage.setItem('cf-lang', lang); window.CFGEWAEHLT = true; }catch(e){} }
 
     document.querySelectorAll('[data-i18n]').forEach(function(el){
       var k = el.getAttribute('data-i18n');
@@ -381,9 +446,46 @@ document.documentElement.lang=window.CFLANG;
   }
   window.__cfApplyLang = apply;
   document.querySelectorAll('.langbar button').forEach(function(b){
-    b.addEventListener('click', function(){ apply(b.getAttribute('data-lang')); });
+    b.addEventListener('click', function(){ apply(b.getAttribute('data-lang'), true); });
   });
-  apply(window.CFLANG || 'en');
+  apply(window.CFLANG || 'en', false);
+
+  /* Die Maske selbst. Sie erscheint, wenn noch nie gewaehlt wurde und die URL
+     nichts vorgibt — und immer in der Vorfuehrung. Danach uebernimmt der
+     kleine DE|EN-Schalter oben. */
+  (function(){
+    var box = document.getElementById('sprachwahl');
+    if(!box) return;
+    var such = location.search;
+    var demo = /(?:^|[?&])demo=1(?:&|$)/.test(such);
+    var ausUrl = /[?&]lang=(de|en)(?:&|$)/.test(such);
+    if(!demo && (ausUrl || window.CFGEWAEHLT)){ box.remove(); return; }
+
+    document.documentElement.style.overflow = 'hidden';
+    box.querySelectorAll('button').forEach(function(b){
+      b.addEventListener('click', function(){
+        apply(b.getAttribute('data-lang'), true);
+        box.classList.add('weg');
+        document.documentElement.style.overflow = '';
+        setTimeout(function(){
+          box.remove();
+          var k = document.getElementById('knob');
+          if(k) k.focus({preventScroll:true});
+        }, 520);
+      });
+    });
+    /* Tastatur: links/rechts zwischen den beiden, Enter waehlt. */
+    box.addEventListener('keydown', function(e){
+      if(e.key!=='ArrowLeft' && e.key!=='ArrowRight') return;
+      var bs = Array.prototype.slice.call(box.querySelectorAll('button'));
+      var i = bs.indexOf(document.activeElement);
+      if(i<0) return;
+      bs[(i + (e.key==='ArrowRight'?1:bs.length-1)) % bs.length].focus();
+      e.preventDefault();
+    });
+    var vorgabe = box.querySelector('button[data-lang="en"]');
+    if(vorgabe) vorgabe.focus({preventScroll:true});
+  })();
 })();
 
 /* ============================ Fader, Formular, C64 ============================ */
@@ -427,6 +529,33 @@ document.documentElement.lang=window.CFLANG;
         cfHumanEl=document.getElementById('cf_human'), tStartEl=document.getElementById('t_start');
 
   tStartEl.value = Date.now();
+
+  /* ---- Vorfuehrung -------------------------------------------------------
+     ?demo=1 spielt den ganzen Ablauf noch einmal durch — Sprachwahl, Regler,
+     C64, Animation, Homepage — ohne den Server anzufassen: kein Nachweis,
+     keine Anmeldung, keine Email. Der C64 zeigt denselben Lauf wie im
+     Ernstfall, nur aus der Konserve. Der Merker cf-seen wird gesetzt wie
+     sonst auch, damit die Homepage am Ende stehen bleibt.
+     Einstieg: computefreedom.org/?demo=1  oder  eingang.html?demo=1 */
+  const DEMO = /(?:^|[?&])demo=1(?:&|$)/.test(location.search);
+  if(DEMO){
+    email.value = 'demo@computefreedom.org';
+    var demoCss = document.createElement('style');
+    demoCss.textContent = '#demoFlag{position:fixed;left:14px;bottom:14px;'
+      + 'z-index:9999;pointer-events:none;font:500 12px/1 ui-monospace,"JetBrains Mono",monospace;'
+      + 'letter-spacing:.06em;color:#a9c1d4;background:rgba(11,24,38,.92);'
+      + 'border:1px solid rgba(168,188,199,.34);border-radius:999px;padding:7px 14px;'
+      + 'white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis}'
+      + '@media (max-width:520px){#demoFlag{font-size:11px;padding:6px 11px}}';
+    document.head.appendChild(demoCss);
+    var demoFlag = document.createElement('div');
+    demoFlag.id = 'demoFlag';
+    demoFlag.setAttribute('data-i18n','demo.flag');
+    demoFlag.__en = 'Preview \u00b7 nothing is sent, nothing is stored';
+    demoFlag.innerHTML = (window.CFLANG==='de' && window.CFI18N['demo.flag'])
+        ? window.CFI18N['demo.flag'] : demoFlag.__en;
+    document.body.appendChild(demoFlag);
+  }
 
   /* Gruenen Bereich und Skala aus der Kennlinie aufbauen — eine Quelle, keine doppelten Zahlen. */
   zone.style.bottom = (BAND_LO*100).toFixed(2)+'%';
@@ -627,7 +756,7 @@ document.documentElement.lang=window.CFLANG;
          dns_timeout:['?DEVICE NOT PRESENT ERROR','$D DID NOT ANSWER. TRY AGAIN.'],
          wegwerf:['?ILLEGAL DEVICE NUMBER','THROWAWAY ADDRESSES DO NOT COUNT.'],
          rolle:['?ILLEGAL QUANTITY ERROR','WE NEED A PERSON, NOT A ROLE.'],
-         zu_viele:['?TOO MANY FILES','TOO MANY TRIES. WAIT A FEW MINUTES.'],
+         zu_viele:['?TOO MANY FILES','TOO MUCH TRAFFIC FROM YOUR NETWORK. WAIT A MINUTE.'],
          zu_schnell:['?VERIFY ERROR','THAT WAS TOO FAST.'],
          cf:['?VERIFY ERROR','THE FADER WAS NOT AT 0 DB.'],
          altcha:['?VERIFY ERROR','THE PROOF DID NOT CHECK OUT.'],
@@ -638,11 +767,11 @@ document.documentElement.lang=window.CFLANG;
          kein_mx:['?DOMAIN  ERROR','$D KANN KEINE POST EMPFANGEN.'],
          dns_timeout:['?DEVICE NOT PRESENT ERROR','$D HAT NICHT GEANTWORTET. NOCH EINMAL.'],
          wegwerf:['?ILLEGAL DEVICE NUMBER','WEGWERF-ADRESSEN ZAEHLEN NICHT.'],
-         rolle:['?ILLEGAL QUANTITY ERROR','WIR BRAUCHEN EINEN MENSCHEN, KEINE ROLLE.'],
-         zu_viele:['?TOO MANY FILES','ZU VIELE VERSUCHE. EIN PAAR MINUTEN WARTEN.'],
+         rolle:['?ILLEGAL QUANTITY ERROR','WIR BRAUCHEN EINEN MENSCHEN, KEINE ROLLENADRESSE.'],
+         zu_viele:['?TOO MANY FILES','ZU VIEL VERKEHR AUS DEINEM NETZ. EINE MINUTE WARTEN.'],
          zu_schnell:['?VERIFY ERROR','DAS WAR ZU SCHNELL.'],
          cf:['?VERIFY ERROR','DER REGLER STAND NICHT AUF 0 DB.'],
-         altcha:['?VERIFY ERROR','DER NACHWEIS GING NICHT AUF.'],
+         altcha:['?VERIFY ERROR','DER NACHWEIS HAT NICHT GESTIMMT.'],
          versand:['?DEVICE NOT PRESENT ERROR','WIR KONNTEN NICHT SENDEN. GLEICH NOCH EINMAL.'],
          netz:['?DEVICE NOT PRESENT ERROR','KEINE VERBINDUNG. GLEICH NOCH EINMAL.'],
          kein_confirm_key:['?FILE NOT FOUND','BEI UNS FEHLT EIN SCHLUESSEL.'] }
@@ -713,6 +842,14 @@ document.documentElement.lang=window.CFLANG;
   }
 
   async function sendeAnmeldung(){
+    if(DEMO){
+      /* Genau der Antwortkoerper, den /api/subscribe im guten Fall schickt.
+         Die Wartezeit ahmt die echte Anfrage nach, damit der C64 dasselbe
+         Bild zeigt und die Pausen stimmen. */
+      await sleep(900);
+      return { ok:true, pruefungen:{ honeypot:'OK', altcha:'OK', cf:'OK',
+                                     syntax:'OK', mx:'OK', versand:'OK' } };
+    }
     let altWert = '';
     try{ altWert = await nachweis(); }catch(e){}
     const payload = {
@@ -790,6 +927,7 @@ document.documentElement.lang=window.CFLANG;
   }
 
   function nachweisStarten(){
+    if(DEMO) return Promise.resolve('');   /* kein Server, keine Aufgabe */
     if(!nachweisLaeuft) nachweisLaeuft = rechne().then(function(wert){
       /* Auch ins Feld schreiben: so ist der Zustand von aussen sichtbar
          und die Nutzlast geht selbst dann mit, wenn das Formular anders
@@ -820,10 +958,39 @@ document.documentElement.lang=window.CFLANG;
     ov.classList.remove('show');
     /* Die Spezialausgabe ist seit dem Seitenaufbau vorgeladen — sie startet
        ohne Ruckeln. Der C64 war die Ladestation. */
-    location.href = ANIM_URL;
+    location.href = DEMO ? (ANIM_URL + '?demo=1') : ANIM_URL;
   }
   render();
 })();
 </script>
+
+  <!-- ░░ BESUCHERZAHLEN UND LADEZEITEN ░░  (26.07.2026)
+       Vercel Web Analytics und Speed Insights, beide im Projekt eingeschaltet.
+       Keine Cookies, nichts wird auf dem Gerät abgelegt oder von dort gelesen;
+       der Besucher wird über einen Hash aus der Anfrage erkannt, der nach
+       24 Stunden verfällt. Erfasst: Zeitpunkt, Seite, Referrer, Land/Region/
+       Stadt, Browser, Betriebssystem, Gerätetyp — und die Web Vitals.
+
+       Wer im Browser „Do Not Track" gesetzt hat, wird NICHT gezählt: die Seite
+       verspricht an drei Stellen „Kein Tracking", da halten wir uns daran.
+       Eine Zeile weniger, und die Messung liefe für alle — aber dann stimmte
+       das Versprechen nicht mehr.
+
+       Steht in der Datenschutzerklärung, Abschnitt 07. -->
+  <script>
+  (function(){
+    try{
+      if (navigator.doNotTrack === '1' || window.doNotTrack === '1' ||
+          navigator.msDoNotTrack === '1' || navigator.globalPrivacyControl === true) return;
+    }catch(e){}
+    window.va = window.va || function(){ (window.vaq = window.vaq || []).push(arguments); };
+    window.si = window.si || function(){ (window.siq = window.siq || []).push(arguments); };
+    ['/_vercel/insights/script.js', '/_vercel/speed-insights/script.js'].forEach(function(src){
+      var s = document.createElement('script');
+      s.defer = true; s.src = src;
+      document.head.appendChild(s);
+    });
+  })();
+  </script>
 </body>
 </html>

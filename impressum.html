@@ -88,5 +88,34 @@
     apply(window.CFLANG || 'en');
   })();
   </script>
+
+  <!-- ░░ BESUCHERZAHLEN UND LADEZEITEN ░░  (26.07.2026)
+       Vercel Web Analytics und Speed Insights, beide im Projekt eingeschaltet.
+       Keine Cookies, nichts wird auf dem Gerät abgelegt oder von dort gelesen;
+       der Besucher wird über einen Hash aus der Anfrage erkannt, der nach
+       24 Stunden verfällt. Erfasst: Zeitpunkt, Seite, Referrer, Land/Region/
+       Stadt, Browser, Betriebssystem, Gerätetyp — und die Web Vitals.
+
+       Wer im Browser „Do Not Track" gesetzt hat, wird NICHT gezählt: die Seite
+       verspricht an drei Stellen „Kein Tracking", da halten wir uns daran.
+       Eine Zeile weniger, und die Messung liefe für alle — aber dann stimmte
+       das Versprechen nicht mehr.
+
+       Steht in der Datenschutzerklärung, Abschnitt 07. -->
+  <script>
+  (function(){
+    try{
+      if (navigator.doNotTrack === '1' || window.doNotTrack === '1' ||
+          navigator.msDoNotTrack === '1' || navigator.globalPrivacyControl === true) return;
+    }catch(e){}
+    window.va = window.va || function(){ (window.vaq = window.vaq || []).push(arguments); };
+    window.si = window.si || function(){ (window.siq = window.siq || []).push(arguments); };
+    ['/_vercel/insights/script.js', '/_vercel/speed-insights/script.js'].forEach(function(src){
+      var s = document.createElement('script');
+      s.defer = true; s.src = src;
+      document.head.appendChild(s);
+    });
+  })();
+  </script>
 </body>
 </html>

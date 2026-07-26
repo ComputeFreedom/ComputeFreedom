@@ -102,10 +102,15 @@ export function pruefeLink(query, key, maxAlterMs = 7 * 24 * 3600 * 1000) {
 // Die Grenze war 5 in 10 Minuten. Zu eng: hinter einem Haushalts- oder
 // Buero-Anschluss teilen sich alle dieselbe IP. Am 25.07.2026 hat ein Besucher
 // den Zaehler gefuellt, und der naechste im selben WLAN bekam »?TOO MANY
-// FILES«, obwohl er zum ersten Mal da war. 12 bremst plumpes Nachschiessen
-// weiterhin — jeder Versuch kostet ohnehin eine Rechenaufgabe.
+// FILES«, obwohl er zum ersten Mal da war.
+// Am 26.07.2026 vor der Bewerbung auf X noch einmal hoch auf 20 (Michael):
+// wenn der Aufruf zieht und eine ganze Firma oder ein Institut hinter einer
+// IP sitzt, sind zwoelf schnell erreicht. Zwanzig in zehn Minuten aus EINEM
+// Netz ist praktisch nie ein Mensch — und jeder Versuch kostet ohnehin eine
+// Rechenaufgabe. Wer daran stoesst, bekommt keine Abfuhr, sondern die Bitte,
+// eine Minute zu warten.
 const EIMER = new Map();
-export function zuVieleVersuche(ip, grenze = 12, fensterMs = 10 * 60 * 1000) {
+export function zuVieleVersuche(ip, grenze = 20, fensterMs = 10 * 60 * 1000) {
   const jetzt = Date.now();
   const liste = (EIMER.get(ip) || []).filter(t => jetzt - t < fensterMs);
   liste.push(jetzt);
