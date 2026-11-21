@@ -1,6 +1,24 @@
 {
-  "rewrites": [
-    { "source": "/AREPO", "destination": "/index.html" },
-    { "source": "/arepo", "destination": "/index.html" }
+  "redirects": [
+    {
+      "source": "/eingang.html",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/spezialausgabe.html",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/AREPO",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/arepo",
+      "destination": "/",
+      "permanent": false
+    }
   ]
 }

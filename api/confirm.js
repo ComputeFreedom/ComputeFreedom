@@ -82,13 +82,13 @@ export default async function handler(req, res) {
   const v = pruefeLink(req.query, confirmKey);
   if (!v.ok) {
     const text = v.grund === 'abgelaufen'
-      ? ['Dieser Link ist älter als sieben Tage. Melde Dich einfach noch einmal an, dann kommt ein frischer.',
-         'This link is older than seven days. Just sign up once more and a fresh one arrives.']
-      : ['Dieser Link passt nicht zu uns. Vielleicht ist beim Kopieren etwas verloren gegangen — melde Dich gern noch einmal an.',
-         'This link does not match ours. Perhaps something was lost in copying — you are welcome to sign up again.'];
+      ? ['Dieser Link ist älter als sieben Tage und gilt nicht mehr. Wolltest Du Dich austragen, fordere auf der Startseite unter „Keine Infos mehr erhalten“ einen frischen an.',
+         'This link is older than seven days and no longer valid. If you meant to leave the list, request a fresh one on the homepage under “No more updates”.']
+      : ['Dieser Link passt nicht zu uns. Vielleicht ist beim Kopieren etwas verloren gegangen. Wolltest Du Dich austragen, fordere auf der Startseite einen frischen an.',
+         'This link does not match ours. Perhaps something was lost in copying. If you meant to leave the list, request a fresh one on the homepage.'];
     return res.status(400).send(seite('Link ungültig',
       ['Der Link trägt nicht.', 'The link does not hold.'], text,
-      { href: '/eingang.html', de: 'Noch einmal anmelden ▶', en: 'Sign up again ▶' }));
+      { href: '/index.html#contact', de: 'Zur Startseite ▶', en: 'To the homepage ▶' }));
   }
 
   const transporter = nodemailer.createTransport({
@@ -136,6 +136,5 @@ export default async function handler(req, res) {
     ['Du bist dabei.', 'You are in.'],
     ['Wir melden uns selten, nur wenn es wirklich etwas Neues gibt. Und wenn Du nicht mehr magst, gehst Du mit einem Klick.',
      'We write rarely, and only when there is genuinely something new. And if you change your mind, you leave with one click.'],
-    { href: '/spezialausgabe.html', de: 'Zur Spezialausgabe ▶', en: 'To the special edition ▶' },
-    { href: '/index.html', de: 'oder direkt zur Homepage', en: 'or straight to the homepage' }));
+    { href: '/index.html', de: 'Zur Homepage ▶', en: 'To the homepage ▶' }));
 }

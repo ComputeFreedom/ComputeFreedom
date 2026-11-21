@@ -119,3 +119,11 @@ footer { border-top:1px solid var(--hairline); padding:56px 0 64px; background:v
 .lang-toggle{background:none;border:1px solid var(--hairline-2);color:var(--ink-dim);cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.08em;padding:6px 10px;border-radius:3px;margin-left:6px;line-height:1;transition:color .2s,border-color .2s}
 .lang-toggle:hover{color:var(--ink);border-color:var(--ink-dim)}
 .legal-note{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.04em;color:var(--ink-dim);margin:-6px 0 26px}
+
+/* ── Marke Runde 9 (Nov 2026): Signet C + F mit Keil, Wortzug in Red Hat Display, als Kurven ── */
+:root{--cf-c:#DD7740;--cf-f:#A8BCC7;--cf-i:#F0E9D8}
+[data-theme="light"]{--cf-c:#B85025;--cf-f:#3E5E76;--cf-i:#1A2833}
+.cf-c{fill:var(--cf-c)}.cf-f{fill:var(--cf-f)}.cf-i{fill:var(--cf-i)}
+.brand svg.cf-wm{height:19px;transform:translateY(-9%)}
+.foot-brand svg.cf-wm{height:15px;transform:translateY(-9%)}
+@media(max-width:520px){.brand svg.cf-wm{display:none}}
